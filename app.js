@@ -184,9 +184,14 @@ function returnToMap() {
         <div class="place-card">
             <h1>Devon Cultural Map</h1>
             <p class="intro">` + instruction + `</p>
+            <button onclick="resetMapView()" class="button" style="margin-top:12px;">Reset map view</button>
         </div>
     `;
     closePanel();
+}
+
+function resetMapView() {
+    map.setView([50.55, -3.8], 9);
 }
 
 // ====================
