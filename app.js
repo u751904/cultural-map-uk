@@ -253,6 +253,7 @@ function applyFilter(selectedCategory) {
             markerClusterGroup.addLayer(marker);
         }
     });
+    returnToMap();
 }
 
 document.getElementById("categoryFilter").addEventListener("change", function() {
