@@ -108,6 +108,17 @@ function closePanel() {
         detailsPanel.classList.remove("panel-open");
         setTimeout(function() { map.invalidateSize(); }, 350);
     }
+    var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    var instruction = isTouchDevice
+        ? "Tap a marker to explore a literary or cultural location."
+        : "Click a marker to explore a literary or cultural location.";
+    details.innerHTML = `
+        <div class="place-card">
+            <h1>Devon Cultural Map</h1>
+            <p class="intro">` + instruction + `</p>
+            <div class="return-map" onclick="resetMapView()"><span class="return-icon">☚</span> Reset map view</div>
+        </div>
+    `;
 }
 
 // ====================
@@ -176,18 +187,6 @@ function showDetails(row) {
 // ====================
 
 function returnToMap() {
-    var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    var instruction = isTouchDevice
-        ? "Tap a marker to explore a literary or cultural location."
-        : "Click a marker to explore a literary or cultural location.";
-
-    details.innerHTML = `
-        <div class="place-card">
-            <h1>Devon Cultural Map</h1>
-            <p class="intro">` + instruction + `</p>
-            <div class="return-map" onclick="resetMapView()"><span class="return-icon">☚</span> Reset map view</div>
-        </div>
-    `;
     closePanel();
 }
 
