@@ -220,7 +220,30 @@ body {
     display: none;
 }
 
+/* Mobile home button */
+#mobileHomeBtn {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    #mobileHomeBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 24px;
+        left: 12px;
+        z-index: 10;
+        background: #082b5f;
+        color: #fff;
+        font-size: 22px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
     #mobileResetBtn {
         display: block;
         position: absolute;
