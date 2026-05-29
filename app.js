@@ -8,14 +8,15 @@ var details = document.getElementById("detailsContent");
 var detailsPanel = document.getElementById("details");
 var allMarkers = [];
 
-// Cluster group — groups nearby markers automatically
+var currentFilterColor = '#082b5f';
+
 var markerClusterGroup = L.markerClusterGroup({
     maxClusterRadius: 40,
     disableClusteringAtZoom: 12,
     maxClusterZoom: 11,
     iconCreateFunction: function(cluster) {
         return L.divIcon({
-            html: '<div style="background:#082b5f;color:white;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:13px;font-weight:600;border:2px solid white;">' + cluster.getChildCount() + '</div>',
+            html: '<div style="background:' + currentFilterColor + ';color:white;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:13px;font-weight:600;border:2px solid white;">' + cluster.getChildCount() + '</div>',
             className: '',
             iconSize: [34, 34],
             iconAnchor: [17, 17]
@@ -243,6 +244,9 @@ loadCSV("horriblehistory.csv");
 // ====================
 
 function applyFilter(selectedCategory) {
+    currentFilterColor = selectedCategory === "Military" ? '#b03020'
+                       : selectedCategory === "Horrible History" ? '#5b2d82'
+                       : '#082b5f';
     markerClusterGroup.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
