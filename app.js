@@ -12,23 +12,31 @@ var allMarkers = [];
 var markerClusterGroup = L.markerClusterGroup({
     maxClusterRadius: 40,
     disableClusteringAtZoom: 12,
-    maxClusterZoom: 11
+    maxClusterZoom: 11,
+    iconCreateFunction: function(cluster) {
+        return L.divIcon({
+            html: '<div style="background:#082b5f;color:white;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:13px;font-weight:600;border:2px solid white;">' + cluster.getChildCount() + '</div>',
+            className: '',
+            iconSize: [34, 34],
+            iconAnchor: [17, 17]
+        });
+    }
 });
 map.addLayer(markerClusterGroup);
 
 function makeSignpostIcon(color, label) {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="50" viewBox="0 0 60 50">' +
-        '<rect x="28" y="22" width="4" height="24" rx="1" fill="#6b4c2a"/>' +
-        '<polygon points="8,4 52,4 56,13 52,22 8,22 4,13" fill="' + color + '"/>' +
-        '<text x="30" y="16" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="white">' + label + '</text>' +
-        '<ellipse cx="30" cy="47" rx="5" ry="2" fill="#6b4c2a" opacity="0.3"/>' +
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="64" viewBox="0 0 80 64">' +
+        '<rect x="37" y="28" width="5" height="30" rx="1" fill="#6b4c2a"/>' +
+        '<polygon points="8,4 68,4 74,16 68,28 8,28 2,16" fill="' + color + '"/>' +
+        '<text x="39" y="20" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="white">' + label + '</text>' +
+        '<ellipse cx="39" cy="60" rx="6" ry="3" fill="#6b4c2a" opacity="0.3"/>' +
         '</svg>';
     return L.divIcon({
         html: svg,
         className: '',
-        iconSize: [60, 50],
-        iconAnchor: [30, 47],
-        popupAnchor: [0, -47]
+        iconSize: [80, 64],
+        iconAnchor: [39, 60],
+        popupAnchor: [0, -60]
     });
 }
 
