@@ -39,12 +39,10 @@ body {
     line-height: 1.55;
 }
 
-/* Mobile filter bar — hidden on desktop */
 #mobileFilterBar {
     display: none;
 }
 
-/* Desktop filter bar */
 #filterBar {
     margin-bottom: 18px;
 }
@@ -88,7 +86,6 @@ body {
     color: #555;
 }
 
-/* Return to map link */
 .return-map {
     display: block;
     width: 100%;
@@ -114,7 +111,6 @@ body {
     margin-right: 6px;
 }
 
-/* Literature list */
 .literature-list {
     columns: 2;
     column-gap: 36px;
@@ -210,22 +206,53 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Mobile instruction hint */
-#mobileHint {
-    display: none;
-}
+/* Hidden by default on desktop */
+#mobileHint { display: none; }
+#mobileResetBtn { display: none; }
+#mobileHomeBtn { display: none; }
 
-/* Mobile reset button */
-#mobileResetBtn {
-    display: none;
-}
-
-/* Mobile home button */
-#mobileHomeBtn {
-    display: none;
-}
+/* ====================
+   MOBILE
+   ==================== */
 
 @media (max-width: 768px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    #layout {
+        flex-direction: column;
+        position: relative;
+    }
+
+    #map {
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    #mobileFilterBar {
+        display: block;
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 10;
+    }
+
+    #mobileFilterBar select {
+        padding: 8px 12px;
+        border: 1px solid #0b4fa3;
+        border-radius: 6px;
+        background: #fff;
+        color: #073f88;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
     #mobileHomeBtn {
         display: flex;
         align-items: center;
@@ -233,32 +260,13 @@ body {
         position: absolute;
         bottom: 24px;
         left: 12px;
-        z-index: 10;
+        z-index: 20;
         background: #082b5f;
-        color: #fff;
-        font-size: 22px;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         cursor: pointer;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    #mobileResetBtn {
-        display: block;
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        z-index: 10;
-        background: #082b5f;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 8px 14px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
     #mobileHint {
@@ -281,49 +289,7 @@ body {
     #mobileHint.hidden {
         display: none;
     }
-}
 
-@media (max-width: 768px) {
-
-    body {
-        overflow: hidden;
-    }
-
-    #layout {
-        flex-direction: column;
-        position: relative;
-    }
-
-    /* Map fills full screen */
-    #map {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-
-    /* Mobile filter — floats over map top-left */
-    #mobileFilterBar {
-        display: block;
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 10;
-    }
-
-    #mobileFilterBar select {
-        padding: 8px 12px;
-        border: 1px solid #0b4fa3;
-        border-radius: 6px;
-        background: #fff;
-        color: #073f88;
-        font-size: 14px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    /* Detail panel — hidden by default, slides up when active */
     #details {
         width: 100%;
         height: 85vh;
@@ -337,23 +303,18 @@ body {
         padding: 16px 16px 32px 16px;
         background: #f8f4ec;
         overflow-y: auto;
-
-        /* Hidden state — slid off screen */
         transform: translateY(100%);
         transition: transform 0.35s ease;
     }
 
-    /* Active state — panel is visible */
     #details.panel-open {
         transform: translateY(0);
     }
 
-    /* Hide the desktop filter bar inside the panel on mobile */
     #filterBar {
         display: none;
     }
 
-    /* Drag handle visual at top of panel */
     #details::before {
         content: '';
         display: block;
@@ -364,7 +325,6 @@ body {
         margin: 0 auto 16px auto;
     }
 
-    /* Card adjustments for mobile */
     .place-card {
         padding: 16px;
         border-radius: 8px;
