@@ -16,32 +16,25 @@ var markerClusterGroup = L.markerClusterGroup({
 });
 map.addLayer(markerClusterGroup);
 
-var blueMarkerIcon = L.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
+function makeSignpostIcon(color, label) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="50" viewBox="0 0 60 50">' +
+        '<rect x="28" y="22" width="4" height="24" rx="1" fill="#6b4c2a"/>' +
+        '<polygon points="8,4 52,4 56,13 52,22 8,22 4,13" fill="' + color + '"/>' +
+        '<text x="30" y="16" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="white">' + label + '</text>' +
+        '<ellipse cx="30" cy="47" rx="5" ry="2" fill="#6b4c2a" opacity="0.3"/>' +
+        '</svg>';
+    return L.divIcon({
+        html: svg,
+        className: '',
+        iconSize: [60, 50],
+        iconAnchor: [30, 47],
+        popupAnchor: [0, -47]
+    });
+}
 
-var redMarkerIcon = L.icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var purpleMarkerIcon = L.icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
+var literaryIcon   = makeSignpostIcon('#082b5f', 'Literary');
+var militaryIcon   = makeSignpostIcon('#b03020', 'Military');
+var horribleIcon   = makeSignpostIcon('#5b2d82', 'Horrible');
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
@@ -208,9 +201,9 @@ function loadCSV(filename) {
                 if (!isNaN(lat) && !isNaN(lng)) {
                     var title = row.Location_name || "Cultural location";
                     var category = row.Category ? row.Category.trim() : "Literary";
-                    var icon = category === "Military" ? redMarkerIcon 
-                             : category === "Horrible History" ? purpleMarkerIcon 
-                             : blueMarkerIcon;
+                    var icon = category === "Military" ? militaryIcon
+                             : category === "Horrible History" ? horribleIcon
+                             : literaryIcon;
 
                     var marker = L.marker([lat, lng], { icon: icon })
                         .bindPopup(escapeHtml(title))
