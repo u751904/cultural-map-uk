@@ -185,7 +185,7 @@ function returnToMap() {
         <div class="place-card">
             <h1>Devon Cultural Map</h1>
             <p class="intro">` + instruction + `</p>
-            <button onclick="resetMapView()" class="button" style="margin-top:12px;">Reset map view</button>
+            <div class="return-map" onclick="resetMapView()"><span class="return-icon">☚</span> Reset map view</div>
         </div>
     `;
     closePanel();
