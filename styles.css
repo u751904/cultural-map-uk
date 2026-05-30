@@ -194,15 +194,11 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Fix Leaflet divIcon hover outline */
-.leaflet-marker-icon {
+/* Fix Leaflet divIcon hover outline on signpost markers only */
+.leaflet-marker-icon.leaflet-div-icon {
     border: none !important;
     background: none !important;
-}
-
-.leaflet-div-icon {
-    border: none !important;
-    background: none !important;
+    box-shadow: none !important;
 }
 
 #mobileHint { display: none; }
