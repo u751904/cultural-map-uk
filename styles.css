@@ -24,6 +24,8 @@ body {
     width: 40%;
     height: 100%;
     flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
 }
 
 #details {
