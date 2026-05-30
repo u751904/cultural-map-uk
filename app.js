@@ -9,9 +9,8 @@ var map = L.map('map', { zoomControl: false, maxZoom: 18 }).setView([50.55, -3.8
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 var markerClusterGroup = L.markerClusterGroup({
-    maxClusterRadius: isMobileDevice ? 120 : 40,
-    disableClusteringAtZoom: isMobileDevice ? 14 : 12,
-    maxClusterZoom: isMobileDevice ? 13 : 11,
+    maxClusterRadius: isMobileDevice ? 120 : 60,
+    disableClusteringAtZoom: 15,
     iconCreateFunction: function(cluster) {
         return L.divIcon({
             html: '<div style="background:' + currentFilterColor + ';color:white;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:14px;font-weight:700;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">' + cluster.getChildCount() + '</div>',
