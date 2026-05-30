@@ -8,6 +8,11 @@ var initialZoom = isMobileDevice ? 8 : 9;
 var map = L.map('map', { zoomControl: false, maxZoom: 18 }).setView([50.55, -3.8], initialZoom);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+var details = document.getElementById("detailsContent");
+var detailsPanel = document.getElementById("details");
+var allMarkers = [];
+var currentFilterColor = '#082b5f';
+
 var markerClusterGroup = L.markerClusterGroup({
     maxClusterRadius: isMobileDevice ? 120 : 60,
     disableClusteringAtZoom: 15,
