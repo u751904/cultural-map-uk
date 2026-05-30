@@ -194,7 +194,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Fix Leaflet divIcon hover outline on signpost markers only */
+/* Fix Leaflet signpost marker hover outline only */
 .leaflet-marker-icon.leaflet-div-icon {
     border: none !important;
     background: none !important;
