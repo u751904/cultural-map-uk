@@ -13,7 +13,7 @@ var currentFilterColor = '#082b5f';
 var isMobileDevice = window.innerWidth <= 768;
 
 var markerClusterGroup = L.markerClusterGroup({
-    maxClusterRadius: isMobileDevice ? 80 : 40,
+    maxClusterRadius: isMobileDevice ? 120 : 40,
     disableClusteringAtZoom: isMobileDevice ? 14 : 12,
     maxClusterZoom: isMobileDevice ? 13 : 11,
     iconCreateFunction: function(cluster) {
