@@ -145,13 +145,16 @@ body {
         .button {
             display: inline-block;
             margin-top: 8px;
-            padding: 8px 12px;
+            padding: 10px 0;
+            width: 130px;
+            text-align: center;
             border: 1px solid #0b4fa3;
             border-radius: 5px;
             background: #fff;
             color: #073f88;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
+            box-sizing: border-box;
         }
 
         .button:hover {
@@ -166,10 +169,12 @@ body {
         .secondary-button:hover {
             background: #eaf2ff;
         }
+
 .action-row {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .action-row .button {
@@ -177,7 +182,7 @@ body {
 }
 
 .action-row .map-icon {
-    font-size: 36px;
+    font-size: 28px;
 }
 
 
