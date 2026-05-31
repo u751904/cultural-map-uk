@@ -396,3 +396,20 @@ body {
         text-align: left;
     }
 }
+
+/* ====================
+   HISTORIC ENGLAND ATTRIBUTION
+   ==================== */
+
+#heAttribution {
+    padding: 8px 28px;
+    font-size: 11px;
+    color: #888;
+    border-top: 1px solid #ddd;
+    background: #f8f4ec;
+    line-height: 1.5;
+}
+
+        .partner-panel.maritime { border-color: #7ab0d0; background: #eef6ff; }
+        .partner-icon.maritime { background: #c0d8f0; }
+        .partner-cta.maritime { border-color: #1a6a9a; color: #0a4a7a; background: #f0f8ff; }
