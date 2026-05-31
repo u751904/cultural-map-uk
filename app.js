@@ -33,7 +33,7 @@ function getMarkerIcon(category) {
 // Marker cluster group — dark navy circles, clusters from zoom 1 upward
 var markerCluster = L.markerClusterGroup({
     maxClusterRadius: 50,
-    disableClusteringAtZoom: 13,
+    disableClusteringAtZoom: 16,
     iconCreateFunction: function(cluster) {
         var count = cluster.getChildCount();
         return L.divIcon({
