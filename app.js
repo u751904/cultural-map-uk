@@ -2,63 +2,23 @@
 // MAP SETUP
 // ====================
 
-var isMobileDevice = window.innerWidth <= 768;
-var initialZoom = isMobileDevice ? 8 : 9;
-
-var map = L.map('map', { zoomControl: false, maxZoom: 18 }).setView([50.55, -3.8], initialZoom);
-L.control.zoom({ position: 'bottomright' }).addTo(map);
-
+var map = L.map('map').setView([50.72, -3.53], 9);
 var details = document.getElementById("detailsContent");
-var detailsPanel = document.getElementById("details");
 var allMarkers = [];
-var currentFilterColor = '#082b5f';
 
-var markerClusterGroup = L.markerClusterGroup({
-    maxClusterRadius: isMobileDevice ? 120 : 60,
-    disableClusteringAtZoom: 15,
-    iconCreateFunction: function(cluster) {
-        return L.divIcon({
-            html: '<div style="background:' + currentFilterColor + ';color:white;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;font-size:14px;font-weight:700;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">' + cluster.getChildCount() + '</div>',
-            className: '',
-            iconSize: [38, 38],
-            iconAnchor: [19, 19]
-        });
-    }
+var blueMarkerIcon = L.icon({
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
 });
-map.addLayer(markerClusterGroup);
-
-function makeSignpostIcon(color, label) {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="64" viewBox="0 0 80 64">' +
-        '<rect x="37" y="28" width="5" height="30" rx="1" fill="#6b4c2a"/>' +
-        '<polygon points="8,4 68,4 74,16 68,28 8,28 2,16" fill="' + color + '"/>' +
-        '<text x="39" y="20" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="white">' + label + '</text>' +
-        '<ellipse cx="39" cy="60" rx="6" ry="3" fill="#6b4c2a" opacity="0.3"/>' +
-        '</svg>';
-    return L.divIcon({
-        html: svg,
-        className: '',
-        iconSize: [80, 64],
-        iconAnchor: [39, 60],
-        popupAnchor: [0, -60]
-    });
-}
-
-var literaryIcon   = makeSignpostIcon('#082b5f', 'Literary');
-var militaryIcon   = makeSignpostIcon('#b03020', 'Military');
-var horribleIcon   = makeSignpostIcon('#5b2d82', 'Horrible');
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
+    maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-
-// ====================
-// MOBILE DETECTION
-// ====================
-
-function isMobile() {
-    return window.innerWidth <= 768;
-}
 
 // ====================
 // HELPER FUNCTIONS
@@ -93,36 +53,56 @@ function formatParagraph(text) {
 }
 
 // ====================
-// OPEN / CLOSE PANEL
+// CATEGORY CONFIG
 // ====================
 
-function openPanel() {
-    if (isMobile()) {
-        detailsPanel.classList.add("panel-open");
-        var hint = document.getElementById("mobileHint");
-        if (hint) hint.classList.add("hidden");
-        setTimeout(function() { map.invalidateSize(); }, 350);
+var categoryConfig = {
+    "Literary": {
+        label: "Literary Location",
+        section1Icon: "\uD83D\uDCD6", section1Title: "Literature",
+        section2Icon: "\uD83C\uDFAD", section2Title: "Cultural Importance",
+        section3Icon: "\uD83D\uDCCD", section3Title: "Place Highlights",
+        partnerClass: "literary",
+        partnerIcon: "\uD83D\uDCDA",
+        partnerIconClass: "literary",
+        partnerName: "The Local Bookshop",
+        partnerTagline: "Independent books &amp; local titles",
+        partnerBody: "Rare, secondhand and local-interest titles. A destination for readers exploring the region's literary heritage.",
+        partnerCta: "Visit website",
+        partnerCtaClass: "literary"
+    },
+    "Horrible History": {
+        label: "Horrible History",
+        section1Icon: "\uD83D\uDC80", section1Title: "The Dark Story",
+        section2Icon: "\u26A0\uFE0F", section2Title: "Historical Context",
+        section3Icon: "\uD83D\uDCCD", section3Title: "Place Highlights",
+        partnerClass: "horrible",
+        partnerIcon: "\u2615",
+        partnerIconClass: "horrible",
+        partnerName: "The Curious Cafe",
+        partnerTagline: "Dark history tours &amp; speciality coffee",
+        partnerBody: "Fuel your curiosity. Dark history walking tours depart daily, or settle in for a good cup and a grim story.",
+        partnerCta: "Book a tour",
+        partnerCtaClass: "horrible"
+    },
+    "Military": {
+        label: "Military Location",
+        section1Icon: "\u2694\uFE0F", section1Title: "Military History",
+        section2Icon: "\uD83C\uDFF0", section2Title: "Historical Significance",
+        section3Icon: "\uD83D\uDCCD", section3Title: "Place Highlights",
+        partnerClass: "military",
+        partnerIcon: "\uD83C\uDFE8",
+        partnerIconClass: "military",
+        partnerName: "The Garrison Hotel",
+        partnerTagline: "Historic stays near the site",
+        partnerBody: "Stay close to history. Comfortable rooms with easy access to the region's military and maritime heritage sites.",
+        partnerCta: "Check availability",
+        partnerCtaClass: "military"
     }
-}
+};
 
-function closePanel() {
-    if (isMobile()) {
-        detailsPanel.classList.remove("panel-open");
-        setTimeout(function() { map.invalidateSize(); }, 350);
-        var hint = document.getElementById("mobileHint");
-        if (hint) hint.classList.remove("hidden");
-    }
-    var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    var instruction = isTouchDevice
-        ? "Tap a marker to explore a literary or cultural location."
-        : "Click a marker to explore a literary or cultural location.";
-    details.innerHTML = `
-        <div class="place-card">
-            <h1>Devon Cultural Map</h1>
-            <p class="intro">` + instruction + `</p>
-            <div class="return-map" onclick="resetMapView()"><span class="return-icon">☚</span> Reset map view</div>
-        </div>
-    `;
+function getCategoryConfig(category) {
+    return categoryConfig[category] || categoryConfig["Literary"];
 }
 
 // ====================
@@ -133,6 +113,8 @@ function showDetails(row) {
     var title = row.Location_name || "Cultural location";
     var lat = row.Latitude;
     var lng = row.Longitude;
+    var category = row.Category ? row.Category.trim() : "Literary";
+    var cfg = getCategoryConfig(category);
 
     var googleMaps = row.Google_Maps_Link
         ? "<a class='button' href='" + escapeHtml(row.Google_Maps_Link) + "' target='_blank'>Open in Google Maps</a>"
@@ -143,128 +125,104 @@ function showDetails(row) {
         : "";
 
     var officialWebsite = row.Official_Website
-        ? "<a class='button green-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>"
+        ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>"
         : "";
 
     details.innerHTML =
         "<div class='place-card'>" +
-            "<div class='return-map' onclick='returnToMap()'><span class='return-icon'>☚</span> Return to Map</div>" +
-            "<h1>" + escapeHtml(title) + "</h1>" +
+        "<h1>" + escapeHtml(cfg.label) + ": " + escapeHtml(title) + "</h1>" +
+        "<div class='return-map' onclick='returnToMap()'><span class='return-icon'>&#x261A;</span> Return to Map</div>" +
 
-            "<h2>📖 Literature</h2>" +
-            makeLiteratureList(row.Literature) +
+        "<h2>" + cfg.section1Icon + " " + cfg.section1Title + "</h2>" +
+        makeLiteratureList(row.Literature) +
 
-            "<h2>🎭 Cultural Importance</h2>" +
-            "<p>" + formatParagraph(row.Cultural_Significance) + "</p>" +
+        "<h2>" + cfg.section2Icon + " " + cfg.section2Title + "</h2>" +
+        "<p>" + formatParagraph(row.Cultural_Significance) + "</p>" +
 
-            "<h2>📍 Place Highlights</h2>" +
-            "<p>" + formatParagraph(row.Distinctive_Feature) + "</p>" +
+        "<h2>" + cfg.section3Icon + " " + cfg.section3Title + "</h2>" +
+        "<p>" + formatParagraph(row.Distinctive_Feature) + "</p>" +
 
-            "<div class='info-panel'>" +
-                "<div class='panel-title'>🔎 Plan Your Visit</div>" +
-                "<div class='action-row'>" +
-                    "<span class='map-icon'>🗺️</span>" +
-                    googleMaps +
-                    appleMaps +
-                    officialWebsite +
-                "</div>" +
-            "</div>" +
+        "<div class='info-panel'>" +
+        "<div class='panel-title'>&#x1F50E; Plan Your Visit</div>" +
+        "<div class='action-row'>" +
+        "<span class='map-icon'>&#x1F5FA;&#xFE0F;</span>" +
+        googleMaps +
+        appleMaps +
+        officialWebsite +
+        "</div>" +
+        "</div>" +
 
-            "<div class='partner-panel'>" +
-                "<div class='panel-title'>🤝 Local Partner</div>" +
-                "<p>This space could be used for local businesses, heritage organisations, bookshops, cafés, tours or accommodation linked to Devon's cultural landscape.</p>" +
-                "<div class='advert-box'><strong>Advertise Here</strong><br>Reach visitors interested in Devon's literary, cultural and heritage locations.</div>" +
-            "</div>" +
+        "<div class='partner-panel " + cfg.partnerClass + "'>" +
+        "<span class='partner-example-tag'>Example partner ad</span>" +
+        "<div class='partner-head'>" +
+        "<div class='partner-icon " + cfg.partnerIconClass + "'>" + cfg.partnerIcon + "</div>" +
+        "<div>" +
+        "<div class='partner-name'>" + cfg.partnerName + "</div>" +
+        "<div class='partner-tagline'>" + cfg.partnerTagline + "</div>" +
+        "</div>" +
+        "</div>" +
+        "<div class='partner-body'>" + cfg.partnerBody + "</div>" +
+        "<a class='partner-cta " + cfg.partnerCtaClass + "' href='#'>" + cfg.partnerCta + "</a>" +
+        "<div class='advertise-bar'>Could this be your business? <a href='#'>Advertise here</a></div>" +
+        "</div>" +
 
-            "<div class='project-footer'>About the Devon Cultural Map</div>" +
+        "<div class='project-footer'>About the Devon Cultural Map</div>" +
         "</div>";
-
-    // Scroll detail content to top
-    detailsPanel.scrollTop = 0;
-
-    // Open panel on mobile
-    openPanel();
-}
-
-// ====================
-// RESET / RETURN TO MAP
-// ====================
-
-function returnToMap() {
-    closePanel();
-}
-
-function resetMapView() {
-    map.setView([50.55, -3.8], initialZoom);
 }
 
 // ====================
 // LOAD CSV DATA
 // ====================
 
-function loadCSV(filename) {
-    Papa.parse(filename, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        error: function(error) {
-            console.error("Could not load " + filename);
-        },
-        complete: function(results) {
-            results.data.forEach(function(row) {
-                var lat = parseFloat(row.Latitude);
-                var lng = parseFloat(row.Longitude);
+Papa.parse("literary-devon.csv", {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    error: function(error) {
+        alert("CSV could not be loaded. Check the CSV filename and that you are running through a local server, not directly from file.");
+    },
+    complete: function(results) {
+        results.data.forEach(function(row) {
+            var lat = parseFloat(row.Latitude);
+            var lng = parseFloat(row.Longitude);
 
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    var title = row.Location_name || "Cultural location";
-                    var category = row.Category ? row.Category.trim() : "Literary";
-                    var icon = category === "Military" ? militaryIcon
-                             : category === "Horrible History" ? horribleIcon
-                             : literaryIcon;
+            if (!isNaN(lat) && !isNaN(lng)) {
+                var title = row.Location_name || "Cultural location";
 
-                    var marker = L.marker([lat, lng], { icon: icon })
-                        .bindPopup(escapeHtml(title))
-                        .on("click", function() {
-                            showDetails(row);
-                        });
+                var marker = L.marker([lat, lng], { icon: blueMarkerIcon })
+                    .addTo(map)
+                    .bindPopup(escapeHtml(title))
+                    .on("click", function() {
+                        showDetails(row);
+                    });
 
-                    marker.category = category;
-                    allMarkers.push(marker);
-                    markerClusterGroup.addLayer(marker);
-                }
-            });
-        }
-    });
+                marker.category = row.Category ? row.Category.trim() : "Literary";
+                allMarkers.push(marker);
+            }
+        });
+    }
+});
+
+// ====================
+// RESET DETAILS PANEL
+// ====================
+
+function returnToMap() {
+    details.innerHTML = '<div class="place-card"><h1>Devon Cultural Map</h1><p class="intro">Click a marker to explore a literary or cultural location.</p></div>';
 }
-
-loadCSV("literarydevon.csv");
-loadCSV("militarydevon.csv");
-loadCSV("horriblehistory.csv");
 
 // ====================
 // CATEGORY FILTER
-// Syncs both the mobile and desktop dropdowns
 // ====================
 
-function applyFilter(selectedCategory) {
-    currentFilterColor = selectedCategory === "Military" ? '#b03020'
-                       : selectedCategory === "Horrible History" ? '#5b2d82'
-                       : '#082b5f';
-    markerClusterGroup.clearLayers();
+document.getElementById("categoryFilter").addEventListener("change", function () {
+    var selectedCategory = this.value;
+
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
-            markerClusterGroup.addLayer(marker);
+            map.addLayer(marker);
+        } else {
+            map.removeLayer(marker);
         }
     });
-    returnToMap();
-}
-
-document.getElementById("categoryFilter").addEventListener("change", function() {
-    applyFilter(this.value);
-    document.getElementById("categoryFilterDesktop").value = this.value;
-});
-
-document.getElementById("categoryFilterDesktop").addEventListener("change", function() {
-    applyFilter(this.value);
-    document.getElementById("categoryFilter").value = this.value;
 });
