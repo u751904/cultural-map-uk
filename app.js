@@ -220,10 +220,104 @@ map.addLayer(markerCluster);
 function resetMapView() {
     map.setView([50.72, -3.53], 9);
     details.innerHTML =
-        "<div class='place-card'>" +
-        "<h1>Devon Cultural Map</h1>" +
-        "<p class='intro'>Click a marker to explore a literary or cultural location.</p>" +
-        "</div>";
+        '<div class="place-card">' +
+        '<svg width="100%" viewBox="0 0 680 440" role="img" xmlns="http://www.w3.org/2000/svg">' +
+        '<title>Devon Cultural Map signpost</title>' +
+        '<desc>A wooden signpost pointing to Literature, Military and Horrible History</desc>' +
+        '<rect x="0" y="0" width="680" height="440" fill="#f5f0e6"/>' +
+        '<rect x="0" y="340" width="680" height="100" fill="#c8b87a"/>' +
+        '<rect x="0" y="355" width="680" height="85" fill="#bfaa68"/>' +
+        '<ellipse cx="100" cy="342" rx="70" ry="18" fill="#8ab060"/>' +
+        '<ellipse cx="75" cy="334" rx="48" ry="22" fill="#7aa050"/>' +
+        '<ellipse cx="105" cy="328" rx="42" ry="26" fill="#90ba64"/>' +
+        '<ellipse cx="88" cy="320" rx="32" ry="20" fill="#82aa58"/>' +
+        '<ellipse cx="118" cy="325" rx="28" ry="18" fill="#9ac070"/>' +
+        '<rect x="95" y="354" width="10" height="22" rx="3" fill="#6a5030"/>' +
+        '<rect x="102" y="350" width="7" height="18" rx="2" fill="#7a6040"/>' +
+        '<ellipse cx="580" cy="338" rx="62" ry="16" fill="#8ab060"/>' +
+        '<ellipse cx="558" cy="328" rx="44" ry="24" fill="#7aa050"/>' +
+        '<ellipse cx="590" cy="322" rx="38" ry="22" fill="#90ba64"/>' +
+        '<ellipse cx="572" cy="315" rx="28" ry="18" fill="#9ac070"/>' +
+        '<ellipse cx="600" cy="330" rx="24" ry="16" fill="#82aa58"/>' +
+        '<rect x="575" y="350" width="10" height="22" rx="3" fill="#6a5030"/>' +
+        '<ellipse cx="470" cy="355" rx="35" ry="10" fill="#9ab868"/>' +
+        '<ellipse cx="458" cy="348" rx="24" ry="14" fill="#8aac58"/>' +
+        '<ellipse cx="478" cy="344" rx="20" ry="13" fill="#9aba6a"/>' +
+        '<rect x="466" y="358" width="7" height="14" rx="2" fill="#6a5030"/>' +
+        '<ellipse cx="210" cy="358" rx="28" ry="8" fill="#9ab868"/>' +
+        '<ellipse cx="200" cy="352" rx="20" ry="12" fill="#8aac58"/>' +
+        '<ellipse cx="218" cy="349" rx="17" ry="11" fill="#9aba6a"/>' +
+        '<rect x="206" y="360" width="6" height="12" rx="2" fill="#6a5030"/>' +
+        '<path d="M30,370 Q60,355 90,365 Q120,375 150,360 Q180,348 210,362 Q240,372 270,358 Q300,346 330,360 Q360,370 390,355 Q420,342 450,358 Q480,370 510,355 Q540,343 570,358 Q600,368 630,355 Q655,345 680,358 L680,440 L0,440 Z" fill="#b8a45e"/>' +
+        '<path d="M0,390 Q40,378 80,385 Q120,392 160,380 Q200,370 240,382 Q280,390 320,378 Q360,368 400,380 Q440,390 480,378 Q520,368 560,380 Q600,388 640,376 Q660,372 680,378 L680,440 L0,440 Z" fill="#a89050"/>' +
+        '<line x1="48" y1="362" x2="44" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="48" y1="362" x2="52" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="48" y1="362" x2="48" y2="348" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="145" y1="368" x2="141" y2="356" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="145" y1="368" x2="149" y2="355" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="145" y1="368" x2="145" y2="354" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="260" y1="364" x2="256" y2="352" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="260" y1="364" x2="264" y2="351" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="260" y1="364" x2="260" y2="350" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="390" y1="360" x2="386" y2="348" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="390" y1="360" x2="394" y2="347" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="390" y1="360" x2="390" y2="346" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="510" y1="362" x2="506" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="510" y1="362" x2="514" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="510" y1="362" x2="510" y2="348" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="630" y1="360" x2="626" y2="348" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="630" y1="360" x2="634" y2="347" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="630" y1="360" x2="630" y2="346" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<line x1="170" y1="380" x2="167" y2="371" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="170" y1="380" x2="173" y2="370" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="440" y1="375" x2="437" y2="366" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="440" y1="375" x2="443" y2="365" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="310" y1="382" x2="307" y2="373" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="310" y1="382" x2="313" y2="372" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="560" y1="378" x2="557" y2="369" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<line x1="560" y1="378" x2="563" y2="368" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
+        '<ellipse cx="62" cy="400" rx="14" ry="9" fill="#c0aa80" stroke="#a08860" stroke-width="0.8"/>' +
+        '<ellipse cx="62" cy="398" rx="10" ry="4" fill="#d0ba90" opacity="0.5"/>' +
+        '<ellipse cx="95" cy="412" rx="10" ry="6" fill="#b8a070" stroke="#988050" stroke-width="0.8"/>' +
+        '<ellipse cx="118" cy="404" rx="7" ry="4" fill="#c8b080" stroke="#a89060" stroke-width="0.7"/>' +
+        '<ellipse cx="118" cy="403" rx="5" ry="2" fill="#d8c090" opacity="0.5"/>' +
+        '<ellipse cx="200" cy="408" rx="18" ry="10" fill="#b4a06a" stroke="#948050" stroke-width="0.8"/>' +
+        '<ellipse cx="200" cy="406" rx="13" ry="5" fill="#c8b47a" opacity="0.5"/>' +
+        '<ellipse cx="232" cy="418" rx="8" ry="5" fill="#c0ac72" stroke="#a08c52" stroke-width="0.7"/>' +
+        '<ellipse cx="255" cy="410" rx="11" ry="6" fill="#bca868" stroke="#9c8848" stroke-width="0.8"/>' +
+        '<ellipse cx="370" cy="415" rx="9" ry="5" fill="#c2ae74" stroke="#a28e54" stroke-width="0.7"/>' +
+        '<ellipse cx="395" cy="406" rx="15" ry="8" fill="#b8a468" stroke="#988448" stroke-width="0.8"/>' +
+        '<ellipse cx="395" cy="404" rx="11" ry="4" fill="#ccb87c" opacity="0.5"/>' +
+        '<ellipse cx="420" cy="418" rx="6" ry="4" fill="#bfaa70" stroke="#9f8a50" stroke-width="0.7"/>' +
+        '<ellipse cx="490" cy="410" rx="12" ry="7" fill="#c0aa72" stroke="#a08a52" stroke-width="0.8"/>' +
+        '<ellipse cx="516" cy="420" rx="7" ry="4" fill="#b8a268" stroke="#988248" stroke-width="0.7"/>' +
+        '<ellipse cx="540" cy="408" rx="16" ry="9" fill="#bcaa6e" stroke="#9c8a4e" stroke-width="0.8"/>' +
+        '<ellipse cx="540" cy="406" rx="11" ry="4" fill="#d0be82" opacity="0.5"/>' +
+        '<ellipse cx="610" cy="414" rx="10" ry="6" fill="#c4ae76" stroke="#a48e56" stroke-width="0.7"/>' +
+        '<ellipse cx="638" cy="405" rx="13" ry="7" fill="#b8a46a" stroke="#988450" stroke-width="0.8"/>' +
+        '<ellipse cx="660" cy="418" rx="8" ry="5" fill="#c0ac72" stroke="#a08c52" stroke-width="0.7"/>' +
+        '<rect x="333" y="200" width="14" height="155" rx="3" fill="#8a6030"/>' +
+        '<rect x="330" y="310" width="20" height="18" rx="2" fill="#7a5028"/>' +
+        '<rect x="333" y="200" width="14" height="30" fill="#7a5828"/>' +
+        '<rect x="222" y="222" width="160" height="40" rx="5" fill="#1a4a8a"/>' +
+        '<rect x="222" y="222" width="160" height="40" rx="5" fill="none" stroke="#0a3060" stroke-width="1.5"/>' +
+        '<polygon points="209,242 222,222 222,262" fill="#1a4a8a" stroke="#0a3060" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<text x="298" y="247" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDCD6 Literature</text>' +
+        '<rect x="347" y="168" width="172" height="40" rx="5" fill="#8a2020"/>' +
+        '<rect x="347" y="168" width="172" height="40" rx="5" fill="none" stroke="#6a1010" stroke-width="1.5"/>' +
+        '<polygon points="531,168 531,208 544,188" fill="#8a2020" stroke="#6a1010" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<text x="429" y="193" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\u2694\uFE0F Military</text>' +
+        '<rect x="228" y="120" width="182" height="40" rx="5" fill="#5a2880"/>' +
+        '<rect x="228" y="120" width="182" height="40" rx="5" fill="none" stroke="#3a1060" stroke-width="1.5"/>' +
+        '<polygon points="215,120 215,160 228,140" fill="#5a2880" stroke="#3a1060" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<text x="316" y="145" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDC80 Horrible History</text>' +
+        '<text x="340" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#082b5f" letter-spacing="1">Devon Cultural Map</text>' +
+        '<text x="340" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-style="italic" font-weight="700" fill="#4a5a70">Select a marker on the map to begin your journey</text>' +
+        '<line x1="200" y1="92" x2="280" y2="92" stroke="#082b5f" stroke-width="0.8" opacity="0.3"/>' +
+        '<line x1="400" y1="92" x2="480" y2="92" stroke="#082b5f" stroke-width="0.8" opacity="0.3"/>' +
+        '<circle cx="340" cy="92" r="3" fill="#082b5f" opacity="0.3"/>' +
+        '</svg>' +
+        '</div>';
 }
 
 // ====================
