@@ -7,12 +7,33 @@ var details = document.getElementById("detailsContent");
 var allMarkers = [];
 
 var blueMarkerIcon = L.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
     shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+});
+
+var redMarkerIcon = L.icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+});
+
+var violetMarkerIcon = L.icon({
+    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+});
+
+function getMarkerIcon(category) {
+    if (category === "Military") return redMarkerIcon;
+    if (category === "Horrible History") return violetMarkerIcon;
+    return blueMarkerIcon;
+}
+
+// Marker cluster group — clusters at low zoom, individual markers when zoomed in
+var markerCluster = L.markerClusterGroup({
+    maxClusterRadius: 50,
+    disableClusteringAtZoom: 13
 });
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -196,16 +217,18 @@ function loadCsv(fileObj) {
 
                 if (!isNaN(lat) && !isNaN(lng)) {
                     var title = row.Location_name || "Cultural location";
+                    var category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
+                    var icon = getMarkerIcon(category);
 
-                    var marker = L.marker([lat, lng], { icon: blueMarkerIcon })
-                        .addTo(map)
+                    var marker = L.marker([lat, lng], { icon: icon })
                         .bindPopup(escapeHtml(title))
                         .on("click", function() {
                             showDetails(row);
                         });
 
-                    marker.category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
+                    marker.category = category;
                     allMarkers.push(marker);
+                    markerCluster.addLayer(marker);
                 }
             });
         }
@@ -213,6 +236,9 @@ function loadCsv(fileObj) {
 }
 
 csvFiles.forEach(loadCsv);
+
+// Add cluster group to map after CSVs start loading
+map.addLayer(markerCluster);
 
 // ====================
 // RESET DETAILS PANEL
@@ -231,11 +257,10 @@ function applyFilter(selectedCategory) {
     document.getElementById("categoryFilter").value = selectedCategory;
     document.getElementById("categoryFilterDesktop").value = selectedCategory;
 
+    markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
-            map.addLayer(marker);
-        } else {
-            map.removeLayer(marker);
+            markerCluster.addLayer(marker);
         }
     });
 }
