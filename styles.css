@@ -146,10 +146,10 @@ body {
     display: inline-block;
     margin: 0 0 16px 0;
     padding: 7px 16px;
-    background: #fff;
-    border: 1px solid #0b4fa3;
+    background: #082b5f;
+    border: 1px solid #082b5f;
     border-radius: 20px;
-    color: #0b4fa3;
+    color: #ffffff;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -157,7 +157,7 @@ body {
 }
 
 .return-map:hover {
-    background: #eaf2ff;
+    background: #0b3d80;
 }
 
 .return-icon {
