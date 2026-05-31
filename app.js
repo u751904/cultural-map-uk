@@ -117,6 +117,16 @@ var categoryConfig = {
         partnerName: "The Garrison Hotel", partnerTagline: "Historic stays near the site",
         partnerBody: "Stay close to history. Comfortable rooms with easy access to the region's military and maritime heritage sites.",
         partnerCta: "Check availability", partnerCtaClass: "military"
+    },
+    "Maritime": {
+        label: "Maritime Location",
+        section1Icon: "\u2693", section1Title: "The Story",
+        section2Icon: "\uD83D\uDEA2", section2Title: "Maritime Significance",
+        section3Icon: "\uD83D\uDCCD", section3Title: "Place Highlights",
+        partnerClass: "maritime", partnerIcon: "\u26F5", partnerIconClass: "maritime",
+        partnerName: "The Harbour Inn", partnerTagline: "Seafront rooms & local ales",
+        partnerBody: "Stay on the water's edge. The perfect base for exploring the region's rich maritime and coastal heritage.",
+        partnerCta: "Check availability", partnerCtaClass: "maritime"
     }
 };
 
@@ -192,6 +202,7 @@ var csvFiles = [
     { file: "literarydevon.csv",   defaultCategory: "Literary" },
     { file: "horriblehistory.csv", defaultCategory: "Horrible History" },
     { file: "militarydevon.csv",   defaultCategory: "Military" }
+    // maritimedevon.csv not loaded — Maritime uses GeoJSON layers only at this stage
 ];
 
 function loadCsv(fileObj) {
@@ -222,6 +233,76 @@ function loadCsv(fileObj) {
 
 csvFiles.forEach(loadCsv);
 map.addLayer(markerCluster);
+// ====================
+// GEOJSON LAYER SYSTEM
+// ====================
+
+// Each layer: file, style, which filter categories show it, popup builder
+var layerConfig = [
+    {
+        file: "battlefields.geojson",
+        categories: ["All", "Military"],
+        style: {
+            color: "#8a2020",
+            weight: 2,
+            fillColor: "#8a2020",
+            fillOpacity: 0.15,
+            dashArray: "4 3"
+        },
+        popup: function(p) {
+            return "<strong>" + (p.Name || "Battlefield") + "</strong>" +
+                (p.area_ha ? "<br>Area: " + Math.round(p.area_ha) + " ha" : "") +
+                (p.hyperlink ? "<br><a href='" + p.hyperlink + "' target='_blank'>Historic England record &#x2197;</a>" : "");
+        }
+    },
+    {
+        file: "wrecks.geojson",
+        categories: ["All", "Maritime"],
+        style: {
+            color: "#1a4a8a",
+            weight: 2,
+            fillColor: "#1a4a8a",
+            fillOpacity: 0.15,
+            dashArray: "4 3"
+        },
+        popup: function(p) {
+            return "<strong>" + (p.Name || "Protected Wreck") + "</strong>" +
+                (p.DesigDate ? "<br>Designated: " + p.DesigDate.substring(0, 4) : "") +
+                (p.area_ha ? "<br>Area: " + Math.round(p.area_ha) + " ha" : "") +
+                (p.hyperlink ? "<br><a href='" + p.hyperlink + "' target='_blank'>Historic England record &#x2197;</a>" : "");
+        }
+    }
+];
+
+// Load all GeoJSON layers
+var geoJsonLayers = [];
+
+layerConfig.forEach(function(cfg) {
+    fetch(cfg.file)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            var layer = L.geoJSON(data, {
+                style: cfg.style,
+                onEachFeature: function(feature, l) {
+                    l.bindPopup(cfg.popup(feature.properties));
+                }
+            });
+            layer.addTo(map);
+            geoJsonLayers.push({ layer: layer, categories: cfg.categories });
+        })
+        .catch(function() { console.warn("Could not load: " + cfg.file); });
+});
+
+function updateGeoJsonVisibility(selectedCategory) {
+    geoJsonLayers.forEach(function(item) {
+        if (item.categories.indexOf(selectedCategory) !== -1) {
+            item.layer.addTo(map);
+        } else {
+            map.removeLayer(item.layer);
+        }
+    });
+}
+
 
 // ====================
 // RESET MAP VIEW
@@ -341,8 +422,6 @@ function applyFilter(selectedCategory) {
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
-            // All categories: navy circle for every marker including singles
-            // Specific category: coloured teardrop so identity is clear
             if (selectedCategory === "All") {
                 marker.setIcon(navySingleIcon);
             } else {
@@ -351,6 +430,8 @@ function applyFilter(selectedCategory) {
             markerCluster.addLayer(marker);
         }
     });
+    // Show/hide GeoJSON layers based on category
+    updateGeoJsonVisibility(selectedCategory);
 }
 
 document.getElementById("categoryFilter").addEventListener("change", function() { applyFilter(this.value); });
