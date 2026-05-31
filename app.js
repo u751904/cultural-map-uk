@@ -45,6 +45,16 @@ var markerCluster = L.markerClusterGroup({
     }
 });
 
+// Track current filter to control single marker icon style
+var currentFilter = "All";
+
+var navySingleIcon = L.divIcon({
+    html: '<div class="cluster-circle">1</div>',
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
+});
+
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
@@ -198,7 +208,7 @@ function loadCsv(fileObj) {
                     var title = row.Location_name || "Cultural location";
                     var category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
                     var icon = getMarkerIcon(category);
-                    var marker = L.marker([lat, lng], { icon: icon })
+                    var marker = L.marker([lat, lng], { icon: navySingleIcon })
                         .bindPopup(escapeHtml(title))
                         .on("click", function() { showDetails(row); });
                     marker.category = category;
@@ -325,11 +335,19 @@ function resetMapView() {
 // ====================
 
 function applyFilter(selectedCategory) {
+    currentFilter = selectedCategory;
     document.getElementById("categoryFilter").value = selectedCategory;
     document.getElementById("categoryFilterDesktop").value = selectedCategory;
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
+            // All categories: navy circle for every marker including singles
+            // Specific category: coloured teardrop so identity is clear
+            if (selectedCategory === "All") {
+                marker.setIcon(navySingleIcon);
+            } else {
+                marker.setIcon(getMarkerIcon(marker.category));
+            }
             markerCluster.addLayer(marker);
         }
     });
