@@ -201,7 +201,8 @@ function showDetails(row) {
 var csvFiles = [
     { file: "literarydevon.csv",   defaultCategory: "Literary" },
     { file: "horriblehistory.csv", defaultCategory: "Horrible History" },
-    { file: "militarydevon.csv",   defaultCategory: "Military" }
+    { file: "militarydevon.csv",   defaultCategory: "Military" },
+    { file: "historicengland.csv", defaultCategory: "Military" }
     // maritimedevon.csv not loaded — Maritime uses GeoJSON layers only at this stage
 ];
 
