@@ -174,34 +174,45 @@ function showDetails(row) {
 // LOAD CSV DATA
 // ====================
 
-Papa.parse("literary-devon.csv", {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    error: function(error) {
-        alert("CSV could not be loaded. Check the CSV filename and that you are running through a local server, not directly from file.");
-    },
-    complete: function(results) {
-        results.data.forEach(function(row) {
-            var lat = parseFloat(row.Latitude);
-            var lng = parseFloat(row.Longitude);
+// Load all three category CSVs
+var csvFiles = [
+    { file: "literarydevon.csv",     defaultCategory: "Literary" },
+    { file: "horriblehistory.csv",   defaultCategory: "Horrible History" },
+    { file: "militarydevon.csv",     defaultCategory: "Military" }
+];
 
-            if (!isNaN(lat) && !isNaN(lng)) {
-                var title = row.Location_name || "Cultural location";
+function loadCsv(fileObj) {
+    Papa.parse(fileObj.file, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        error: function() {
+            console.warn("Could not load: " + fileObj.file);
+        },
+        complete: function(results) {
+            results.data.forEach(function(row) {
+                var lat = parseFloat(row.Latitude);
+                var lng = parseFloat(row.Longitude);
 
-                var marker = L.marker([lat, lng], { icon: blueMarkerIcon })
-                    .addTo(map)
-                    .bindPopup(escapeHtml(title))
-                    .on("click", function() {
-                        showDetails(row);
-                    });
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    var title = row.Location_name || "Cultural location";
 
-                marker.category = row.Category ? row.Category.trim() : "Literary";
-                allMarkers.push(marker);
-            }
-        });
-    }
-});
+                    var marker = L.marker([lat, lng], { icon: blueMarkerIcon })
+                        .addTo(map)
+                        .bindPopup(escapeHtml(title))
+                        .on("click", function() {
+                            showDetails(row);
+                        });
+
+                    marker.category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
+                    allMarkers.push(marker);
+                }
+            });
+        }
+    });
+}
+
+csvFiles.forEach(loadCsv);
 
 // ====================
 // RESET DETAILS PANEL
@@ -215,8 +226,10 @@ function returnToMap() {
 // CATEGORY FILTER
 // ====================
 
-document.getElementById("categoryFilter").addEventListener("change", function () {
-    var selectedCategory = this.value;
+// Sync both filter dropdowns (mobile overlay + desktop panel) and apply filter
+function applyFilter(selectedCategory) {
+    document.getElementById("categoryFilter").value = selectedCategory;
+    document.getElementById("categoryFilterDesktop").value = selectedCategory;
 
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
@@ -225,4 +238,12 @@ document.getElementById("categoryFilter").addEventListener("change", function ()
             map.removeLayer(marker);
         }
     });
+}
+
+document.getElementById("categoryFilter").addEventListener("change", function () {
+    applyFilter(this.value);
+});
+
+document.getElementById("categoryFilterDesktop").addEventListener("change", function () {
+    applyFilter(this.value);
 });
