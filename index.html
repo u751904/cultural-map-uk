@@ -15,15 +15,19 @@
     <div id="map"></div>
 
     <!-- Mobile filter bar overlaid on map -->
-    <div id="mobileFilterBar">
-        <select id="categoryFilter">
-            <option value="All">All Categories</option>
-            <option value="Horrible History">Horrible History</option>
-            <option value="Literary">Literary</option>
-            <option value="Maritime">Maritime</option>
-            <option value="Military">Military</option>
-        </select>
+<div id="mobileFilterBar">
+    <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
+        <span id="categoryFilterLabel">All Categories</span>
+        <span id="categoryFilterChevron">&#8693;</span>
     </div>
+    <div id="categoryFilterDropdown">
+        <div class="filter-option" onclick="selectFilterOption('All')">All Categories</div>
+        <div class="filter-option" onclick="selectFilterOption('Horrible History')">Horrible History</div>
+        <div class="filter-option" onclick="selectFilterOption('Literary')">Literary</div>
+        <div class="filter-option" onclick="selectFilterOption('Maritime')">Maritime</div>
+        <div class="filter-option" onclick="selectFilterOption('Military')">Military</div>
+    </div>
+</div>
 
     <div id="mobileHomeBtn" onclick="resetMapView(); closePanel();">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
