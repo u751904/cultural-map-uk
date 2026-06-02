@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Devon Cultural Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -13,6 +13,7 @@
 <body>
 <div id="layout">
     <div id="map"></div>
+
     <!-- Mobile filter bar overlaid on map -->
     <div id="mobileFilterBar">
         <select id="categoryFilter">
@@ -23,13 +24,15 @@
             <option value="Military">Military</option>
         </select>
     </div>
+
     <div id="mobileHomeBtn" onclick="resetMapView(); closePanel();">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M12 4 a8 8 0 1 1 -6.4 3.2" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
             <polygon points="3,4 3,10 9,7" fill="white"/>
         </svg>
     </div>
-    <!-- Detail panel — slides up on mobile, fixed sidebar on desktop -->
+
+    <!-- Detail panel -->
     <div id="details">
         <button id="mobilePanelClose" onclick="closePanel()" aria-label="Close panel">&#x2715;</button>
         <div id="filterBar">
@@ -45,14 +48,84 @@
             <div class="place-card">
                 <h1>Devon Cultural Map</h1>
                 <p class="intro">Click a marker to explore a literary or cultural location.</p>
-                <div class="return-map" onclick="resetMapView()"><span class="return-icon">☚</span> Reset map view</div>
             </div>
         </div>
         <div id="heAttribution">
-            © Historic England 2026 · Contains Ordnance Survey data © Crown copyright and database right 2026
+            © Historic England 2026 · Contains Ordnance Survey data © Crown copyright and database right 2026 · Plague data: Büntgen &amp; Ginzler, EnviDat 2019 (ODbL)
         </div>
     </div>
+
+    <!-- Mobile footer -->
+    <div id="mobileFooter">
+        <button class="footer-btn" onclick="openModal('about')">About</button>
+        <button class="footer-btn" onclick="openModal('contact')">Contact</button>
+        <button class="footer-btn" onclick="openModal('references')">References</button>
+        <span class="footer-copy">© 2026</span>
+    </div>
 </div>
+
+<!-- Modal overlay -->
+<div id="modalOverlay" onclick="closeModal()"></div>
+
+<!-- Modal -->
+<div id="modal">
+    <div id="modalHeader">
+        <div id="modalTabs">
+            <button class="modal-tab active" onclick="switchTab('about')">About</button>
+            <button class="modal-tab" onclick="switchTab('references')">References</button>
+            <button class="modal-tab" onclick="switchTab('contact')">Contact</button>
+        </div>
+        <button id="modalClose" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div id="modalBody">
+
+        <div id="tab-about" class="modal-tab-content active">
+            <h2>Devon Cultural Map</h2>
+            <p>A narrative-led map of cultural, literary, heritage and dark tourism locations across the UK. Discover the stories behind the places — from plague outbreaks to shipwrecks, battlefields to literary landscapes.</p>
+            <p>Built as an independent project. Currently in prototype stage, expanding nationally.</p>
+            <h3>Categories</h3>
+            <ul>
+                <li><strong>Literary</strong> — authors, novels and places associated with British literature</li>
+                <li><strong>Military</strong> — battlefields, airfields, fortifications and military heritage</li>
+                <li><strong>Horrible History</strong> — executions, plague, crime and dark tourism locations</li>
+                <li><strong>Maritime</strong> — shipwrecks and coastal heritage</li>
+            </ul>
+        </div>
+
+        <div id="tab-references" class="modal-tab-content">
+            <h2>Data Sources &amp; Attribution</h2>
+
+            <h3>Historic England</h3>
+            <p>Battlefield polygons, protected wreck polygons and battlefield data are sourced from the National Heritage List for England (NHLE), published by Historic England under the Open Government Licence v3.</p>
+            <p class="attribution-block">© Historic England 2026. Contains Ordnance Survey data © Crown copyright and database right 2026.</p>
+            <a href="https://historicengland.org.uk/listing/the-list/data-downloads" target="_blank">Historic England Open Data Hub ↗</a>
+
+            <h3>Plague Data</h3>
+            <p>UK plague outbreak locations (1348–1670) are sourced from the digitised Biraben dataset published by Büntgen &amp; Ginzler (2019) via EnviDat, licensed under the Open Database Licence (ODbL).</p>
+            <p class="attribution-block">Büntgen, U. &amp; Ginzler, C. (2019). Digitizing historical plague. EnviDat. doi:10.16904/envidat.181</p>
+            <a href="https://www.envidat.ch/dataset/digitizing-historical-plague" target="_blank">EnviDat dataset page ↗</a>
+
+            <h3>Map Tiles</h3>
+            <p>Map tiles provided by OpenStreetMap contributors, licensed under the Open Database Licence (ODbL).</p>
+            <p class="attribution-block">© OpenStreetMap contributors</p>
+            <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap copyright ↗</a>
+
+            <h3>Wikidata</h3>
+            <p>Place descriptions and Wikipedia links sourced from Wikidata, licensed under CC0 (no restrictions).</p>
+            <a href="https://www.wikidata.org" target="_blank">Wikidata ↗</a>
+        </div>
+
+        <div id="tab-contact" class="modal-tab-content">
+            <h2>Contact</h2>
+            <p>For partnership and advertising enquiries, or to suggest a location for the map:</p>
+            <a href="mailto:hello@devonculturalmap.co.uk" class="contact-link">hello@devonculturalmap.co.uk</a>
+            <h3>Partner with us</h3>
+            <p>We offer local partner listings for businesses, heritage organisations, accommodation providers and tour operators. Reach visitors actively exploring cultural and heritage locations.</p>
+        </div>
+
+    </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
