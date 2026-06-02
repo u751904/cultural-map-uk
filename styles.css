@@ -30,10 +30,13 @@ body {
    CLUSTER CIRCLES
    ==================== */
 
-.cluster-circle {
+.cluster-circle,
+.cluster-circle-blue,
+.cluster-circle-purple,
+.cluster-circle-red,
+.cluster-circle-teal {
     width: 36px;
     height: 36px;
-    background: #082b5f;
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -45,6 +48,12 @@ body {
     border: 2px solid #fff;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
+
+.cluster-circle        { background: #082b5f; }
+.cluster-circle-blue   { background: #1a4a8a; }
+.cluster-circle-purple { background: #5a2880; }
+.cluster-circle-red    { background: #8a2020; }
+.cluster-circle-teal   { background: #1a6a7a; }
 
 /* ====================
    MOBILE OVERLAY ELEMENTS
