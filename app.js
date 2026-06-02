@@ -186,6 +186,7 @@ function showDetails(row) {
         ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>"
         : "";
 
+    openPanel();
     details.innerHTML =
         "<div class='place-card'>" +
         "<h1>" + escapeHtml(cfg.label) + ": " + escapeHtml(title) + "</h1>" +
@@ -466,6 +467,21 @@ function resetMapView() {
         '<circle cx="340" cy="92" r="3" fill="#082b5f" opacity="0.3"/>' +
         '</svg>' +
         '</div>';
+}
+
+
+// ====================
+// MOBILE PANEL
+// ====================
+
+function openPanel() {
+    var detailsEl = document.getElementById("details");
+    if (detailsEl) detailsEl.classList.remove("panel-hidden");
+}
+
+function closePanel() {
+    var detailsEl = document.getElementById("details");
+    if (detailsEl) detailsEl.classList.add("panel-hidden");
 }
 
 // ====================
