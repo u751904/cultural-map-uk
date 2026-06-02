@@ -502,16 +502,39 @@ function closePanel() {
 
 function applyFilter(selectedCategory) {
     currentFilter = selectedCategory;
-    document.getElementById("categoryFilter").value = selectedCategory;
+var label = document.getElementById("categoryFilterLabel");
+if (label) label.textContent = selectedCategory;
+document.querySelectorAll(".filter-option").forEach(function(opt) {
+    opt.classList.toggle("selected", opt.textContent === selectedCategory);
+});
     document.getElementById("categoryFilterDesktop").value = selectedCategory;
     // On mobile, expand map when a specific category is selected, restore when All
     if (window.innerWidth <= 768) {
         var layout = document.getElementById("layout");
-        if (selectedCategory !== "All") {
-            layout.classList.add("filter-active");
-        } else {
-            layout.classList.remove("filter-active");
-        }
+    if (selectedCategory !== "All") {
+    layout.classList.add("filter-active");
+} else {
+    layout.classList.remove("filter-active");
+}
+function toggleFilterDropdown() {
+    var dd = document.getElementById("categoryFilterDropdown");
+    dd.classList.toggle("open");
+}
+
+function selectFilterOption(value) {
+    document.getElementById("categoryFilterDropdown").classList.remove("open");
+    applyFilter(value);
+}
+
+// Close dropdown if user taps elsewhere on the map
+document.addEventListener("click", function(e) {
+    var bar = document.getElementById("mobileFilterBar");
+    if (bar && !bar.contains(e.target)) {
+        var dd = document.getElementById("categoryFilterDropdown");
+        if (dd) dd.classList.remove("open");
+    }
+});
+        setTimeout(function() { map.invalidateSize(); }, 50);
     }
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
