@@ -55,6 +55,35 @@ var navySingleIcon = L.divIcon({
     iconAnchor: [18, 18]
 });
 
+
+// ====================
+// SHIP MARKER ICON
+// ====================
+
+function makeShipIcon(size) {
+    var w = size;
+    var h = Math.round(size * 1.25);
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 100 125">' +
+        '<path d="M8,60 Q10,70 50,72 Q86,70 92,60 Q92,50 88,46 Q74,52 50,54 Q26,52 12,46 Q8,50 8,60 Z" fill="#082b5f"/>' +
+        '<path d="M8,60 L8,48 L20,48 L20,54 Q14,52 8,60 Z" fill="#082b5f"/>' +
+        '<rect x="47" y="4" width="3.5" height="56" fill="#082b5f"/>' +
+        '<rect x="20" y="8" width="60" height="2.5" rx="1" fill="#082b5f"/>' +
+        '<rect x="18" y="36" width="64" height="2.5" rx="1" fill="#082b5f"/>' +
+        '<path d="M20,10 Q26,24 22,36 L78,36 Q74,24 80,10 Z" fill="#082b5f"/>' +
+        '<rect x="44" y="1" width="10" height="5" rx="1" fill="#082b5f"/>' +
+        '<polygon points="47,1 47,-6 57,-2" fill="#082b5f"/>' +
+        '</svg>';
+    return L.divIcon({
+        html: svg,
+        className: '',
+        iconSize: [w, h],
+        iconAnchor: [w / 2, h]
+    });
+}
+
+var isMobile = window.innerWidth <= 768;
+var shipMarkerIcon = makeShipIcon(isMobile ? 24 : 32);
+
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
@@ -263,7 +292,7 @@ var layerConfig = [
             color: "#1a4a8a",
             weight: 2,
             fillColor: "#1a4a8a",
-            fillOpacity: 0.15,
+            fillOpacity: 0.12,
             dashArray: "4 3"
         },
         popup: function(p) {
@@ -271,7 +300,8 @@ var layerConfig = [
                 (p.DesigDate ? "<br>Designated: " + p.DesigDate.substring(0, 4) : "") +
                 (p.area_ha ? "<br>Area: " + Math.round(p.area_ha) + " ha" : "") +
                 (p.hyperlink ? "<br><a href='" + p.hyperlink + "' target='_blank'>Historic England record &#x2197;</a>" : "");
-        }
+        },
+        markerFromCentroid: true
     }
 ];
 
@@ -290,6 +320,32 @@ layerConfig.forEach(function(cfg) {
             });
             layer.addTo(map);
             geoJsonLayers.push({ layer: layer, categories: cfg.categories });
+
+            // Add ship markers at centroid of each wreck polygon
+            if (cfg.markerFromCentroid) {
+                var markerLayer = L.featureGroup();
+                data.features.forEach(function(feature) {
+                    var coords = [];
+                    var geom = feature.geometry;
+                    if (geom.type === 'Polygon') {
+                        coords = geom.coordinates[0];
+                    } else if (geom.type === 'MultiPolygon') {
+                        geom.coordinates.forEach(function(poly) { coords = coords.concat(poly[0]); });
+                    }
+                    if (coords.length) {
+                        var lngSum = 0, latSum = 0;
+                        coords.forEach(function(c) { lngSum += c[0]; latSum += c[1]; });
+                        var centLat = latSum / coords.length;
+                        var centLng = lngSum / coords.length;
+                        var p = feature.properties;
+                        var marker = L.marker([centLat, centLng], { icon: shipMarkerIcon })
+                            .bindPopup(cfg.popup(p));
+                        markerLayer.addLayer(marker);
+                    }
+                });
+                markerLayer.addTo(map);
+                geoJsonLayers.push({ layer: markerLayer, categories: cfg.categories });
+            }
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
 });
