@@ -77,7 +77,7 @@ function makeShipIcon(size) {
         html: svg,
         className: '',
         iconSize: [w, h],
-        iconAnchor: [w / 2, h]
+        iconAnchor: [w / 2, h / 2]
     });
 }
 
