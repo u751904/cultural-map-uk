@@ -8,26 +8,26 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 <div id="layout">
     <div id="map"></div>
 
     <!-- Mobile filter bar overlaid on map -->
-<div id="mobileFilterBar">
-    <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
-        <span id="categoryFilterLabel">All Categories</span>
-        <span id="categoryFilterChevron">&#8693;</span>
+    <div id="mobileFilterBar">
+        <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
+            <span id="categoryFilterLabel">All Categories</span>
+            <span id="categoryFilterChevron">&#8693;</span>
+        </div>
+        <div id="categoryFilterDropdown">
+            <div class="filter-option" onclick="selectFilterOption('All')">All Categories</div>
+            <div class="filter-option" onclick="selectFilterOption('Horrible History')">Horrible History</div>
+            <div class="filter-option" onclick="selectFilterOption('Literary')">Literary</div>
+            <div class="filter-option" onclick="selectFilterOption('Maritime')">Maritime</div>
+            <div class="filter-option" onclick="selectFilterOption('Military')">Military</div>
+        </div>
     </div>
-    <div id="categoryFilterDropdown">
-        <div class="filter-option" onclick="selectFilterOption('All')">All Categories</div>
-        <div class="filter-option" onclick="selectFilterOption('Horrible History')">Horrible History</div>
-        <div class="filter-option" onclick="selectFilterOption('Literary')">Literary</div>
-        <div class="filter-option" onclick="selectFilterOption('Maritime')">Maritime</div>
-        <div class="filter-option" onclick="selectFilterOption('Military')">Military</div>
-    </div>
-</div>
 
     <div id="mobileHomeBtn" onclick="resetMapView(); closePanel();">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -132,6 +132,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
