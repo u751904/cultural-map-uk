@@ -31,13 +31,22 @@ function getMarkerIcon(category) {
 }
 
 // Marker cluster group — dark navy circles, clusters from zoom 1 upward
+var categoryClusterColours = {
+    "Literary":         "cluster-circle-blue",
+    "Horrible History": "cluster-circle-purple",
+    "Military":         "cluster-circle-red",
+    "Maritime":         "cluster-circle-teal",
+    "All":              "cluster-circle"
+};
+
 var markerCluster = L.markerClusterGroup({
     maxClusterRadius: 50,
     disableClusteringAtZoom: 16,
     iconCreateFunction: function(cluster) {
         var count = cluster.getChildCount();
+        var cls = categoryClusterColours[currentFilter] || "cluster-circle";
         return L.divIcon({
-            html: '<div class="cluster-circle">' + count + '</div>',
+            html: '<div class="' + cls + '">' + count + '</div>',
             className: '',
             iconSize: [36, 36],
             iconAnchor: [18, 18]
@@ -63,29 +72,37 @@ var navySingleIcon = L.divIcon({
 // SHIP MARKER ICON
 // ====================
 
-function makeShipIcon(size) {
-    var w = size;
-    var h = Math.round(size * 1.25);
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 100 125">' +
-        '<path d="M8,60 Q10,70 50,72 Q86,70 92,60 Q92,50 88,46 Q74,52 50,54 Q26,52 12,46 Q8,50 8,60 Z" fill="#082b5f"/>' +
-        '<path d="M8,60 L8,48 L20,48 L20,54 Q14,52 8,60 Z" fill="#082b5f"/>' +
-        '<rect x="47" y="4" width="3.5" height="56" fill="#082b5f"/>' +
-        '<rect x="20" y="8" width="60" height="2.5" rx="1" fill="#082b5f"/>' +
-        '<rect x="18" y="36" width="64" height="2.5" rx="1" fill="#082b5f"/>' +
-        '<path d="M20,10 Q26,24 22,36 L78,36 Q74,24 80,10 Z" fill="#082b5f"/>' +
-        '<rect x="44" y="1" width="10" height="5" rx="1" fill="#082b5f"/>' +
-        '<polygon points="47,1 47,-6 57,-2" fill="#082b5f"/>' +
+function makeAnchorIcon(size) {
+    var s = size;
+    var sw = Math.round(s * 0.13);   // stroke width scales with size
+    var osw = Math.round(sw * 2.2);  // outline stroke
+    var r = Math.round(s * 0.13);    // ring radius
+    var half = Math.round(s * 0.5);
+    // Anchor proportions relative to size
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + s + '" height="' + s + '" viewBox="0 0 40 40">' +
+        // navy outline layer
+        '<circle cx="20" cy="7" r="4" fill="none" stroke="#082b5f" stroke-width="' + osw + '"/>' +
+        '<line x1="20" y1="11" x2="20" y2="34" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
+        '<line x1="8" y1="18" x2="32" y2="18" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
+        '<path d="M8,34 Q8,40 14,40 Q20,40 20,34" fill="none" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
+        '<path d="M32,34 Q32,40 26,40 Q20,40 20,34" fill="none" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
+        // white foreground layer
+        '<circle cx="20" cy="7" r="4" fill="none" stroke="white" stroke-width="' + sw + '"/>' +
+        '<line x1="20" y1="11" x2="20" y2="34" stroke="white" stroke-width="' + sw + '" stroke-linecap="round"/>' +
+        '<line x1="8" y1="18" x2="32" y2="18" stroke="white" stroke-width="' + sw + '" stroke-linecap="round"/>' +
+        '<path d="M8,34 Q8,40 14,40 Q20,40 20,34" fill="none" stroke="white" stroke-width="' + sw + '" stroke-linecap="round"/>' +
+        '<path d="M32,34 Q32,40 26,40 Q20,40 20,34" fill="none" stroke="white" stroke-width="' + sw + '" stroke-linecap="round"/>' +
         '</svg>';
     return L.divIcon({
         html: svg,
         className: '',
-        iconSize: [w, h],
-        iconAnchor: [w / 2, h / 2]
+        iconSize: [s, s],
+        iconAnchor: [s / 2, s / 2]
     });
 }
 
 var isMobile = window.innerWidth <= 768;
-var shipMarkerIcon = makeShipIcon(isMobile ? 24 : 32);
+var shipMarkerIcon = makeAnchorIcon(isMobile ? 24 : 32);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
