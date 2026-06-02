@@ -682,5 +682,73 @@ body {
 }
 
 #layout.filter-active #details {
+
     display: none;
+}
+/* ====================
+   CUSTOM MOBILE DROPDOWN
+   ==================== */
+
+#categoryFilterCustom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #fffdf8;
+    border: 2px solid #082b5f;
+    border-radius: 22px;
+    color: #082b5f;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 180px;
+    justify-content: space-between;
+}
+
+#categoryFilterDropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #082b5f;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 200px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 1001;
+}
+
+#categoryFilterDropdown.open {
+    display: block;
+}
+
+.filter-option {
+    padding: 14px 20px;
+    color: rgba(255,255,255,0.85);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filter-option:hover {
+    background: rgba(255,255,255,0.12);
+    color: white;
+}
+
+.filter-option.selected {
+    color: white;
+    font-weight: 700;
+}
+
+/* Fix map not expanding when panel hidden on mobile */
+@media (max-width: 768px) {
+    #details.panel-hidden {
+        display: none;
+    }
+
+    #layout:not(.filter-active) #map {
+        height: calc(52vh - env(safe-area-inset-top));
+    }
 }
