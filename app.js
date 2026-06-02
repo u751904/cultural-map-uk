@@ -538,7 +538,7 @@ function applyFilter(selectedCategory) {
 
     // Update mobile custom dropdown label
     var label = document.getElementById("categoryFilterLabel");
-    if (label) label.textContent = selectedCategory;
+    if (label) label.textContent = selectedCategory === "All" ? "All Categories" : selectedCategory;
     document.querySelectorAll(".filter-option").forEach(function(opt) {
         opt.classList.toggle("selected", opt.textContent.trim() === selectedCategory);
     });
