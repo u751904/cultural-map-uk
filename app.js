@@ -6,27 +6,32 @@ var map = L.map('map').setView([50.72, -3.53], 9);
 var details = document.getElementById("detailsContent");
 var allMarkers = [];
 
-var blueMarkerIcon = L.icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-});
+// Teardrop SVG icons — colours match their cluster circles exactly
+function makeTearDrop(colour) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">' +
+        '<path d="M12.5 0 C5.6 0 0 5.6 0 12.5 C0 22 12.5 41 12.5 41 C12.5 41 25 22 25 12.5 C25 5.6 19.4 0 12.5 0 Z"' +
+        ' fill="' + colour + '" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>' +
+        '<circle cx="12.5" cy="12.5" r="5" fill="rgba(255,255,255,0.4)"/>' +
+        '</svg>';
+    return L.divIcon({
+        html: svg,
+        className: '',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+}
 
-var redMarkerIcon = L.icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-});
-
-var violetMarkerIcon = L.icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-});
+// Match teardrop colours to cluster circle colours
+var blueMarkerIcon   = makeTearDrop("#1a4a8a");  // Literary — matches cluster-circle-blue
+var redMarkerIcon    = makeTearDrop("#8a2020");  // Military — matches cluster-circle-red
+var violetMarkerIcon = makeTearDrop("#5a2880");  // Horrible History — matches cluster-circle-purple
+var tealMarkerIcon   = makeTearDrop("#1a6a7a");  // Maritime — matches cluster-circle-teal
 
 function getMarkerIcon(category) {
     if (category === "Military") return redMarkerIcon;
     if (category === "Horrible History") return violetMarkerIcon;
+    if (category === "Maritime") return tealMarkerIcon;
     return blueMarkerIcon;
 }
 
@@ -102,7 +107,7 @@ function makeAnchorIcon(size) {
 }
 
 var isMobile = window.innerWidth <= 768;
-var shipMarkerIcon = makeAnchorIcon(isMobile ? 24 : 32);
+var shipMarkerIcon = makeAnchorIcon(isMobile ? 18 : 22);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
