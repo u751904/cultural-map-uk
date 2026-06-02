@@ -547,14 +547,11 @@ function applyFilter(selectedCategory) {
     var desktopSelect = document.getElementById("categoryFilterDesktop");
     if (desktopSelect) desktopSelect.value = selectedCategory;
 
-    // On mobile, expand map when a specific category is selected, restore when All
+    // On mobile, always expand map to full height when filter is active
     if (window.innerWidth <= 768) {
         var layout = document.getElementById("layout");
-        if (selectedCategory !== "All") {
-            layout.classList.add("filter-active");
-        } else {
-            layout.classList.remove("filter-active");
-        }
+        layout.classList.add("filter-active");
+        closePanel();
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
 
@@ -595,6 +592,10 @@ document.getElementById("categoryFilterDesktop").addEventListener("change", func
 // Render signpost on first load only if user hasn't already clicked a marker
 window.addEventListener('load', function() {
     if (!markerClicked) {
+        // On mobile, make sure the panel is visible for the signpost
+        if (window.innerWidth <= 768) {
+            openPanel();
+        }
         resetMapView();
     }
 });
