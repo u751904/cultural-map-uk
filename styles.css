@@ -66,6 +66,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 
@@ -92,13 +93,25 @@ body {
     margin-bottom: 18px;
 }
 
-#categoryFilterDesktop {
-    padding: 9px 12px;
-    border: 1px solid #0b4fa3;
-    border-radius: 6px;
+#categoryFilterDesktop,
+#categoryFilter {
+    padding: 11px 16px;
+    border: 2px solid #082b5f;
+    border-radius: 8px;
     background: #fffdf8;
-    color: #073f88;
-    font-size: 15px;
+    color: #082b5f;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    max-width: 260px;
+}
+
+#categoryFilterDesktop:focus,
+#categoryFilter:focus {
+    outline: none;
+    border-color: #1a4a8a;
+    box-shadow: 0 0 0 3px rgba(8,43,95,0.15);
 }
 
 /* ====================
