@@ -77,26 +77,11 @@ var navySingleIcon = L.divIcon({
 // SHIP MARKER ICON
 // ====================
 
-function makeAnchorIcon(size) {
+function makeWreckIcon(size) {
     var s = size;
-    var sw = Math.round(s * 0.13);   // stroke width scales with size
-    var osw = Math.round(sw * 2.2);  // outline stroke
-    var r = Math.round(s * 0.13);    // ring radius
-    var half = Math.round(s * 0.5);
-    // Anchor proportions relative to size
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + s + '" height="' + s + '" viewBox="0 0 40 40">' +
-        // navy outline layer
-        '<circle cx="20" cy="7" r="4" fill="none" stroke="#3d1a00" stroke-width="' + osw + '"/>' +
-        '<line x1="20" y1="11" x2="20" y2="34" stroke="#3d1a00" stroke-width="' + osw + '" stroke-linecap="round"/>' +
-        '<line x1="8" y1="18" x2="32" y2="18" stroke="#3d1a00" stroke-width="' + osw + '" stroke-linecap="round"/>' +
-        '<path d="M8,34 Q8,40 14,40 Q20,40 20,34" fill="none" stroke="#3d1a00" stroke-width="' + osw + '" stroke-linecap="round"/>' +
-        '<path d="M32,34 Q32,40 26,40 Q20,40 20,34" fill="none" stroke="#3d1a00" stroke-width="' + osw + '" stroke-linecap="round"/>' +
-        // white foreground layer
-        '<circle cx="20" cy="7" r="4" fill="none" stroke="#c45e1a" stroke-width="' + sw + '"/>' +
-        '<line x1="20" y1="11" x2="20" y2="34" stroke="#c45e1a" stroke-width="' + sw + '" stroke-linecap="round"/>' +
-        '<line x1="8" y1="18" x2="32" y2="18" stroke="#c45e1a" stroke-width="' + sw + '" stroke-linecap="round"/>' +
-        '<path d="M8,34 Q8,40 14,40 Q20,40 20,34" fill="none" stroke="#c45e1a" stroke-width="' + sw + '" stroke-linecap="round"/>' +
-        '<path d="M32,34 Q32,40 26,40 Q20,40 20,34" fill="none" stroke="#c45e1a" stroke-width="' + sw + '" stroke-linecap="round"/>' +
+        '<line x1="6" y1="6" x2="34" y2="34" stroke="#e07b39" stroke-width="8" stroke-linecap="round"/>' +
+        '<line x1="34" y1="6" x2="6" y2="34" stroke="#e07b39" stroke-width="8" stroke-linecap="round"/>' +
         '</svg>';
     return L.divIcon({
         html: svg,
@@ -107,7 +92,7 @@ function makeAnchorIcon(size) {
 }
 
 var isMobile = window.innerWidth <= 768;
-var shipMarkerIcon = makeAnchorIcon(isMobile ? 18 : 22);
+var shipMarkerIcon = makeWreckIcon(isMobile ? 18 : 22);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -546,7 +531,7 @@ function applyFilter(selectedCategory) {
     var newAnchorSize = (selectedCategory === "Maritime") 
         ? (isMobile ? 24 : 28)
         : (isMobile ? 18 : 22);
-    shipMarkerIcon = makeAnchorIcon(newAnchorSize);
+    shipMarkerIcon = makeWreckIcon(newAnchorSize);
 
     // Re-apply anchor icon to all wreck markers
     geoJsonLayers.forEach(function(item) {
