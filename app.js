@@ -437,3 +437,8 @@ function applyFilter(selectedCategory) {
 
 document.getElementById("categoryFilter").addEventListener("change", function() { applyFilter(this.value); });
 document.getElementById("categoryFilterDesktop").addEventListener("change", function() { applyFilter(this.value); });
+
+// Call resetMapView on first load to render the signpost illustration
+window.addEventListener('load', function() {
+    resetMapView();
+});
