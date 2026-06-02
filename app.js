@@ -246,7 +246,7 @@ function showDetails(row) {
         "<div class='advertise-bar'>Could this be your business? <a href='#'>Advertise here</a></div>" +
         "</div>" +
 
-        "<div class='project-footer'>About the Devon Cultural Map</div>" +
+        "<div class='project-footer'><a href='#' onclick='openModal(\"about\"); return false;'>About the Devon Cultural Map</a></div>" +
         "</div>";
 }
 
@@ -542,4 +542,40 @@ window.addEventListener('load', function() {
     if (!markerClicked) {
         resetMapView();
     }
+});
+
+// ====================
+// MODAL
+// ====================
+
+function openModal(tab) {
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('modalOverlay').classList.add('open');
+    if (tab) switchTab(tab);
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function switchTab(name) {
+    document.querySelectorAll('.modal-tab').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.modal-tab-content').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    var tab = document.getElementById('tab-' + name);
+    if (tab) tab.classList.add('active');
+    document.querySelectorAll('.modal-tab').forEach(function(btn) {
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(name) !== -1) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
 });
