@@ -478,7 +478,7 @@ function resetMapView() {
         '</div>';
 
     // On mobile, hide panel when returning to map so map fills screen
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 768 && markerClicked) {
         var layout = document.getElementById("layout");
         layout.classList.remove("filter-active");
         closePanel();
@@ -592,11 +592,13 @@ document.getElementById("categoryFilterDesktop").addEventListener("change", func
 // Render signpost on first load only if user hasn't already clicked a marker
 window.addEventListener('load', function() {
     if (!markerClicked) {
-        // On mobile, make sure the panel is visible for the signpost
-        if (window.innerWidth <= 768) {
-            openPanel();
-        }
         resetMapView();
+        // On mobile, show panel AFTER resetMapView (which hides it) so signpost is visible
+        if (window.innerWidth <= 768) {
+            var detailsEl = document.getElementById("details");
+            if (detailsEl) detailsEl.classList.remove("panel-hidden");
+            setTimeout(function() { map.invalidateSize(); }, 50);
+        }
     }
 });
 
