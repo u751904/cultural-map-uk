@@ -86,7 +86,7 @@ function makeAnchorIcon(size) {
     // Anchor proportions relative to size
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + s + '" height="' + s + '" viewBox="0 0 40 40">' +
         // navy outline layer
-        '<circle cx="20" cy="7" r="4" fill="none" stroke="#082b5f" stroke-width="' + osw + '"/>' +
+        '<circle cx="20" cy="7" r="4" fill="none" stroke="#041830" stroke-width="' + osw + '"/>' +
         '<line x1="20" y1="11" x2="20" y2="34" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
         '<line x1="8" y1="18" x2="32" y2="18" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
         '<path d="M8,34 Q8,40 14,40 Q20,40 20,34" fill="none" stroke="#082b5f" stroke-width="' + osw + '" stroke-linecap="round"/>' +
@@ -372,7 +372,7 @@ layerConfig.forEach(function(cfg) {
                     }
                 });
                 markerLayer.addTo(map);
-                geoJsonLayers.push({ layer: markerLayer, categories: cfg.categories });
+                geoJsonLayers.push({ layer: markerLayer, categories: cfg.categories, isWreckMarkers: true });
             }
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
@@ -519,6 +519,15 @@ function applyFilter(selectedCategory) {
     currentFilter = selectedCategory;
     document.getElementById("categoryFilter").value = selectedCategory;
     document.getElementById("categoryFilterDesktop").value = selectedCategory;
+    // On mobile, expand map when a specific category is selected, restore when All
+    if (window.innerWidth <= 768) {
+        var layout = document.getElementById("layout");
+        if (selectedCategory !== "All") {
+            layout.classList.add("filter-active");
+        } else {
+            layout.classList.remove("filter-active");
+        }
+    }
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
@@ -532,6 +541,21 @@ function applyFilter(selectedCategory) {
     });
     // Show/hide GeoJSON layers based on category
     updateGeoJsonVisibility(selectedCategory);
+
+    // Swap anchor size — bigger/darker when Maritime selected, smaller when All
+    var newAnchorSize = (selectedCategory === "Maritime") 
+        ? (isMobile ? 24 : 28)
+        : (isMobile ? 18 : 22);
+    shipMarkerIcon = makeAnchorIcon(newAnchorSize);
+
+    // Re-apply anchor icon to all wreck markers
+    geoJsonLayers.forEach(function(item) {
+        if (item.isWreckMarkers) {
+            item.layer.eachLayer(function(marker) {
+                if (marker.setIcon) marker.setIcon(shipMarkerIcon);
+            });
+        }
+    });
 }
 
 document.getElementById("categoryFilter").addEventListener("change", function() { applyFilter(this.value); });
