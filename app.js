@@ -48,6 +48,9 @@ var markerCluster = L.markerClusterGroup({
 // Track current filter to control single marker icon style
 var currentFilter = "All";
 
+// Track whether user has clicked a marker — prevents load event overwriting panel
+var markerClicked = false;
+
 var navySingleIcon = L.divIcon({
     html: '<div class="cluster-circle">1</div>',
     className: '',
@@ -186,6 +189,7 @@ function showDetails(row) {
         ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>"
         : "";
 
+    markerClicked = true;
     openPanel();
     details.innerHTML =
         "<div class='place-card'>" +
@@ -511,7 +515,9 @@ function applyFilter(selectedCategory) {
 document.getElementById("categoryFilter").addEventListener("change", function() { applyFilter(this.value); });
 document.getElementById("categoryFilterDesktop").addEventListener("change", function() { applyFilter(this.value); });
 
-// Call resetMapView on first load to render the signpost illustration
+// Render signpost on first load only if user hasn't already clicked a marker
 window.addEventListener('load', function() {
-    resetMapView();
+    if (!markerClicked) {
+        resetMapView();
+    }
 });
