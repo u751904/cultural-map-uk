@@ -261,7 +261,6 @@ function loadCsv(fileObj) {
                 if (!isNaN(lat) && !isNaN(lng)) {
                     var title = row.Location_name || "Cultural location";
                     var category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
-                    var icon = getMarkerIcon(category);
                     var marker = L.marker([lat, lng], { icon: navySingleIcon })
                         .bindPopup(escapeHtml(title))
                         .on("click", function() { showDetails(row); });
@@ -276,11 +275,11 @@ function loadCsv(fileObj) {
 
 csvFiles.forEach(loadCsv);
 map.addLayer(markerCluster);
+
 // ====================
 // GEOJSON LAYER SYSTEM
 // ====================
 
-// Each layer: file, style, which filter categories show it, popup builder
 var layerConfig = [
     {
         file: "battlefields.geojson",
@@ -318,7 +317,6 @@ var layerConfig = [
     }
 ];
 
-// Load all GeoJSON layers
 var geoJsonLayers = [];
 
 layerConfig.forEach(function(cfg) {
@@ -334,7 +332,6 @@ layerConfig.forEach(function(cfg) {
             layer.addTo(map);
             geoJsonLayers.push({ layer: layer, categories: cfg.categories });
 
-            // Add ship markers at centroid of each wreck polygon
             if (cfg.markerFromCentroid) {
                 var markerLayer = L.featureGroup();
                 data.features.forEach(function(feature) {
@@ -409,7 +406,7 @@ function resetMapView() {
         '<ellipse cx="200" cy="352" rx="20" ry="12" fill="#8aac58"/>' +
         '<ellipse cx="218" cy="349" rx="17" ry="11" fill="#9aba6a"/>' +
         '<rect x="206" y="360" width="6" height="12" rx="2" fill="#6a5030"/>' +
-        '<path d="M30,370 Q60,355 90,365 Q120,375 150,360 Q180,348 210,362 Q240,372 270,358 Q300,346 330,360 Q360,370 390,355 Q420,342 450,358 Q480,370 510,355 Q540,343 570,358 Q600,368 630,355 Q655,345 680,358 L680,440 L0,440 Z" fill="#b8a45e"/>' +
+        '<path d="M30,370 Q60,355 90,365 Q120,375 150,360 Q180,348 210,362 Q240,372 270,358 Q300,346 330,360 Q360,370 390,355 Q420,342 450,158 Q480,370 510,355 Q540,343 570,358 Q600,368 630,355 Q655,345 680,158 L680,440 L0,440 Z" fill="#b8a45e"/>' +
         '<path d="M0,390 Q40,378 80,385 Q120,392 160,380 Q200,370 240,382 Q280,390 320,378 Q360,368 400,380 Q440,390 480,378 Q520,368 560,380 Q600,388 640,376 Q660,372 680,378 L680,440 L0,440 Z" fill="#a89050"/>' +
         '<line x1="48" y1="362" x2="44" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
         '<line x1="48" y1="362" x2="52" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
@@ -479,6 +476,14 @@ function resetMapView() {
         '<circle cx="340" cy="92" r="3" fill="#082b5f" opacity="0.3"/>' +
         '</svg>' +
         '</div>';
+
+    // On mobile, hide panel when returning to map so map fills screen
+    if (window.innerWidth <= 768) {
+        var layout = document.getElementById("layout");
+        layout.classList.remove("filter-active");
+        closePanel();
+        setTimeout(function() { map.invalidateSize(); }, 50);
+    }
 }
 
 
@@ -489,44 +494,32 @@ function resetMapView() {
 function openPanel() {
     var detailsEl = document.getElementById("details");
     if (detailsEl) detailsEl.classList.remove("panel-hidden");
+    setTimeout(function() { map.invalidateSize(); }, 50);
 }
 
 function closePanel() {
     var detailsEl = document.getElementById("details");
     if (detailsEl) detailsEl.classList.add("panel-hidden");
+    setTimeout(function() { map.invalidateSize(); }, 50);
 }
 
+
 // ====================
-// CATEGORY FILTER
+// CUSTOM DROPDOWN (MOBILE)
 // ====================
 
-function applyFilter(selectedCategory) {
-    currentFilter = selectedCategory;
-var label = document.getElementById("categoryFilterLabel");
-if (label) label.textContent = selectedCategory;
-document.querySelectorAll(".filter-option").forEach(function(opt) {
-    opt.classList.toggle("selected", opt.textContent === selectedCategory);
-});
-    document.getElementById("categoryFilterDesktop").value = selectedCategory;
-    // On mobile, expand map when a specific category is selected, restore when All
-    if (window.innerWidth <= 768) {
-        var layout = document.getElementById("layout");
-    if (selectedCategory !== "All") {
-    layout.classList.add("filter-active");
-} else {
-    layout.classList.remove("filter-active");
-}
 function toggleFilterDropdown() {
     var dd = document.getElementById("categoryFilterDropdown");
-    dd.classList.toggle("open");
+    if (dd) dd.classList.toggle("open");
 }
 
 function selectFilterOption(value) {
-    document.getElementById("categoryFilterDropdown").classList.remove("open");
+    var dd = document.getElementById("categoryFilterDropdown");
+    if (dd) dd.classList.remove("open");
     applyFilter(value);
 }
 
-// Close dropdown if user taps elsewhere on the map
+// Close dropdown if user taps anywhere outside it
 document.addEventListener("click", function(e) {
     var bar = document.getElementById("mobileFilterBar");
     if (bar && !bar.contains(e.target)) {
@@ -534,8 +527,37 @@ document.addEventListener("click", function(e) {
         if (dd) dd.classList.remove("open");
     }
 });
+
+
+// ====================
+// CATEGORY FILTER
+// ====================
+
+function applyFilter(selectedCategory) {
+    currentFilter = selectedCategory;
+
+    // Update mobile custom dropdown label
+    var label = document.getElementById("categoryFilterLabel");
+    if (label) label.textContent = selectedCategory;
+    document.querySelectorAll(".filter-option").forEach(function(opt) {
+        opt.classList.toggle("selected", opt.textContent.trim() === selectedCategory);
+    });
+
+    // Update desktop select
+    var desktopSelect = document.getElementById("categoryFilterDesktop");
+    if (desktopSelect) desktopSelect.value = selectedCategory;
+
+    // On mobile, expand map when a specific category is selected, restore when All
+    if (window.innerWidth <= 768) {
+        var layout = document.getElementById("layout");
+        if (selectedCategory !== "All") {
+            layout.classList.add("filter-active");
+        } else {
+            layout.classList.remove("filter-active");
+        }
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
+
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
@@ -547,16 +569,15 @@ document.addEventListener("click", function(e) {
             markerCluster.addLayer(marker);
         }
     });
-    // Show/hide GeoJSON layers based on category
+
     updateGeoJsonVisibility(selectedCategory);
 
     // Swap anchor size — bigger/darker when Maritime selected, smaller when All
-    var newAnchorSize = (selectedCategory === "Maritime") 
+    var newAnchorSize = (selectedCategory === "Maritime")
         ? (isMobile ? 24 : 28)
         : (isMobile ? 18 : 22);
     shipMarkerIcon = makeWreckIcon(newAnchorSize);
 
-    // Re-apply anchor icon to all wreck markers
     geoJsonLayers.forEach(function(item) {
         if (item.isWreckMarkers) {
             item.layer.eachLayer(function(marker) {
@@ -566,8 +587,10 @@ document.addEventListener("click", function(e) {
     });
 }
 
-document.getElementById("categoryFilter").addEventListener("change", function() { applyFilter(this.value); });
-document.getElementById("categoryFilterDesktop").addEventListener("change", function() { applyFilter(this.value); });
+// Desktop select listener
+document.getElementById("categoryFilterDesktop").addEventListener("change", function() {
+    applyFilter(this.value);
+});
 
 // Render signpost on first load only if user hasn't already clicked a marker
 window.addEventListener('load', function() {
@@ -575,6 +598,7 @@ window.addEventListener('load', function() {
         resetMapView();
     }
 });
+
 
 // ====================
 // MODAL
