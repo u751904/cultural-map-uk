@@ -28,25 +28,21 @@ var redMarkerIcon    = makeTearDrop("#8a2020");  // Military — matches cluster
 var violetMarkerIcon = makeTearDrop("#5a2880");  // Horrible History — matches cluster-circle-purple
 var tealMarkerIcon   = makeTearDrop("#1a6a7a");  // Maritime — matches cluster-circle-teal
 
-// Tree marker icon for Ancient Landscape
+// Tree marker icon for Ancient Landscape — three-circle broadleaf style
 function makeTreeIcon() {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">' +
-        // Trunk
-        '<rect x="11" y="26" width="6" height="10" rx="1.5" fill="#6a4a1a"/>' +
-        // Lower canopy
-        '<ellipse cx="14" cy="22" rx="13" ry="10" fill="#2d6e2d"/>' +
-        // Middle canopy
-        '<ellipse cx="14" cy="15" rx="10" ry="9" fill="#3a8a3a"/>' +
-        // Top canopy
-        '<ellipse cx="14" cy="8" rx="7" ry="7" fill="#4aaa4a"/>' +
-        // Highlight
-        '<ellipse cx="11" cy="6" rx="3" ry="2.5" fill="rgba(255,255,255,0.15)"/>' +
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="38" viewBox="0 0 36 38">' +
+        '<polygon points="16,38 20,38 21,28 22,24 18,21 14,24 15,28" fill="#3d2008"/>' +
+        '<line x1="16" y1="26" x2="12" y2="22" stroke="#3d2008" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<line x1="20" y1="26" x2="24" y2="22" stroke="#3d2008" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<circle cx="11" cy="21" r="11" fill="#6aaa34"/>' +
+        '<circle cx="25" cy="21" r="11" fill="#3a7a20"/>' +
+        '<circle cx="18" cy="11" r="12" fill="#4e9428"/>' +
         '</svg>';
     return L.divIcon({
         html: svg,
         className: '',
-        iconSize: [28, 38],
-        iconAnchor: [14, 38],
+        iconSize: [36, 38],
+        iconAnchor: [18, 38],
         popupAnchor: [0, -38]
     });
 }
@@ -80,8 +76,8 @@ var markerCluster = L.markerClusterGroup({
         return L.divIcon({
             html: '<div class="' + cls + '">' + count + '</div>',
             className: '',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
         });
     }
 });
@@ -95,8 +91,8 @@ var markerClicked = false;
 var navySingleIcon = L.divIcon({
     html: '<div class="cluster-circle">1</div>',
     className: '',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
+    iconSize: [32, 32],
+    iconAnchor: [16, 16]
 });
 
 
