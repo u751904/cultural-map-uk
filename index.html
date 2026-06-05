@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 <div id="layout">
@@ -26,6 +26,7 @@
             <div class="filter-option" onclick="selectFilterOption('Literary')">Literary</div>
             <div class="filter-option" onclick="selectFilterOption('Maritime')">Maritime</div>
             <div class="filter-option" onclick="selectFilterOption('Military')">Military</div>
+            <div class="filter-option" onclick="selectFilterOption('Ancient Landscape')">Ancient Landscape</div>
         </div>
     </div>
 
@@ -45,6 +46,7 @@
                 <option value="Literary">Literary</option>
                 <option value="Maritime">Maritime</option>
                 <option value="Military">Military</option>
+                <option value="Ancient Landscape">Ancient Landscape</option>
             </select>
         </div>
         <div id="detailsContent">
@@ -54,7 +56,7 @@
             </div>
         </div>
         <div id="heAttribution">
-            © Historic England 2026 · Contains Ordnance Survey data © Crown copyright and database right 2026 · Plague data: Büntgen &amp; Ginzler, EnviDat 2019 (ODbL)
+            © Historic England 2026 · Contains Ordnance Survey data © Crown copyright and database right 2026 · Plague data: Büntgen &amp; Ginzler, EnviDat 2019 (ODbL) · Tree data: Wikidata (CC0)
         </div>
     </div>
 
@@ -92,6 +94,7 @@
                 <li><strong>Military</strong> — battlefields, airfields, fortifications and military heritage</li>
                 <li><strong>Horrible History</strong> — executions, plague, crime and dark tourism locations</li>
                 <li><strong>Maritime</strong> — shipwrecks and coastal heritage</li>
+                <li><strong>Ancient Landscape</strong> — ancient and veteran trees, lost settlements and prehistoric sites</li>
             </ul>
         </div>
 
@@ -107,6 +110,22 @@
             <p>UK plague outbreak locations (1348–1670) are sourced from the digitised Biraben dataset published by Büntgen &amp; Ginzler (2019) via EnviDat, licensed under the Open Database Licence (ODbL).</p>
             <p class="attribution-block">Büntgen, U. &amp; Ginzler, C. (2019). Digitizing historical plague. EnviDat. doi:10.16904/envidat.181</p>
             <a href="https://www.envidat.ch/dataset/digitizing-historical-plague" target="_blank">EnviDat dataset page ↗</a>
+
+            <h3>Ancient Trees &amp; Woodland</h3>
+            <p>Tree location data sourced from Wikidata, licensed under CC0 (no restrictions). Narrative content researched and written by [Site Name]. Coordinates verified via Wikipedia and Wikidata.</p>
+            <p class="attribution-block">Wikidata contributors. Tree and woodland data. Wikidata (CC0).</p>
+            <a href="https://www.wikidata.org" target="_blank">Wikidata ↗</a>
+            <a href="https://ati.woodlandtrust.org.uk" target="_blank">Ancient Tree Inventory — Woodland Trust ↗</a>
+            <a href="https://www.ancienttreeforum.org.uk" target="_blank">Ancient Tree Forum ↗</a>
+            <a href="https://www.woodlandtrust.org.uk" target="_blank">Woodland Trust ↗</a>
+
+            <h3>Further Reading</h3>
+            <ul>
+                <li>Rackham, O. — <em>Trees and Woodland in the British Landscape</em></li>
+                <li>Barley, L. — <em>Ancient: Reviving the Woods That Made Britain</em></li>
+                <li>Munson, V. — <em>Nature Detective: British Trees</em></li>
+                <li>Phillips, T. — <em>Forest Folk Tales for Children</em></li>
+            </ul>
 
             <h3>Map Tiles</h3>
             <p>Map tiles provided by OpenStreetMap contributors, licensed under the Open Database Licence (ODbL).</p>
@@ -132,6 +151,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
