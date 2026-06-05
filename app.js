@@ -197,6 +197,9 @@ function showDetails(row) {
         : "";
 
     markerClicked = true;
+    if (window.innerWidth <= 768) {
+        document.getElementById("layout").classList.remove("filter-active");
+    }
     openPanel();
     details.innerHTML =
         "<div class='place-card'>" +
