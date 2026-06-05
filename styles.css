@@ -752,3 +752,20 @@ body {
         height: calc(52vh - env(safe-area-inset-top));
     }
 }
+/* Ancient Landscape partner panel */
+.partner-panel.ancient { border-color: #5a9e5a; background: #f0f7f0; }
+.partner-icon.ancient { background: #c8e6c8; }
+.partner-cta.ancient { border-color: #2d6e2d; color: #1a4a1a; background: #f0f7f0; }
+
+/* Source credit in detail panel footer */
+.source-credit {
+    display: block;
+    margin-top: 6px;
+    color: #999;
+    font-size: 11px;
+}
+
+/* Hide About link on mobile — it's in the footer nav instead */
+@media (max-width: 768px) {
+    .desktop-only { display: none; }
+}
