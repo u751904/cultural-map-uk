@@ -28,20 +28,47 @@ var redMarkerIcon    = makeTearDrop("#8a2020");  // Military — matches cluster
 var violetMarkerIcon = makeTearDrop("#5a2880");  // Horrible History — matches cluster-circle-purple
 var tealMarkerIcon   = makeTearDrop("#1a6a7a");  // Maritime — matches cluster-circle-teal
 
+// Tree marker icon for Ancient Landscape
+function makeTreeIcon() {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">' +
+        // Trunk
+        '<rect x="11" y="26" width="6" height="10" rx="1.5" fill="#6a4a1a"/>' +
+        // Lower canopy
+        '<ellipse cx="14" cy="22" rx="13" ry="10" fill="#2d6e2d"/>' +
+        // Middle canopy
+        '<ellipse cx="14" cy="15" rx="10" ry="9" fill="#3a8a3a"/>' +
+        // Top canopy
+        '<ellipse cx="14" cy="8" rx="7" ry="7" fill="#4aaa4a"/>' +
+        // Highlight
+        '<ellipse cx="11" cy="6" rx="3" ry="2.5" fill="rgba(255,255,255,0.15)"/>' +
+        '</svg>';
+    return L.divIcon({
+        html: svg,
+        className: '',
+        iconSize: [28, 38],
+        iconAnchor: [14, 38],
+        popupAnchor: [0, -38]
+    });
+}
+
+var treeMarkerIcon = makeTreeIcon();
+
 function getMarkerIcon(category) {
     if (category === "Military") return redMarkerIcon;
     if (category === "Horrible History") return violetMarkerIcon;
     if (category === "Maritime") return tealMarkerIcon;
+    if (category === "Ancient Landscape") return treeMarkerIcon;
     return blueMarkerIcon;
 }
 
 // Marker cluster group — dark navy circles, clusters from zoom 1 upward
 var categoryClusterColours = {
-    "Literary":         "cluster-circle-blue",
-    "Horrible History": "cluster-circle-purple",
-    "Military":         "cluster-circle-red",
-    "Maritime":         "cluster-circle-teal",
-    "All":              "cluster-circle"
+    "Literary":           "cluster-circle-blue",
+    "Horrible History":   "cluster-circle-purple",
+    "Military":           "cluster-circle-red",
+    "Maritime":           "cluster-circle-teal",
+    "Ancient Landscape":  "cluster-circle-green",
+    "All":                "cluster-circle"
 };
 
 var markerCluster = L.markerClusterGroup({
@@ -166,6 +193,16 @@ var categoryConfig = {
         partnerName: "The Harbour Inn", partnerTagline: "Seafront rooms & local ales",
         partnerBody: "Stay on the water's edge. The perfect base for exploring the region's rich maritime and coastal heritage.",
         partnerCta: "Check availability", partnerCtaClass: "maritime"
+    },
+    "Ancient Landscape": {
+        label: "Ancient Landscape",
+        section1Icon: "\uD83C\uDF33", section1Title: "The Story",
+        section2Icon: "\uD83C\uDF0D", section2Title: "Historical Significance",
+        section3Icon: "\uD83D\uDCCD", section3Title: "About this Site",
+        partnerClass: "ancient", partnerIcon: "\uD83C\uDF33", partnerIconClass: "ancient",
+        partnerName: "The Forest Inn", partnerTagline: "Walks, wildlife & warm welcome",
+        partnerBody: "The perfect base for exploring the ancient landscapes, veteran trees and lost settlements of the region.",
+        partnerCta: "Find out more", partnerCtaClass: "ancient"
     }
 };
 
@@ -234,7 +271,12 @@ function showDetails(row) {
         "<div class='advertise-bar'>Could this be your business? <a href='#'>Advertise here</a></div>" +
         "</div>" +
 
-        "<div class='project-footer'><a href='#' onclick='openModal(\"about\"); return false;'>About the Devon Cultural Map</a></div>" +
+        "<div class='project-footer'>" +
+        "<a href='#' onclick='openModal(\"about\"); return false;'>About this map</a>" +
+        " &nbsp;·&nbsp; " +
+        "<a href='mailto:hello@devonculturalmap.co.uk?subject=Error report: " + escapeHtml(title) + "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
+        (row.Source ? "<br><small class='source-credit'>Source: " + escapeHtml(row.Source) + "</small>" : "") +
+        "</div>" +
         "</div>";
 }
 
@@ -247,8 +289,8 @@ var csvFiles = [
     { file: "horriblehistory.csv", defaultCategory: "Horrible History" },
     { file: "militarydevon.csv",   defaultCategory: "Military" },
     { file: "historicengland.csv", defaultCategory: "Military" },
-    { file: "plague_uk_final.csv",  defaultCategory: "Horrible History" }
-    // maritimedevon.csv not loaded — Maritime uses GeoJSON layers only at this stage
+    { file: "plague_uk_final.csv", defaultCategory: "Horrible History" },
+    { file: "ancient_trees.csv",   defaultCategory: "Ancient Landscape" }
 ];
 
 function loadCsv(fileObj) {
