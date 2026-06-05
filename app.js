@@ -268,8 +268,7 @@ function showDetails(row) {
         "</div>" +
 
         "<div class='project-footer'>" +
-        "<a href='#' onclick='openModal(\"about\"); return false;'>About this map</a>" +
-        " &nbsp;·&nbsp; " +
+        "<span class='desktop-only'><a href='#' onclick='openModal(\"about\"); return false;'>About this map</a> &nbsp;·&nbsp; </span>" +
         "<a href='mailto:hello@devonculturalmap.co.uk?subject=Error report: " + escapeHtml(title) + "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
         (row.Source ? "<br><small class='source-credit'>Source: " + escapeHtml(row.Source) + "</small>" : "") +
         "</div>" +
@@ -495,26 +494,23 @@ function resetMapView() {
         '<ellipse cx="610" cy="414" rx="10" ry="6" fill="#c4ae76" stroke="#a48e56" stroke-width="0.7"/>' +
         '<ellipse cx="638" cy="405" rx="13" ry="7" fill="#b8a46a" stroke="#988450" stroke-width="0.8"/>' +
         '<ellipse cx="660" cy="418" rx="8" ry="5" fill="#c0ac72" stroke="#a08c52" stroke-width="0.7"/>' +
-        '<rect x="333" y="200" width="14" height="155" rx="3" fill="#8a6030"/>' +
+        '<rect x="333" y="120" width="14" height="235" rx="3" fill="#8a6030"/>' +
         '<rect x="330" y="310" width="20" height="18" rx="2" fill="#7a5028"/>' +
-        '<rect x="333" y="200" width="14" height="30" fill="#7a5828"/>' +
+        '<rect x="333" y="120" width="14" height="30" fill="#7a5828"/>' +
         '<rect x="222" y="222" width="160" height="40" rx="5" fill="#1a4a8a"/>' +
         '<rect x="222" y="222" width="160" height="40" rx="5" fill="none" stroke="#0a3060" stroke-width="1.5"/>' +
-        '<polygon points="209,242 222,222 222,262" fill="#1a4a8a" stroke="#0a3060" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<polygon points="222,222 209,242 222,262" fill="#1a4a8a" stroke="#0a3060" stroke-width="1.5" stroke-linejoin="round"/>' +
         '<text x="298" y="247" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDCD6 Literature</text>' +
         '<rect x="347" y="168" width="172" height="40" rx="5" fill="#8a2020"/>' +
         '<rect x="347" y="168" width="172" height="40" rx="5" fill="none" stroke="#6a1010" stroke-width="1.5"/>' +
-        '<polygon points="531,168 531,208 544,188" fill="#8a2020" stroke="#6a1010" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<polygon points="519,168 519,208 533,188" fill="#8a2020" stroke="#6a1010" stroke-width="1.5" stroke-linejoin="round"/>' +
         '<text x="429" y="193" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\u2694\uFE0F Military</text>' +
         '<rect x="228" y="120" width="182" height="40" rx="5" fill="#5a2880"/>' +
         '<rect x="228" y="120" width="182" height="40" rx="5" fill="none" stroke="#3a1060" stroke-width="1.5"/>' +
-        '<polygon points="215,120 215,160 228,140" fill="#5a2880" stroke="#3a1060" stroke-width="1.5" stroke-linejoin="round"/>' +
+        '<polygon points="228,120 228,160 215,140" fill="#5a2880" stroke="#3a1060" stroke-width="1.5" stroke-linejoin="round"/>' +
         '<text x="316" y="145" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDC80 Horrible History</text>' +
-        '<text x="340" y="52" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#082b5f" letter-spacing="1">Devon Cultural Map</text>' +
-        '<text x="340" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-style="italic" font-weight="700" fill="#4a5a70">Select a marker on the map to begin your journey</text>' +
-        '<line x1="200" y1="92" x2="280" y2="92" stroke="#082b5f" stroke-width="0.8" opacity="0.3"/>' +
-        '<line x1="400" y1="92" x2="480" y2="92" stroke="#082b5f" stroke-width="0.8" opacity="0.3"/>' +
-        '<circle cx="340" cy="92" r="3" fill="#082b5f" opacity="0.3"/>' +
+        '<text x="340" y="75" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" font-weight="700" fill="#4a5a70">Select a marker on the map</text>' +
+        '<text x="340" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" font-weight="700" fill="#4a5a70">to begin your journey</text>' +
         '</svg>' +
         '</div>';
 
