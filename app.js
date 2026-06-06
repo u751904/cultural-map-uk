@@ -9,10 +9,6 @@ var isMobile = window.innerWidth <= 768;
 var desktopDetails = document.getElementById("detailsContent");
 var mobileDetails  = document.getElementById("mobileDetailsContent");
 
-function getDetailsTarget() {
-    return isMobile ? mobileDetails : desktopDetails;
-}
-
 // ====================
 // MARKER ICONS
 // ====================
@@ -35,10 +31,10 @@ function makeTearDropSelected(colour) {
     return L.divIcon({ html: svg, className: '', iconSize: [32, 52], iconAnchor: [16, 52], popupAnchor: [1, -52] });
 }
 
-var blueMarkerIcon   = makeTearDrop("#1a4a8a");
-var redMarkerIcon    = makeTearDrop("#8a2020");
-var violetMarkerIcon = makeTearDrop("#5a2880");
-var tealMarkerIcon   = makeTearDrop("#1a6a7a");
+var blueMarkerIcon     = makeTearDrop("#1a4a8a");
+var redMarkerIcon      = makeTearDrop("#8a2020");
+var violetMarkerIcon   = makeTearDrop("#5a2880");
+var tealMarkerIcon     = makeTearDrop("#1a6a7a");
 var blueSelectedIcon   = makeTearDropSelected("#1a4a8a");
 var redSelectedIcon    = makeTearDropSelected("#8a2020");
 var violetSelectedIcon = makeTearDropSelected("#5a2880");
@@ -204,8 +200,7 @@ function showDetails(row, marker) {
     var cfg = getCategoryConfig(category);
 
     if (selectedMarker && selectedMarker !== marker) {
-        var prevCat = selectedMarker.category || "Literary";
-        selectedMarker.setIcon(getMarkerIcon(prevCat));
+        selectedMarker.setIcon(getMarkerIcon(selectedMarker.category || "Literary"));
     }
     selectedMarker = marker;
     marker.setIcon(getSelectedMarkerIcon(category));
@@ -250,8 +245,7 @@ function showDetails(row, marker) {
         "<a href='mailto:hello@mapbritannia.com?subject=Error report: " + escapeHtml(title) +
         "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
         (row.Source ? "<br><small class='source-credit'>Source: " + escapeHtml(row.Source) + "</small>" : "") +
-        "</div>" +
-        "</div>";
+        "</div></div>";
 
     markerClicked = true;
 
@@ -333,7 +327,6 @@ function getSignpostHTML() {
         '<line x1="310" y1="382" x2="313" y2="372" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
         '<line x1="560" y1="378" x2="557" y2="369" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
         '<line x1="560" y1="378" x2="563" y2="368" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-
         '<rect x="333" y="120" width="14" height="235" rx="3" fill="#8a6030"/>' +
         '<rect x="330" y="310" width="20" height="18" rx="2" fill="#7a5028"/>' +
         '<rect x="333" y="120" width="14" height="30" fill="#7a5828"/>' +
@@ -482,7 +475,6 @@ function closeLayersPanel() {
 function toggleLayer(toggleEl) {
     var row = toggleEl.closest ? toggleEl.closest(".layer-row") : toggleEl.parentNode;
     var cat = row.getAttribute("data-cat");
-    var colour = row.getAttribute("data-colour");
     var isOn = toggleEl.classList.contains("on");
 
     if (isOn) {
@@ -529,11 +521,8 @@ function applyLayerFilter() {
 
     geoJsonLayers.forEach(function(item) {
         var shouldShow = activeList.some(function(cat) { return item.categories.indexOf(cat) !== -1; });
-        if (shouldShow) {
-            item.layer.addTo(map);
-        } else {
-            if (map.hasLayer(item.layer)) map.removeLayer(item.layer);
-        }
+        if (shouldShow) item.layer.addTo(map);
+        else if (map.hasLayer(item.layer)) map.removeLayer(item.layer);
     });
 }
 
@@ -545,9 +534,7 @@ function updateKeyPills() {
         var colour = "#082b5f";
         var rowEl = document.querySelector(".layer-row[data-cat='" + cat + "']");
         if (rowEl) colour = rowEl.getAttribute("data-colour");
-        return "<div class='key-pill'>" +
-            "<span class='key-pill-dot' style='background:" + colour + ";'></span>" +
-            cat + "</div>";
+        return "<div class='key-pill'><span class='key-pill-dot' style='background:" + colour + ";'></span>" + cat + "</div>";
     }).join("");
 }
 
@@ -563,7 +550,6 @@ function updateBadge() {
     }
 }
 
-// Close layers panel when clicking map
 map.on("click", function() {
     if (!isMobile) {
         closeLayersPanel();
@@ -571,7 +557,6 @@ map.on("click", function() {
     }
 });
 
-// Close layers panel when clicking outside
 document.addEventListener("click", function(e) {
     var bar = document.getElementById("mapContentBar");
     var panel = document.getElementById("layersPanel");
@@ -605,14 +590,12 @@ function resetMapView() {
     markerClicked = false;
 
     if (selectedMarker) {
-        var cat = selectedMarker.category || "Literary";
-        selectedMarker.setIcon(getMarkerIcon(cat));
+        selectedMarker.setIcon(getMarkerIcon(selectedMarker.category || "Literary"));
         selectedMarker = null;
     }
 
-    var layout = document.getElementById("layout");
-    layout.classList.remove("filter-active");
-    layout.classList.remove("map-expanded");
+    document.getElementById("layout").classList.remove("filter-active");
+    document.getElementById("layout").classList.remove("map-expanded");
 
     if (isMobile) {
         mobileDetails.innerHTML = getSignpostHTML();
@@ -647,7 +630,7 @@ function expandMap() {
 }
 
 // ====================
-// MOBILE FILTER (unchanged)
+// MOBILE FILTER
 // ====================
 
 function toggleFilterDropdown() {
@@ -690,10 +673,63 @@ function applyMobileFilter(selectedCategory) {
     });
 }
 
-var desktopSelect = document.getElementById("categoryFilterDesktop");
-if (desktopSelect) {
-    desktopSelect.addEventListener("change", function() { applyMobileFilter(this.value); });
+// ====================
+// SEARCH (Nominatim)
+// ====================
+
+function runSearch() {
+    var input = document.getElementById("desktopSearchInput");
+    var resultsBox = document.getElementById("searchResults");
+    if (!input || !resultsBox) return;
+    var query = input.value.trim();
+    if (!query) return;
+
+    resultsBox.innerHTML = '<div class="search-no-result">Searching…</div>';
+
+    var url = "https://nominatim.openstreetmap.org/search?format=json&countrycodes=gb&limit=5&q=" + encodeURIComponent(query);
+
+    fetch(url, { headers: { "Accept-Language": "en", "User-Agent": "MapBritannia/1.0" } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            resultsBox.innerHTML = "";
+            if (!data || data.length === 0) {
+                resultsBox.innerHTML = '<div class="search-no-result">No results found</div>';
+                return;
+            }
+            if (data.length === 1) {
+                flyToResult(data[0]);
+                return;
+            }
+            data.forEach(function(item) {
+                var div = document.createElement("div");
+                div.className = "search-result-item";
+                div.textContent = item.display_name;
+                div.onclick = function() { flyToResult(item); resultsBox.innerHTML = ""; };
+                resultsBox.appendChild(div);
+            });
+        })
+        .catch(function() {
+            resultsBox.innerHTML = '<div class="search-no-result">Search unavailable — please try again</div>';
+        });
 }
+
+function flyToResult(item) {
+    var lat = parseFloat(item.lat);
+    var lng = parseFloat(item.lon);
+    var resultsBox = document.getElementById("searchResults");
+    var input = document.getElementById("desktopSearchInput");
+    if (resultsBox) resultsBox.innerHTML = "";
+    if (input) input.value = item.display_name.split(",")[0];
+    map.flyTo([lat, lng], 10, { duration: 1.2 });
+}
+
+document.addEventListener("click", function(e) {
+    var search = document.getElementById("desktopPanelSearch");
+    var results = document.getElementById("searchResults");
+    if (search && results && !search.contains(e.target)) {
+        results.innerHTML = "";
+    }
+});
 
 // ====================
 // INIT
