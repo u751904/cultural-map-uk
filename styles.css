@@ -1049,3 +1049,243 @@ body {
 .partner-panel.ancient { border-color: #5a9e5a; background: #f0f7f0; }
 .partner-icon.ancient  { background: #c8e6c8; }
 .partner-cta.ancient   { border-color: #2d6e2d; color: #1a4a1a; background: #f0f7f0; }
+
+/* ====================
+   MAP CONTENT BAR (desktop floating)
+   ==================== */
+
+#mapContentBar {
+    display: none;
+    position: absolute;
+    top: 14px;
+    left: calc(35% + 20px);
+    z-index: 200;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    max-width: calc(65% - 60px);
+}
+
+#mapContentBtn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #222222;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#mapContentBtn:hover {
+    background: #f5f5f5;
+}
+
+#mapContentBadge {
+    background: #082b5f;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 1px 7px;
+    margin-left: 2px;
+}
+
+#keyPillsRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.key-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 20px;
+    padding: 5px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #333333;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.key-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ====================
+   LAYERS PANEL
+   ==================== */
+
+#layersPanel {
+    display: none;
+    position: absolute;
+    top: 52px;
+    left: calc(35% + 20px);
+    width: 270px;
+    background: #ffffff;
+    border: 0.5px solid #dddddd;
+    border-radius: var(--border-radius-lg);
+    z-index: 300;
+    overflow: hidden;
+}
+
+#layersPanel.open {
+    display: block;
+}
+
+#layersPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 0.5px solid #eeeeee;
+}
+
+#layersPanelTitle {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111111;
+}
+
+#layersPanelClose {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888888;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+#layersPanelClose:hover {
+    color: #333333;
+}
+
+#layersPanelSection {
+    padding: 10px 16px 4px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #999999;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.layer-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 0.5px solid #f2f2f2;
+}
+
+.layer-row:last-child {
+    border-bottom: none;
+}
+
+.layer-row.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.layer-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.layer-label {
+    flex: 1;
+}
+
+.layer-name {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #222222;
+    font-weight: 500;
+}
+
+.layer-sub {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #888888;
+    margin-top: 1px;
+}
+
+.layer-toggle {
+    width: 38px;
+    height: 22px;
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.layer-toggle.on {
+    background: #082b5f;
+}
+
+.layer-toggle.off {
+    background: #dddddd;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: left 0.2s;
+    pointer-events: none;
+}
+
+.layer-toggle.on .toggle-thumb {
+    left: 19px;
+}
+
+.layer-toggle.off .toggle-thumb {
+    left: 3px;
+}
+
+#layersPanelFooter {
+    padding: 10px 16px;
+    border-top: 0.5px solid #eeeeee;
+}
+
+#layersClearBtn {
+    background: none;
+    border: 0.5px solid #cccccc;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #555555;
+    cursor: pointer;
+}
+
+#layersClearBtn:hover {
+    background: #f5f5f5;
+}
+
+@media (min-width: 769px) {
+    #mapContentBar {
+        display: flex;
+    }
+}
