@@ -3,29 +3,50 @@
 // ====================
 
 var map = L.map('map').setView([50.72, -3.53], 9);
-var details = document.getElementById("detailsContent");
 var allMarkers = [];
+var isMobile = window.innerWidth <= 768;
 
-// Teardrop SVG icons — colours match their cluster circles exactly
+// Desktop panel content target
+var desktopDetails = document.getElementById("detailsContent");
+// Mobile content target
+var mobileDetails  = document.getElementById("mobileDetailsContent");
+
+// Write to correct target based on viewport
+function getDetailsTarget() {
+    return isMobile ? mobileDetails : desktopDetails;
+}
+
+// ====================
+// TEARDROP MARKER ICONS
+// ====================
+
 function makeTearDrop(colour) {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">' +
         '<path d="M12.5 0 C5.6 0 0 5.6 0 12.5 C0 22 12.5 41 12.5 41 C12.5 41 25 22 25 12.5 C25 5.6 19.4 0 12.5 0 Z"' +
         ' fill="' + colour + '" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>' +
         '<circle cx="12.5" cy="12.5" r="5" fill="rgba(255,255,255,0.4)"/>' +
         '</svg>';
-    return L.divIcon({
-        html: svg,
-        className: '',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34]
-    });
+    return L.divIcon({ html: svg, className: '', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+}
+
+function makeTearDropSelected(colour) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="52" viewBox="0 0 25 41">' +
+        '<path d="M12.5 0 C5.6 0 0 5.6 0 12.5 C0 22 12.5 41 12.5 41 C12.5 41 25 22 25 12.5 C25 5.6 19.4 0 12.5 0 Z"' +
+        ' fill="' + colour + '" stroke="white" stroke-width="2"/>' +
+        '<circle cx="12.5" cy="12.5" r="5" fill="rgba(255,255,255,0.6)"/>' +
+        '</svg>';
+    return L.divIcon({ html: svg, className: '', iconSize: [32, 52], iconAnchor: [16, 52], popupAnchor: [1, -52] });
 }
 
 var blueMarkerIcon   = makeTearDrop("#1a4a8a");
 var redMarkerIcon    = makeTearDrop("#8a2020");
 var violetMarkerIcon = makeTearDrop("#5a2880");
 var tealMarkerIcon   = makeTearDrop("#1a6a7a");
+
+var blueSelectedIcon   = makeTearDropSelected("#1a4a8a");
+var redSelectedIcon    = makeTearDropSelected("#8a2020");
+var violetSelectedIcon = makeTearDropSelected("#5a2880");
+var tealSelectedIcon   = makeTearDropSelected("#1a6a7a");
 
 function makeTreeIcon() {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="38" viewBox="0 0 36 38">' +
@@ -36,13 +57,7 @@ function makeTreeIcon() {
         '<circle cx="25" cy="21" r="11" fill="#3a7a20"/>' +
         '<circle cx="18" cy="11" r="12" fill="#4e9428"/>' +
         '</svg>';
-    return L.divIcon({
-        html: svg,
-        className: '',
-        iconSize: [36, 38],
-        iconAnchor: [18, 38],
-        popupAnchor: [0, -38]
-    });
+    return L.divIcon({ html: svg, className: '', iconSize: [36, 38], iconAnchor: [18, 38], popupAnchor: [0, -38] });
 }
 
 var treeMarkerIcon = makeTreeIcon();
@@ -55,6 +70,17 @@ function getMarkerIcon(category) {
     return blueMarkerIcon;
 }
 
+function getSelectedMarkerIcon(category) {
+    if (category === "Military") return redSelectedIcon;
+    if (category === "Horrible History") return violetSelectedIcon;
+    if (category === "Maritime") return tealSelectedIcon;
+    return blueSelectedIcon;
+}
+
+// ====================
+// MARKER CLUSTER
+// ====================
+
 var categoryClusterColours = {
     "Literary":           "cluster-circle-blue",
     "Horrible History":   "cluster-circle-purple",
@@ -64,34 +90,24 @@ var categoryClusterColours = {
     "All":                "cluster-circle"
 };
 
+var currentFilter = "All";
+var markerClicked = false;
+var selectedMarker = null;
+
 var markerCluster = L.markerClusterGroup({
     maxClusterRadius: 50,
     disableClusteringAtZoom: 16,
     iconCreateFunction: function(cluster) {
         var count = cluster.getChildCount();
         var cls = categoryClusterColours[currentFilter] || "cluster-circle";
-        return L.divIcon({
-            html: '<div class="' + cls + '">' + count + '</div>',
-            className: '',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-        });
+        return L.divIcon({ html: '<div class="' + cls + '">' + count + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
     }
 });
 
-var currentFilter = "All";
-var markerClicked = false;
-
-var navySingleIcon = L.divIcon({
-    html: '<div class="cluster-circle">1</div>',
-    className: '',
-    iconSize: [32, 32],
-    iconAnchor: [16, 16]
-});
-
+var navySingleIcon = L.divIcon({ html: '<div class="cluster-circle">1</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
 
 // ====================
-// SHIP MARKER ICON
+// WRECK ICON
 // ====================
 
 function makeWreckIcon(size) {
@@ -100,15 +116,9 @@ function makeWreckIcon(size) {
         '<line x1="6" y1="6" x2="34" y2="34" stroke="#e07b39" stroke-width="8" stroke-linecap="round"/>' +
         '<line x1="34" y1="6" x2="6" y2="34" stroke="#e07b39" stroke-width="8" stroke-linecap="round"/>' +
         '</svg>';
-    return L.divIcon({
-        html: svg,
-        className: '',
-        iconSize: [s, s],
-        iconAnchor: [s / 2, s / 2]
-    });
+    return L.divIcon({ html: svg, className: '', iconSize: [s, s], iconAnchor: [s / 2, s / 2] });
 }
 
-var isMobile = window.innerWidth <= 768;
 var shipMarkerIcon = makeWreckIcon(isMobile ? 18 : 22);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -117,22 +127,19 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ====================
-// HELPER FUNCTIONS
+// HELPERS
 // ====================
 
 function escapeHtml(text) {
     return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 function makeLiteratureList(text) {
     if (!text) return "<p>No literature added yet.</p>";
-    var items = text.split(/\n+/).map(function(item) { return item.trim(); }).filter(function(item) { return item.length > 0; });
-    return "<ul class='literature-list'>" + items.map(function(item) { return "<li>" + escapeHtml(item) + "</li>"; }).join("") + "</ul>";
+    var items = text.split(/\n+/).map(function(i) { return i.trim(); }).filter(function(i) { return i.length > 0; });
+    return "<ul class='literature-list'>" + items.map(function(i) { return "<li>" + escapeHtml(i) + "</li>"; }).join("") + "</ul>";
 }
 
 function formatParagraph(text) {
@@ -201,57 +208,52 @@ function getCategoryConfig(category) {
 }
 
 // ====================
-// DETAILS PANEL
+// SHOW DETAILS
 // ====================
 
-function showDetails(row) {
+function showDetails(row, marker) {
     var title = row.Location_name || "Cultural location";
     var lat = row.Latitude;
     var lng = row.Longitude;
     var category = row.Category ? row.Category.trim() : "Literary";
     var cfg = getCategoryConfig(category);
 
-    var googleMaps = row.Google_Maps_Link
-        ? "<a class='button' href='" + escapeHtml(row.Google_Maps_Link) + "' target='_blank'>Google Maps</a>"
-        : "";
-
-    var appleMaps = lat && lng
-        ? "<a class='button' href='https://maps.apple.com/?q=" + encodeURIComponent(title) + "&ll=" + lat + "," + lng + "' target='_blank'>Apple Maps</a>"
-        : "";
-
-    var officialWebsite = row.Official_Website
-        ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>"
-        : "";
-
-    markerClicked = true;
-
-    // Collapse map-expanded state when a marker is clicked on mobile
-    if (window.innerWidth <= 768) {
-        document.getElementById("layout").classList.remove("filter-active");
-        document.getElementById("layout").classList.remove("map-expanded");
+    // Update selected marker icon
+    if (selectedMarker && selectedMarker !== marker) {
+        var prevCat = selectedMarker.category || "Literary";
+        selectedMarker.setIcon(currentFilter === "All" ? navySingleIcon : getMarkerIcon(prevCat));
     }
+    selectedMarker = marker;
+    marker.setIcon(getSelectedMarkerIcon(category));
 
-    openPanel();
+    var googleMaps = row.Google_Maps_Link
+        ? "<a class='button' href='" + escapeHtml(row.Google_Maps_Link) + "' target='_blank'>Google Maps</a>" : "";
+    var appleMaps = lat && lng
+        ? "<a class='button' href='https://maps.apple.com/?q=" + encodeURIComponent(title) + "&ll=" + lat + "," + lng + "' target='_blank'>Apple Maps</a>" : "";
+    var officialWebsite = row.Official_Website
+        ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>" : "";
 
-    details.innerHTML =
+    var html =
         "<div class='place-card'>" +
-        "<h1>" + escapeHtml(cfg.label) + ": " + escapeHtml(title) + "</h1>" +
-        "<div class='return-map' onclick='resetMapView()'><span class='return-icon'>&#x261A;</span> Return to Map</div>" +
+        "<div class='place-card-category'>" + escapeHtml(cfg.label) + "</div>" +
+        "<h1>" + escapeHtml(title) + "</h1>" +
+        "<button class='return-map' onclick='resetMapView()'>&#8592; Back to map</button>" +
 
+        "<hr class='section-divider'>" +
         "<h2>" + cfg.section1Icon + " " + cfg.section1Title + "</h2>" +
         makeLiteratureList(row.Literature) +
 
+        "<hr class='section-divider'>" +
         "<h2>" + cfg.section2Icon + " " + cfg.section2Title + "</h2>" +
         "<p>" + formatParagraph(row.Cultural_Significance) + "</p>" +
 
+        "<hr class='section-divider'>" +
         "<h2>" + cfg.section3Icon + " " + cfg.section3Title + "</h2>" +
         "<p>" + formatParagraph(row.Distinctive_Feature) + "</p>" +
 
         "<div class='info-panel'>" +
         "<div class='panel-title'>&#x1F50E; Plan Your Visit</div>" +
-        "<div class='action-row'>" +
-        googleMaps + appleMaps + officialWebsite +
-        "</div>" +
+        "<div class='action-row'>" + googleMaps + appleMaps + officialWebsite + "</div>" +
         "</div>" +
 
         "<div class='partner-panel " + cfg.partnerClass + "'>" +
@@ -267,19 +269,31 @@ function showDetails(row) {
         "</div>" +
 
         "<div class='project-footer'>" +
-        "<span class='desktop-only'><a href='#' onclick='openModal(\"about\"); return false;'>About this map</a> &nbsp;·&nbsp; </span>" +
-        "<a href='mailto:hello@mapbritannia.com?subject=Error report: " + escapeHtml(title) + "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
+        "<a href='mailto:hello@mapbritannia.com?subject=Error report: " + escapeHtml(title) +
+        "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
         (row.Source ? "<br><small class='source-credit'>Source: " + escapeHtml(row.Source) + "</small>" : "") +
         "</div>" +
         "</div>";
+
+    markerClicked = true;
+
+    if (isMobile) {
+        document.getElementById("layout").classList.remove("filter-active");
+        document.getElementById("layout").classList.remove("map-expanded");
+        mobileDetails.innerHTML = html;
+        openPanel();
+    } else {
+        desktopDetails.innerHTML = html;
+        openDesktopPanel();
+    }
 }
 
 // ====================
-// SIGNPOST HTML (shared between resetMapView and load event)
+// SIGNPOST HTML
 // ====================
 
 function getSignpostHTML() {
-    return '<div class="place-card">' +
+    return '<div class="signpost-wrapper">' +
         '<svg width="100%" viewBox="0 0 680 440" role="img" xmlns="http://www.w3.org/2000/svg">' +
         '<title>Map Britannia signpost</title>' +
         '<desc>A wooden signpost pointing to Literature, Military and Horrible History</desc>' +
@@ -354,9 +368,8 @@ function getSignpostHTML() {
         '<rect x="228" y="120" width="182" height="40" rx="5" fill="none" stroke="#3a1060" stroke-width="1.5"/>' +
         '<polygon points="228,120 228,160 215,140" fill="#5a2880" stroke="#3a1060" stroke-width="1.5" stroke-linejoin="round"/>' +
         '<text x="316" y="145" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDC80 Horrible History</text>' +
-        '<text x="340" y="75" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" font-weight="700" fill="#4a5a70">Select a marker on the map</text>' +
-        '<text x="340" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" font-weight="700" fill="#4a5a70">to begin your journey</text>' +
         '</svg>' +
+        '<p class="signpost-prompt">Select a marker on the map to begin your journey</p>' +
         '</div>';
 }
 
@@ -375,9 +388,7 @@ var csvFiles = [
 
 function loadCsv(fileObj) {
     Papa.parse(fileObj.file, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
+        download: true, header: true, skipEmptyLines: true,
         error: function() { console.warn("Could not load: " + fileObj.file); },
         complete: function(results) {
             results.data.forEach(function(row) {
@@ -388,7 +399,7 @@ function loadCsv(fileObj) {
                     var category = row.Category ? row.Category.trim() : fileObj.defaultCategory;
                     var marker = L.marker([lat, lng], { icon: navySingleIcon })
                         .bindPopup(escapeHtml(title))
-                        .on("click", function() { showDetails(row); });
+                        .on("click", function() { showDetails(row, marker); });
                     marker.category = category;
                     allMarkers.push(marker);
                     markerCluster.addLayer(marker);
@@ -409,13 +420,7 @@ var layerConfig = [
     {
         file: "battlefields.geojson",
         categories: ["All", "Military"],
-        style: {
-            color: "#8a2020",
-            weight: 2,
-            fillColor: "#8a2020",
-            fillOpacity: 0.15,
-            dashArray: "4 3"
-        },
+        style: { color: "#8a2020", weight: 2, fillColor: "#8a2020", fillOpacity: 0.15, dashArray: "4 3" },
         popup: function(p) {
             return "<strong>" + (p.Name || "Battlefield") + "</strong>" +
                 (p.area_ha ? "<br>Area: " + Math.round(p.area_ha) + " ha" : "") +
@@ -425,13 +430,7 @@ var layerConfig = [
     {
         file: "wrecks.geojson",
         categories: ["All", "Maritime"],
-        style: {
-            color: "#1a4a8a",
-            weight: 2,
-            fillColor: "#1a4a8a",
-            fillOpacity: 0.12,
-            dashArray: "4 3"
-        },
+        style: { color: "#1a4a8a", weight: 2, fillColor: "#1a4a8a", fillOpacity: 0.12, dashArray: "4 3" },
         popup: function(p) {
             return "<strong>" + (p.Name || "Protected Wreck") + "</strong>" +
                 (p.DesigDate ? "<br>Designated: " + p.DesigDate.substring(0, 4) : "") +
@@ -446,13 +445,11 @@ var geoJsonLayers = [];
 
 layerConfig.forEach(function(cfg) {
     fetch(cfg.file)
-        .then(function(response) { return response.json(); })
+        .then(function(r) { return r.json(); })
         .then(function(data) {
             var layer = L.geoJSON(data, {
                 style: cfg.style,
-                onEachFeature: function(feature, l) {
-                    l.bindPopup(cfg.popup(feature.properties));
-                }
+                onEachFeature: function(feature, l) { l.bindPopup(cfg.popup(feature.properties)); }
             });
             layer.addTo(map);
             geoJsonLayers.push({ layer: layer, categories: cfg.categories });
@@ -462,19 +459,13 @@ layerConfig.forEach(function(cfg) {
                 data.features.forEach(function(feature) {
                     var coords = [];
                     var geom = feature.geometry;
-                    if (geom.type === 'Polygon') {
-                        coords = geom.coordinates[0];
-                    } else if (geom.type === 'MultiPolygon') {
-                        geom.coordinates.forEach(function(poly) { coords = coords.concat(poly[0]); });
-                    }
+                    if (geom.type === 'Polygon') coords = geom.coordinates[0];
+                    else if (geom.type === 'MultiPolygon') geom.coordinates.forEach(function(poly) { coords = coords.concat(poly[0]); });
                     if (coords.length) {
                         var lngSum = 0, latSum = 0;
                         coords.forEach(function(c) { lngSum += c[0]; latSum += c[1]; });
-                        var centLat = latSum / coords.length;
-                        var centLng = lngSum / coords.length;
-                        var p = feature.properties;
-                        var marker = L.marker([centLat, centLng], { icon: shipMarkerIcon })
-                            .bindPopup(cfg.popup(p));
+                        var marker = L.marker([latSum / coords.length, lngSum / coords.length], { icon: shipMarkerIcon })
+                            .bindPopup(cfg.popup(feature.properties));
                         markerLayer.addLayer(marker);
                     }
                 });
@@ -487,14 +478,33 @@ layerConfig.forEach(function(cfg) {
 
 function updateGeoJsonVisibility(selectedCategory) {
     geoJsonLayers.forEach(function(item) {
-        if (item.categories.indexOf(selectedCategory) !== -1) {
-            item.layer.addTo(map);
-        } else {
-            map.removeLayer(item.layer);
-        }
+        if (item.categories.indexOf(selectedCategory) !== -1) item.layer.addTo(map);
+        else map.removeLayer(item.layer);
     });
 }
 
+// ====================
+// DESKTOP PANEL OPEN / CLOSE
+// ====================
+
+function openDesktopPanel() {
+    var panel = document.getElementById("desktopPanel");
+    if (panel) panel.classList.add("panel-open");
+    setTimeout(function() { map.invalidateSize(); }, 320);
+}
+
+function closeDesktopPanel() {
+    var panel = document.getElementById("desktopPanel");
+    if (panel) panel.classList.remove("panel-open");
+    setTimeout(function() { map.invalidateSize(); }, 320);
+}
+
+// Close panel when clicking the map (desktop)
+map.on("click", function() {
+    if (!isMobile) {
+        closeDesktopPanel();
+    }
+});
 
 // ====================
 // RESET MAP VIEW
@@ -502,57 +512,146 @@ function updateGeoJsonVisibility(selectedCategory) {
 
 function resetMapView() {
     map.setView([50.72, -3.53], 9);
-
-    // Reset state — clear markerClicked BEFORE mobile checks
     markerClicked = false;
 
-    // Restore any expanded/filtered state on mobile
+    // Reset selected marker icon
+    if (selectedMarker) {
+        var cat = selectedMarker.category || "Literary";
+        selectedMarker.setIcon(currentFilter === "All" ? navySingleIcon : getMarkerIcon(cat));
+        selectedMarker = null;
+    }
+
     var layout = document.getElementById("layout");
     layout.classList.remove("filter-active");
     layout.classList.remove("map-expanded");
 
-    // Render the signpost
-    details.innerHTML = getSignpostHTML();
-
-    // On mobile: show the panel so signpost is visible
-    if (window.innerWidth <= 768) {
+    if (isMobile) {
+        mobileDetails.innerHTML = getSignpostHTML();
         openPanel();
         setTimeout(function() { map.invalidateSize(); }, 50);
+    } else {
+        desktopDetails.innerHTML = getSignpostHTML();
+        openDesktopPanel();
     }
 }
-
-
-// ====================
-// MOBILE MAP EXPAND
-// ====================
-
-function expandMap() {
-    var layout = document.getElementById("layout");
-    layout.classList.add("map-expanded");
-    closePanel();
-    setTimeout(function() { map.invalidateSize(); }, 50);
-}
-
 
 // ====================
 // MOBILE PANEL
 // ====================
 
 function openPanel() {
-    var detailsEl = document.getElementById("details");
-    if (detailsEl) detailsEl.classList.remove("panel-hidden");
+    var el = document.getElementById("details");
+    if (el) el.classList.remove("panel-hidden");
     setTimeout(function() { map.invalidateSize(); }, 50);
 }
 
 function closePanel() {
-    var detailsEl = document.getElementById("details");
-    if (detailsEl) detailsEl.classList.add("panel-hidden");
+    var el = document.getElementById("details");
+    if (el) el.classList.add("panel-hidden");
     setTimeout(function() { map.invalidateSize(); }, 50);
 }
 
+function expandMap() {
+    document.getElementById("layout").classList.add("map-expanded");
+    closePanel();
+    setTimeout(function() { map.invalidateSize(); }, 50);
+}
 
 // ====================
-// CUSTOM DROPDOWN (MOBILE)
+// DESKTOP PILL FILTER SYSTEM
+// ====================
+
+var activeLayers = [];
+var MAX_LAYERS = 4;
+
+function toggleCategoryDropdown() {
+    var dd = document.getElementById("categoryDropdown");
+    if (dd) dd.classList.toggle("open");
+}
+
+function closeCategoryDropdown() {
+    var dd = document.getElementById("categoryDropdown");
+    if (dd) dd.classList.remove("open");
+}
+
+function selectCategory(el) {
+    var cat = el.getAttribute("data-cat");
+    var colour = el.getAttribute("data-colour");
+    closeCategoryDropdown();
+
+    // Toggle: if already active, turn it off
+    var idx = activeLayers.findIndex(function(l) { return l.cat === cat; });
+    if (idx !== -1) {
+        activeLayers[idx].active = !activeLayers[idx].active;
+    } else {
+        if (activeLayers.length >= MAX_LAYERS) return; // max reached
+        activeLayers.push({ cat: cat, colour: colour, active: true });
+    }
+
+    renderActivePills();
+    applyDesktopFilter();
+}
+
+function togglePill(cat) {
+    var layer = activeLayers.find(function(l) { return l.cat === cat; });
+    if (layer) {
+        layer.active = !layer.active;
+        renderActivePills();
+        applyDesktopFilter();
+    }
+}
+
+function resetAllLayers() {
+    activeLayers = [];
+    renderActivePills();
+    applyDesktopFilter();
+}
+
+function renderActivePills() {
+    var row = document.getElementById("activePillsRow");
+    var resetBtn = document.getElementById("pillReset");
+    if (!row) return;
+
+    row.innerHTML = activeLayers.map(function(l) {
+        var cls = l.active ? "active-layer-pill" : "active-layer-pill inactive";
+        return "<div class='" + cls + "' onclick='togglePill(\"" + l.cat + "\")'>" +
+            "<span class='pill-dot' style='background:" + (l.active ? l.colour : "#aaa") + ";'></span>" +
+            l.cat +
+            "</div>";
+    }).join("");
+
+    if (resetBtn) resetBtn.style.display = activeLayers.length > 0 ? "flex" : "none";
+}
+
+function applyDesktopFilter() {
+    var activeOnes = activeLayers.filter(function(l) { return l.active; });
+
+    markerCluster.clearLayers();
+    allMarkers.forEach(function(marker) {
+        var show = activeOnes.length === 0 || activeOnes.some(function(l) { return l.cat === marker.category; });
+        if (show) {
+            marker.setIcon(activeOnes.length === 0 ? navySingleIcon : getMarkerIcon(marker.category));
+            markerCluster.addLayer(marker);
+        }
+    });
+
+    var visCategory = activeOnes.length === 1 ? activeOnes[0].cat : "All";
+    updateGeoJsonVisibility(visCategory);
+
+    currentFilter = activeOnes.length === 0 ? "All" : activeOnes[0].cat;
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function(e) {
+    var bar = document.getElementById("desktopPillBar");
+    var dd  = document.getElementById("categoryDropdown");
+    if (bar && !bar.contains(e.target) && dd && !dd.contains(e.target)) {
+        closeCategoryDropdown();
+    }
+});
+
+// ====================
+// MOBILE CATEGORY FILTER (unchanged)
 // ====================
 
 function toggleFilterDropdown() {
@@ -563,7 +662,7 @@ function toggleFilterDropdown() {
 function selectFilterOption(value) {
     var dd = document.getElementById("categoryFilterDropdown");
     if (dd) dd.classList.remove("open");
-    applyFilter(value);
+    applyMobileFilter(value);
 }
 
 document.addEventListener("click", function(e) {
@@ -574,12 +673,7 @@ document.addEventListener("click", function(e) {
     }
 });
 
-
-// ====================
-// CATEGORY FILTER
-// ====================
-
-function applyFilter(selectedCategory) {
+function applyMobileFilter(selectedCategory) {
     currentFilter = selectedCategory;
 
     var label = document.getElementById("categoryFilterLabel");
@@ -588,12 +682,8 @@ function applyFilter(selectedCategory) {
         opt.classList.toggle("selected", opt.textContent.trim() === selectedCategory);
     });
 
-    var desktopSelect = document.getElementById("categoryFilterDesktop");
-    if (desktopSelect) desktopSelect.value = selectedCategory;
-
     if (window.innerWidth <= 768) {
-        var layout = document.getElementById("layout");
-        layout.classList.add("filter-active");
+        document.getElementById("layout").classList.add("filter-active");
         closePanel();
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
@@ -601,45 +691,41 @@ function applyFilter(selectedCategory) {
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (selectedCategory === "All" || marker.category === selectedCategory) {
-            if (selectedCategory === "All") {
-                marker.setIcon(navySingleIcon);
-            } else {
-                marker.setIcon(getMarkerIcon(marker.category));
-            }
+            marker.setIcon(selectedCategory === "All" ? navySingleIcon : getMarkerIcon(marker.category));
             markerCluster.addLayer(marker);
         }
     });
 
     updateGeoJsonVisibility(selectedCategory);
 
-    var newAnchorSize = (selectedCategory === "Maritime")
-        ? (isMobile ? 24 : 28)
-        : (isMobile ? 18 : 22);
-    shipMarkerIcon = makeWreckIcon(newAnchorSize);
-
+    var newSize = (selectedCategory === "Maritime") ? (isMobile ? 24 : 28) : (isMobile ? 18 : 22);
+    shipMarkerIcon = makeWreckIcon(newSize);
     geoJsonLayers.forEach(function(item) {
-        if (item.isWreckMarkers) {
-            item.layer.eachLayer(function(marker) {
-                if (marker.setIcon) marker.setIcon(shipMarkerIcon);
-            });
-        }
+        if (item.isWreckMarkers) item.layer.eachLayer(function(m) { if (m.setIcon) m.setIcon(shipMarkerIcon); });
     });
 }
 
-document.getElementById("categoryFilterDesktop").addEventListener("change", function() {
-    applyFilter(this.value);
-});
+// Desktop select fallback (mobile panel)
+var desktopSelect = document.getElementById("categoryFilterDesktop");
+if (desktopSelect) {
+    desktopSelect.addEventListener("change", function() { applyMobileFilter(this.value); });
+}
 
-// Render signpost on first load
+// ====================
+// INIT ON LOAD
+// ====================
+
 window.addEventListener('load', function() {
-    details.innerHTML = getSignpostHTML();
-    if (window.innerWidth <= 768) {
+    if (!isMobile) {
+        desktopDetails.innerHTML = getSignpostHTML();
+        openDesktopPanel();
+    } else {
+        mobileDetails.innerHTML = getSignpostHTML();
         var detailsEl = document.getElementById("details");
         if (detailsEl) detailsEl.classList.remove("panel-hidden");
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
 });
-
 
 // ====================
 // MODAL
@@ -657,21 +743,13 @@ function closeModal() {
 }
 
 function switchTab(name) {
-    document.querySelectorAll('.modal-tab').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
-    document.querySelectorAll('.modal-tab-content').forEach(function(el) {
-        el.classList.remove('active');
-    });
+    document.querySelectorAll('.modal-tab').forEach(function(btn) { btn.classList.remove('active'); });
+    document.querySelectorAll('.modal-tab-content').forEach(function(el) { el.classList.remove('active'); });
     var tab = document.getElementById('tab-' + name);
     if (tab) tab.classList.add('active');
     document.querySelectorAll('.modal-tab').forEach(function(btn) {
-        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(name) !== -1) {
-            btn.classList.add('active');
-        }
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(name) !== -1) btn.classList.add('active');
     });
 }
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
