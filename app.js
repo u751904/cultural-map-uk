@@ -145,7 +145,7 @@ var categoryConfig = {
     "Horrible History": {
         label: "Horrible History",
         section1Icon: "\uD83D\uDC80", section1Title: "The Dark Story",
-        section2Icon: "\u26A0\uFE0F", section2Title: "Historical Context",
+        section2Icon: "\uD83C\uDF0D", section2Title: "Historical Context",
         section3Icon: "\uD83D\uDCDA", section3Title: "Further Reading",
         partnerClass: "horrible", partnerIcon: "\u2615", partnerIconClass: "horrible",
         partnerName: "The Curious Cafe", partnerTagline: "Dark history tours &amp; speciality coffee",
