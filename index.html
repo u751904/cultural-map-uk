@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css?v=15">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
 <div id="layout">
@@ -23,12 +23,13 @@
         </div>
         <div id="desktopPanelSearch">
             <div id="desktopSearchBox">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <svg id="desktopSearchIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="cursor:pointer;flex-shrink:0;" onclick="runSearch()">
                     <circle cx="11" cy="11" r="7" stroke="#082b5f" stroke-width="2.2"/>
                     <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round"/>
                 </svg>
-                <span id="desktopSearchPlaceholder">Search place or postcode…</span>
+                <input type="text" id="desktopSearchInput" placeholder="Search place or postcode…" autocomplete="off" onkeydown="if(event.key==='Enter') runSearch()"/>
             </div>
+            <div id="searchResults"></div>
         </div>
         <div id="desktopPanelBody">
             <div id="detailsContent"></div>
@@ -39,7 +40,7 @@
         </div>
     </div>
 
-    <!-- ── MAP CONTENT BUTTON + KEY PILLS (desktop, floating on map) ── -->
+    <!-- ── MAP CONTENT BUTTON + KEY PILLS ── -->
     <div id="mapContentBar">
         <button id="mapResetBtn" onclick="resetMapView(); clearAllLayers();">Reset</button>
         <button id="mapContentBtn" onclick="toggleLayersPanel()">
@@ -57,7 +58,7 @@
         <div id="keyPillsRow"></div>
     </div>
 
-    <!-- ── LAYERS PANEL (drops down from map content button) ── -->
+    <!-- ── LAYERS PANEL ── -->
     <div id="layersPanel">
         <div id="layersPanelHeader">
             <span id="layersPanelTitle">Map content</span>
@@ -111,7 +112,7 @@
         </div>
     </div>
 
-    <!-- ── MOBILE ELEMENTS (untouched) ── -->
+    <!-- ── MOBILE ELEMENTS ── -->
     <div id="mobileFilterBar">
         <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
             <span id="categoryFilterLabel">All Categories</span>
@@ -136,34 +137,22 @@
         </svg>
     </div>
 
-    <div id="mobileHomeBtn" onclick="resetMapView(); closePanel();">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
-            <path d="M9 21V12h6v9" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
-        </svg>
-    </div>
-
+    <!-- Mobile details panel — no filterBar dropdown -->
     <div id="details">
         <div id="detailsPanelInner">
-            <div id="filterBar">
-                <select id="categoryFilterDesktop">
-                    <option value="All">All Categories</option>
-                    <option value="Horrible History">Horrible History</option>
-                    <option value="Literary">Literary</option>
-                    <option value="Maritime">Maritime</option>
-                    <option value="Military">Military</option>
-                    <option value="Ancient Landscape">Ancient Landscape</option>
-                </select>
-            </div>
             <div id="mobileDetailsContent"></div>
         </div>
     </div>
 
+    <!-- Mobile footer — house circle + About · mapbritannia.com + © 2026 -->
     <div id="mobileFooter">
-        <button class="footer-btn" onclick="resetMapView(); closePanel();">🏠</button>
-        <button class="footer-btn" onclick="openModal('about')">About</button>
-        <button class="footer-btn" onclick="openModal('contact')">Contact</button>
-        <button class="footer-btn" onclick="openModal('references')">References</button>
+        <button class="footer-home-btn" onclick="resetMapView(); closePanel();" aria-label="Home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+                <path d="M9 21V12h6v9" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <a class="footer-about-link" href="#" onclick="openModal('about'); return false;">About · mapbritannia.com</a>
         <span class="footer-copy">© 2026</span>
     </div>
 </div>
@@ -229,6 +218,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js?v=15"></script>
+<script src="app.js?v=17"></script>
 </body>
 </html>
