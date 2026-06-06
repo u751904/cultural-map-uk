@@ -8,75 +8,109 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css?v=9">
+    <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 <div id="layout">
 
-    <!-- Full viewport map -->
     <div id="map"></div>
 
     <!-- ── DESKTOP LEFT PANEL ── -->
     <div id="desktopPanel">
-
         <div id="desktopPanelHeader">
             <div id="desktopPanelLogo">Map Britannia</div>
             <div id="desktopPanelSub">Explore Britain's cultural heritage</div>
         </div>
-
         <div id="desktopPanelSearch">
             <div id="desktopSearchBox">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <circle cx="11" cy="11" r="7" stroke="#082b5f" stroke-width="2.2"/>
                     <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round"/>
                 </svg>
                 <span id="desktopSearchPlaceholder">Search place or postcode…</span>
             </div>
         </div>
-
         <div id="desktopPanelBody">
             <div id="detailsContent"></div>
         </div>
-
         <div id="desktopPanelFooter">
             <a href="#" onclick="openModal('about'); return false;" id="desktopFooterAbout">About · mapbritannia.com</a>
             <span id="desktopFooterCopy">© 2026</span>
         </div>
     </div>
 
-    <!-- ── DESKTOP PILL FILTER BAR (floating on map) ── -->
-    <div id="desktopPillBar">
-        <div id="pillAllCategories" onclick="toggleCategoryDropdown()">
-            <span>All categories</span>
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <!-- ── MAP CONTENT BUTTON + KEY PILLS (desktop, floating on map) ── -->
+    <div id="mapContentBar">
+        <button id="mapContentBtn" onclick="toggleLayersPanel()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+                <rect x="2" y="10" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+                <rect x="2" y="17" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+            </svg>
+            Map content
+            <svg id="mapContentChevron" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4l4 4 4-4" stroke="#555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="mapContentBadge" style="display:none;"></span>
+        </button>
+        <div id="keyPillsRow"></div>
+    </div>
+
+    <!-- ── LAYERS PANEL (drops down from map content button) ── -->
+    <div id="layersPanel">
+        <div id="layersPanelHeader">
+            <span id="layersPanelTitle">Map content</span>
+            <button id="layersPanelClose" onclick="closeLayersPanel()" aria-label="Close layers panel">×</button>
         </div>
-        <div id="activePillsRow"></div>
-        <div id="pillReset" onclick="resetAllLayers()" style="display:none;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4v6h6" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 10a8 8 0 1 1 2 5.3" stroke="#555" stroke-width="2" stroke-linecap="round"/></svg>
-            Reset
+        <div id="layersPanelSection">Categories</div>
+        <div id="layersList">
+            <div class="layer-row" data-cat="Literary" data-colour="#1a4a8a">
+                <span class="layer-dot" style="background:#1a4a8a;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Literary</div>
+                    <div class="layer-sub">Authors, novels &amp; landscapes</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Horrible History" data-colour="#5a2880">
+                <span class="layer-dot" style="background:#5a2880;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Horrible History</div>
+                    <div class="layer-sub">Plague, crime &amp; dark tourism</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Military" data-colour="#8a2020">
+                <span class="layer-dot" style="background:#8a2020;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Military</div>
+                    <div class="layer-sub">Battlefields &amp; fortifications</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Maritime" data-colour="#1a6a7a">
+                <span class="layer-dot" style="background:#1a6a7a;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Maritime</div>
+                    <div class="layer-sub">Wrecks &amp; coastal heritage</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Ancient Landscape" data-colour="#2d6e2d">
+                <span class="layer-dot" style="background:#2d6e2d;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Ancient Landscape</div>
+                    <div class="layer-sub">Veteran trees &amp; lost settlements</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+        </div>
+        <div id="layersPanelFooter">
+            <button id="layersClearBtn" onclick="clearAllLayers()">Clear all</button>
         </div>
     </div>
 
-    <!-- Category dropdown -->
-    <div id="categoryDropdown">
-        <div class="cat-option" data-cat="Literary" data-colour="#1a4a8a" onclick="selectCategory(this)">
-            <span class="cat-dot" style="background:#1a4a8a;"></span> Literary
-        </div>
-        <div class="cat-option" data-cat="Horrible History" data-colour="#5a2880" onclick="selectCategory(this)">
-            <span class="cat-dot" style="background:#5a2880;"></span> Horrible History
-        </div>
-        <div class="cat-option" data-cat="Military" data-colour="#8a2020" onclick="selectCategory(this)">
-            <span class="cat-dot" style="background:#8a2020;"></span> Military
-        </div>
-        <div class="cat-option" data-cat="Maritime" data-colour="#1a6a7a" onclick="selectCategory(this)">
-            <span class="cat-dot" style="background:#1a6a7a;"></span> Maritime
-        </div>
-        <div class="cat-option" data-cat="Ancient Landscape" data-colour="#2d6e2d" onclick="selectCategory(this)">
-            <span class="cat-dot" style="background:#2d6e2d;"></span> Ancient Landscape
-        </div>
-    </div>
-
-    <!-- ── MOBILE OVERLAY ELEMENTS (untouched) ── -->
+    <!-- ── MOBILE ELEMENTS (untouched) ── -->
     <div id="mobileFilterBar">
         <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
             <span id="categoryFilterLabel">All Categories</span>
@@ -108,7 +142,6 @@
         </svg>
     </div>
 
-    <!-- Mobile details panel -->
     <div id="details">
         <div id="detailsPanelInner">
             <div id="filterBar">
@@ -125,7 +158,6 @@
         </div>
     </div>
 
-    <!-- Mobile footer -->
     <div id="mobileFooter">
         <button class="footer-btn" onclick="resetMapView(); closePanel();">🏠</button>
         <button class="footer-btn" onclick="openModal('about')">About</button>
@@ -135,10 +167,8 @@
     </div>
 </div>
 
-<!-- Modal overlay -->
-<div id="modalOverlay" onclick="closeModal()"></div>
-
 <!-- Modal -->
+<div id="modalOverlay" onclick="closeModal()"></div>
 <div id="modal">
     <div id="modalHeader">
         <div id="modalTabs">
@@ -177,8 +207,6 @@
             <p class="attribution-block">Wikidata contributors. Tree and woodland data. Wikidata (CC0).</p>
             <a href="https://www.wikidata.org" target="_blank">Wikidata ↗</a>
             <a href="https://ati.woodlandtrust.org.uk" target="_blank">Ancient Tree Inventory — Woodland Trust ↗</a>
-            <a href="https://www.ancienttreeforum.org.uk" target="_blank">Ancient Tree Forum ↗</a>
-            <a href="https://www.woodlandtrust.org.uk" target="_blank">Woodland Trust ↗</a>
             <h3>Map Tiles</h3>
             <p>Map tiles provided by OpenStreetMap contributors, licensed under the Open Database Licence (ODbL).</p>
             <p class="attribution-block">© OpenStreetMap contributors</p>
@@ -200,6 +228,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js?v=9"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>
