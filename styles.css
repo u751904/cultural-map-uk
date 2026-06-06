@@ -16,14 +16,51 @@ body {
     height: 100%;
 }
 
+/* ====================
+   DETAILS PANEL — flex column so footer sticks to bottom
+   ==================== */
+
 #details {
     width: 38%;
-    padding: 28px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     border-left: 1px solid #c9c9c9;
     background: #f8f4ec;
     line-height: 1.55;
     box-sizing: border-box;
+    overflow: hidden;
+}
+
+#detailsPanelInner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px;
+    box-sizing: border-box;
+}
+
+/* ====================
+   DESKTOP STICKY FOOTER
+   ==================== */
+
+#desktopFooter {
+    flex-shrink: 0;
+    background: #082b5f;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+#desktopFooterLinks {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 16px;
+}
+
+#desktopFooterAttrib {
+    padding: 6px 16px 10px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 /* ====================
@@ -55,6 +92,7 @@ body {
 .cluster-circle-red    { background: #8a2020; }
 .cluster-circle-teal   { background: #1a6a7a; }
 .cluster-circle-green  { background: #2d6e2d; }
+
 /* ====================
    MOBILE OVERLAY ELEMENTS
    ==================== */
@@ -69,7 +107,6 @@ body {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
-
 #mobileHomeBtn {
     display: none;
     position: absolute;
@@ -80,6 +117,21 @@ body {
     border-radius: 50%;
     width: 36px;
     height: 36px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#mobileExpandBtn {
+    display: none;
+    position: absolute;
+    bottom: calc(48vh + 14px);
+    right: 10px;
+    z-index: 1000;
+    background: rgba(8,43,95,0.85);
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -264,6 +316,8 @@ body {
 .partner-panel.literary { border-color: #e2c47d; background: #fff8e8; }
 .partner-panel.horrible { border-color: #c4a8d0; background: #f5f0f7; }
 .partner-panel.military { border-color: #8fba9f; background: #eef4f0; }
+.partner-panel.maritime { border-color: #7ab0d0; background: #eef6ff; }
+.partner-panel.ancient  { border-color: #5a9e5a; background: #f0f7f0; }
 
 .partner-head {
     display: flex;
@@ -286,6 +340,8 @@ body {
 .partner-icon.literary { background: #f5e4b8; }
 .partner-icon.horrible { background: #e8d8f0; }
 .partner-icon.military { background: #cce3d5; }
+.partner-icon.maritime { background: #c0d8f0; }
+.partner-icon.ancient  { background: #c8e6c8; }
 
 .partner-name {
     font-size: 14px;
@@ -322,6 +378,8 @@ body {
 .partner-cta.literary { border-color: #ba8b1d; color: #7a5c1e; background: #fffdf6; }
 .partner-cta.horrible { border-color: #9b6db8; color: #6a3d82; background: #faf5ff; }
 .partner-cta.military { border-color: #4a9b6a; color: #2a6645; background: #f2faf5; }
+.partner-cta.maritime { border-color: #1a6a9a; color: #0a4a7a; background: #f0f8ff; }
+.partner-cta.ancient  { border-color: #2d6e2d; color: #1a4a1a; background: #f0f7f0; }
 
 .partner-example-tag {
     display: inline-block;
@@ -354,7 +412,7 @@ body {
 }
 
 /* ====================
-   FOOTER
+   PROJECT FOOTER (inline, inside place card)
    ==================== */
 
 .project-footer {
@@ -364,106 +422,22 @@ body {
     text-align: right;
 }
 
-/* ====================
-   MOBILE
-   ==================== */
-
-@media (max-width: 768px) {
-    #layout {
-        flex-direction: column;
-    }
-
-    #map {
-        width: 100%;
-        height: 52vh;
-    }
-
-
-    #details {
-        width: auto;
-        height: 48vh;
-        border-left: none;
-        border-top: 1px solid #ccc;
-        padding: 14px;
-        transition: transform 0.3s ease;
-    }
-
-    #details.panel-hidden {
-        transform: translateY(100%);
-        pointer-events: none;
-    }
-
-
-
-    #mobileFilterBar {
-        display: block;
-    }
-
-    #mobileHint {
-        display: block;
-    }
-
-    #mobileHomeBtn {
-        display: flex;
-    }
-
-    #filterBar {
-        display: none;
-    }
-
-    .place-card {
-        padding: 18px;
-    }
-
-    .place-card h1 {
-        font-size: 26px;
-    }
-
-    .literature-list {
-        columns: 1;
-    }
-
-    .project-footer {
-        text-align: left;
-    }
-}
-
-/* ====================
-   HISTORIC ENGLAND ATTRIBUTION
-   ==================== */
-
-#heAttribution {
-    padding: 8px 28px;
+/* Source credit in detail panel footer */
+.source-credit {
+    display: block;
+    margin-top: 6px;
+    color: #999;
     font-size: 11px;
-    color: #888;
-    border-top: 1px solid #ddd;
-    background: #f8f4ec;
-    line-height: 1.5;
 }
 
-        .partner-panel.maritime { border-color: #7ab0d0; background: #eef6ff; }
-        .partner-icon.maritime { background: #c0d8f0; }
-        .partner-cta.maritime { border-color: #1a6a9a; color: #0a4a7a; background: #f0f8ff; }
+/* Hide About link on mobile — it's in the footer nav instead */
+@media (max-width: 768px) {
+    .desktop-only { display: none; }
+}
 
 /* ====================
-   MOBILE FOOTER
+   SHARED FOOTER BUTTON STYLES
    ==================== */
-
-#mobileFooter {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1001;
-    background: #082b5f;
-    padding: 10px 16px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-    display: none;
-    align-items: center;
-    justify-content: space-around;
-    border-top: 1px solid rgba(255,255,255,0.15);
-}
 
 .footer-btn {
     background: none;
@@ -482,6 +456,25 @@ body {
 .footer-copy {
     color: rgba(255,255,255,0.5);
     font-size: 13px;
+}
+
+/* ====================
+   MOBILE FOOTER
+   ==================== */
+
+#mobileFooter {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    background: #082b5f;
+    padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    align-items: center;
+    justify-content: space-around;
+    border-top: 1px solid rgba(255,255,255,0.15);
 }
 
 /* ====================
@@ -642,25 +635,88 @@ body {
     margin: 8px 0 20px;
 }
 
+/* ====================
+   MOBILE
+   ==================== */
+
 @media (max-width: 768px) {
-    #mobileFooter {
-        display: flex;
+
+    #layout {
+        flex-direction: column;
+    }
+
+    #map {
+        width: 100%;
+        height: calc(52vh - env(safe-area-inset-top));
+        transition: height 0.3s ease;
     }
 
     #details {
+        width: auto;
+        height: calc(48vh - env(safe-area-inset-bottom));
+        border-left: none;
+        border-top: 1px solid #ccc;
+        transition: transform 0.3s ease, height 0.3s ease;
+        /* Override desktop flex padding — padding is on inner div */
+        padding: 0;
+    }
+
+    #detailsPanelInner {
+        padding: 14px;
         padding-bottom: calc(14px + 52px + env(safe-area-inset-bottom));
     }
 
+    /* Hide desktop footer on mobile */
+    #desktopFooter {
+        display: none;
+    }
+
+    #details.panel-hidden {
+        transform: translateY(100%);
+        pointer-events: none;
+    }
+
+    #details.panel-hidden {
+        display: none;
+    }
+
     #mobileFilterBar {
+        display: block;
         top: calc(12px + env(safe-area-inset-top));
     }
 
     #mobileHomeBtn {
+        display: flex;
         top: calc(12px + env(safe-area-inset-top));
     }
 
-    #map {
-        height: calc(52vh - env(safe-area-inset-top));
+    #mobileExpandBtn {
+        display: flex;
+        bottom: calc(48vh + 14px);
+    }
+
+    #filterBar {
+        display: none;
+    }
+
+    .place-card {
+        padding: 18px;
+    }
+
+    .place-card h1 {
+        font-size: 26px;
+    }
+
+    .literature-list {
+        columns: 1;
+    }
+
+    .project-footer {
+        text-align: left;
+    }
+
+    #mobileFooter {
+        display: flex;
     }
 
     #modal {
@@ -676,15 +732,32 @@ body {
     }
 }
 
-/* Map expands to full height on mobile when filter active */
+/* ====================
+   MOBILE MAP EXPANDED STATE
+   ==================== */
+
+/* Filter active: full height map, hide panel */
 #layout.filter-active #map {
     height: calc(100vh - 52px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
 }
 
 #layout.filter-active #details {
-
     display: none;
 }
+
+/* Map expanded: full height, hide panel and expand button */
+#layout.map-expanded #map {
+    height: calc(100vh - 52px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+}
+
+#layout.map-expanded #details {
+    display: none;
+}
+
+#layout.map-expanded #mobileExpandBtn {
+    display: none;
+}
+
 /* ====================
    CUSTOM MOBILE DROPDOWN
    ==================== */
@@ -740,32 +813,4 @@ body {
 .filter-option.selected {
     color: white;
     font-weight: 700;
-}
-
-/* Fix map not expanding when panel hidden on mobile */
-@media (max-width: 768px) {
-    #details.panel-hidden {
-        display: none;
-    }
-
-    #layout:not(.filter-active) #map {
-        height: calc(52vh - env(safe-area-inset-top));
-    }
-}
-/* Ancient Landscape partner panel */
-.partner-panel.ancient { border-color: #5a9e5a; background: #f0f7f0; }
-.partner-icon.ancient { background: #c8e6c8; }
-.partner-cta.ancient { border-color: #2d6e2d; color: #1a4a1a; background: #f0f7f0; }
-
-/* Source credit in detail panel footer */
-.source-credit {
-    display: block;
-    margin-top: 6px;
-    color: #999;
-    font-size: 11px;
-}
-
-/* Hide About link on mobile — it's in the footer nav instead */
-@media (max-width: 768px) {
-    .desktop-only { display: none; }
 }
