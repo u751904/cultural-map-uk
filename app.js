@@ -2,7 +2,7 @@
 // MAP SETUP
 // ====================
 
-var map = L.map('map').setView([54.5, -3.5], 5);
+var map = L.map('map').setView([54.0, -2.5], 6);
 var allMarkers = [];
 var isMobile = window.innerWidth <= 768;
 
@@ -80,7 +80,6 @@ function getSelectedMarkerIcon(category) {
 var currentFilter = "All";
 var markerClicked = false;
 var selectedMarker = null;
-var MAX_LAYERS = 4;
 
 var markerCluster = L.markerClusterGroup({
     maxClusterRadius: 50,
@@ -277,8 +276,8 @@ function getSignpostHTML() {
         '<title>Map Britannia signpost</title>' +
         '<desc>A wooden signpost pointing to Literature, Military and Horrible History</desc>' +
         '<rect x="0" y="0" width="680" height="440" fill="#f5f0e6"/>' +
-        '<rect x="0" y="340" width="680" height="100" fill="#c8b87a"/>' +
-        '<rect x="0" y="355" width="680" height="85" fill="#bfaa68"/>' +
+        '<rect x="0" y="340" width="680" height="100" fill="#7aaa48"/>' +
+        '<rect x="0" y="358" width="680" height="82" fill="#5a9030"/>' +
         '<ellipse cx="100" cy="342" rx="70" ry="18" fill="#8ab060"/>' +
         '<ellipse cx="75" cy="334" rx="48" ry="22" fill="#7aa050"/>' +
         '<ellipse cx="105" cy="328" rx="42" ry="26" fill="#90ba64"/>' +
@@ -300,8 +299,14 @@ function getSignpostHTML() {
         '<ellipse cx="200" cy="352" rx="20" ry="12" fill="#8aac58"/>' +
         '<ellipse cx="218" cy="349" rx="17" ry="11" fill="#9aba6a"/>' +
         '<rect x="206" y="360" width="6" height="12" rx="2" fill="#6a5030"/>' +
-        '<path d="M30,370 Q60,355 90,365 Q120,375 150,360 Q180,348 210,362 Q240,372 270,358 Q300,346 330,360 Q360,370 390,355 Q420,342 450,158 Q480,370 510,355 Q540,343 570,358 Q600,368 630,355 Q655,345 680,158 L680,440 L0,440 Z" fill="#b8a45e"/>' +
-        '<path d="M0,390 Q40,378 80,385 Q120,392 160,380 Q200,370 240,382 Q280,390 320,378 Q360,368 400,380 Q440,390 480,378 Q520,368 560,380 Q600,388 640,376 Q660,372 680,378 L680,440 L0,440 Z" fill="#a89050"/>' +
+        '<path d="M0,368 Q40,360 80,365 Q120,370 160,362 Q200,355 240,364 Q280,371 320,362 Q360,355 400,364 Q440,371 480,362 Q520,355 560,364 Q600,371 640,362 Q660,358 680,362 L680,440 L0,440 Z" fill="#6aaa38"/>' +
+        '<path d="M0,385 Q50,378 100,383 Q150,388 200,380 Q250,373 300,381 Q350,388 400,380 Q450,373 500,381 Q550,388 600,380 Q640,374 680,378 L680,440 L0,440 Z" fill="#4e8c28"/>' +
+        '<ellipse cx="62" cy="402" rx="7" ry="4" fill="#8a8a7a" stroke="#6a6a5a" stroke-width="0.6"/>' +
+        '<ellipse cx="95" cy="410" rx="5" ry="3" fill="#9a9a8a" stroke="#7a7a6a" stroke-width="0.5"/>' +
+        '<ellipse cx="200" cy="414" rx="8" ry="4" fill="#888878" stroke="#686858" stroke-width="0.6"/>' +
+        '<ellipse cx="395" cy="412" rx="7" ry="3" fill="#8a8a7a" stroke="#6a6a5a" stroke-width="0.6"/>' +
+        '<ellipse cx="430" cy="420" rx="5" ry="3" fill="#9a9a8a" stroke="#7a7a6a" stroke-width="0.5"/>' +
+        '<ellipse cx="540" cy="414" rx="9" ry="4" fill="#888878" stroke="#686858" stroke-width="0.6"/>' +
         '<line x1="48" y1="362" x2="44" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
         '<line x1="48" y1="362" x2="52" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
         '<line x1="48" y1="362" x2="48" y2="348" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
@@ -328,9 +333,7 @@ function getSignpostHTML() {
         '<line x1="310" y1="382" x2="313" y2="372" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
         '<line x1="560" y1="378" x2="557" y2="369" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
         '<line x1="560" y1="378" x2="563" y2="368" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<ellipse cx="62" cy="400" rx="14" ry="9" fill="#c0aa80" stroke="#a08860" stroke-width="0.8"/>' +
-        '<ellipse cx="395" cy="406" rx="15" ry="8" fill="#b8a468" stroke="#988448" stroke-width="0.8"/>' +
-        '<ellipse cx="540" cy="408" rx="16" ry="9" fill="#bcaa6e" stroke="#9c8a4e" stroke-width="0.8"/>' +
+
         '<rect x="333" y="120" width="14" height="235" rx="3" fill="#8a6030"/>' +
         '<rect x="330" y="310" width="20" height="18" rx="2" fill="#7a5028"/>' +
         '<rect x="333" y="120" width="14" height="30" fill="#7a5828"/>' +
@@ -482,12 +485,6 @@ function toggleLayer(toggleEl) {
     var colour = row.getAttribute("data-colour");
     var isOn = toggleEl.classList.contains("on");
 
-    var activeCount = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; }).length;
-
-    if (!isOn && activeCount >= MAX_LAYERS) {
-        return;
-    }
-
     if (isOn) {
         toggleEl.classList.remove("on");
         toggleEl.classList.add("off");
@@ -498,24 +495,9 @@ function toggleLayer(toggleEl) {
         activeLayers[cat] = true;
     }
 
-    enforceMaxLayers();
     applyLayerFilter();
     updateKeyPills();
     updateBadge();
-}
-
-function enforceMaxLayers() {
-    var activeCount = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; }).length;
-    var rows = document.querySelectorAll(".layer-row");
-    rows.forEach(function(row) {
-        var cat = row.getAttribute("data-cat");
-        var toggle = row.querySelector(".layer-toggle");
-        if (toggle && !activeLayers[cat] && activeCount >= MAX_LAYERS) {
-            row.classList.add("disabled");
-        } else {
-            row.classList.remove("disabled");
-        }
-    });
 }
 
 function clearAllLayers() {
@@ -523,9 +505,6 @@ function clearAllLayers() {
     document.querySelectorAll(".layer-toggle").forEach(function(t) {
         t.classList.remove("on");
         t.classList.add("off");
-    });
-    document.querySelectorAll(".layer-row").forEach(function(r) {
-        r.classList.remove("disabled");
     });
     applyLayerFilter();
     updateKeyPills();
@@ -622,7 +601,7 @@ function closeDesktopPanel() {
 // ====================
 
 function resetMapView() {
-    map.setView([54.5, -3.5], 5);
+    map.setView([54.0, -2.5], 6);
     markerClicked = false;
 
     if (selectedMarker) {
