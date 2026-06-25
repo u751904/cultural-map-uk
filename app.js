@@ -87,7 +87,24 @@ var markerCluster = L.markerClusterGroup({
     disableClusteringAtZoom: 16,
     iconCreateFunction: function(cluster) {
         var count = cluster.getChildCount();
-        return L.divIcon({ html: '<div class="cluster-circle">' + count + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
+        var children = cluster.getAllChildMarkers();
+        var categories = {};
+        children.forEach(function(m) { if (m.category) categories[m.category] = true; });
+        var uniqueCats = Object.keys(categories);
+
+        var colourClass = "cluster-circle"; // default: navy, used when mixed or unknown
+        if (uniqueCats.length === 1) {
+            var catColourClass = {
+                "Literary": "cluster-circle-blue",
+                "Horrible History": "cluster-circle-purple",
+                "Military": "cluster-circle-red",
+                "Maritime": "cluster-circle-teal",
+                "Ancient Landscape": "cluster-circle-green"
+            };
+            colourClass = catColourClass[uniqueCats[0]] || "cluster-circle";
+        }
+
+        return L.divIcon({ html: '<div class="' + colourClass + '">' + count + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
     }
 });
 
