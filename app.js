@@ -441,6 +441,11 @@ layerConfig.forEach(function(cfg) {
                 });
                 geoJsonLayers.push({ layer: ml, categories: cfg.categories, isWreckMarkers: true });
             }
+
+            // Re-apply any active layer filter now that this geoJSON has actually loaded.
+            // Without this, toggling a layer on before the fetch resolves (common on a fast
+            // mobile page load) leaves that layer permanently invisible even after the data arrives.
+            applyLayerFilter();
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
 });
