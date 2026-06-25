@@ -73,7 +73,6 @@ function getSelectedMarkerIcon(category) {
 // MARKER CLUSTER
 // ====================
 
-var currentFilter = "All";
 var markerClicked = false;
 var selectedMarker = null;
 
@@ -85,8 +84,6 @@ var markerCluster = L.markerClusterGroup({
         return L.divIcon({ html: '<div class="cluster-circle">' + count + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
     }
 });
-
-var navySingleIcon = L.divIcon({ html: '<div class="cluster-circle">1</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
 
 // ====================
 // WRECK ICON
@@ -261,89 +258,12 @@ function showDetails(row, marker) {
 }
 
 // ====================
-// SIGNPOST HTML
+// EMPTY STATE (replaces old signpost graphic)
 // ====================
 
-function getSignpostHTML() {
-    return '<div class="signpost-wrapper">' +
-        '<svg width="100%" viewBox="0 0 680 440" role="img" xmlns="http://www.w3.org/2000/svg">' +
-        '<title>Map Britannia signpost</title>' +
-        '<desc>A wooden signpost pointing to Literature, Military and Horrible History</desc>' +
-        '<rect x="0" y="0" width="680" height="440" fill="#f5f0e6"/>' +
-        '<rect x="0" y="340" width="680" height="100" fill="#7aaa48"/>' +
-        '<rect x="0" y="358" width="680" height="82" fill="#5a9030"/>' +
-        '<ellipse cx="100" cy="342" rx="70" ry="18" fill="#8ab060"/>' +
-        '<ellipse cx="75" cy="334" rx="48" ry="22" fill="#7aa050"/>' +
-        '<ellipse cx="105" cy="328" rx="42" ry="26" fill="#90ba64"/>' +
-        '<ellipse cx="88" cy="320" rx="32" ry="20" fill="#82aa58"/>' +
-        '<ellipse cx="118" cy="325" rx="28" ry="18" fill="#9ac070"/>' +
-        '<rect x="95" y="354" width="10" height="22" rx="3" fill="#6a5030"/>' +
-        '<rect x="102" y="350" width="7" height="18" rx="2" fill="#7a6040"/>' +
-        '<ellipse cx="580" cy="338" rx="62" ry="16" fill="#8ab060"/>' +
-        '<ellipse cx="558" cy="328" rx="44" ry="24" fill="#7aa050"/>' +
-        '<ellipse cx="590" cy="322" rx="38" ry="22" fill="#90ba64"/>' +
-        '<ellipse cx="572" cy="315" rx="28" ry="18" fill="#9ac070"/>' +
-        '<ellipse cx="600" cy="330" rx="24" ry="16" fill="#82aa58"/>' +
-        '<rect x="575" y="350" width="10" height="22" rx="3" fill="#6a5030"/>' +
-        '<ellipse cx="470" cy="355" rx="35" ry="10" fill="#9ab868"/>' +
-        '<ellipse cx="458" cy="348" rx="24" ry="14" fill="#8aac58"/>' +
-        '<ellipse cx="478" cy="344" rx="20" ry="13" fill="#9aba6a"/>' +
-        '<rect x="466" y="358" width="7" height="14" rx="2" fill="#6a5030"/>' +
-        '<ellipse cx="210" cy="358" rx="28" ry="8" fill="#9ab868"/>' +
-        '<ellipse cx="200" cy="352" rx="20" ry="12" fill="#8aac58"/>' +
-        '<ellipse cx="218" cy="349" rx="17" ry="11" fill="#9aba6a"/>' +
-        '<rect x="206" y="360" width="6" height="12" rx="2" fill="#6a5030"/>' +
-        '<path d="M0,368 Q40,360 80,365 Q120,370 160,362 Q200,355 240,364 Q280,371 320,362 Q360,355 400,364 Q440,371 480,362 Q520,355 560,364 Q600,371 640,362 Q660,358 680,362 L680,440 L0,440 Z" fill="#6aaa38"/>' +
-        '<path d="M0,385 Q50,378 100,383 Q150,388 200,380 Q250,373 300,381 Q350,388 400,380 Q450,373 500,381 Q550,388 600,380 Q640,374 680,378 L680,440 L0,440 Z" fill="#4e8c28"/>' +
-        '<ellipse cx="62" cy="402" rx="7" ry="4" fill="#8a8a7a" stroke="#6a6a5a" stroke-width="0.6"/>' +
-        '<ellipse cx="95" cy="410" rx="5" ry="3" fill="#9a9a8a" stroke="#7a7a6a" stroke-width="0.5"/>' +
-        '<ellipse cx="200" cy="414" rx="8" ry="4" fill="#888878" stroke="#686858" stroke-width="0.6"/>' +
-        '<ellipse cx="395" cy="412" rx="7" ry="3" fill="#8a8a7a" stroke="#6a6a5a" stroke-width="0.6"/>' +
-        '<ellipse cx="430" cy="420" rx="5" ry="3" fill="#9a9a8a" stroke="#7a7a6a" stroke-width="0.5"/>' +
-        '<ellipse cx="540" cy="414" rx="9" ry="4" fill="#888878" stroke="#686858" stroke-width="0.6"/>' +
-        '<line x1="48" y1="362" x2="44" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="48" y1="362" x2="52" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="48" y1="362" x2="48" y2="348" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="145" y1="368" x2="141" y2="356" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="145" y1="368" x2="149" y2="355" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="145" y1="368" x2="145" y2="354" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="260" y1="364" x2="256" y2="352" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="260" y1="364" x2="264" y2="351" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="260" y1="364" x2="260" y2="350" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="390" y1="360" x2="386" y2="348" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="390" y1="360" x2="394" y2="347" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="390" y1="360" x2="390" y2="346" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="510" y1="362" x2="506" y2="350" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="510" y1="362" x2="514" y2="349" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="510" y1="362" x2="510" y2="348" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="630" y1="360" x2="626" y2="348" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="630" y1="360" x2="634" y2="347" stroke="#6a8a38" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="630" y1="360" x2="630" y2="346" stroke="#5a7a28" stroke-width="1.5" stroke-linecap="round"/>' +
-        '<line x1="170" y1="380" x2="167" y2="371" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="170" y1="380" x2="173" y2="370" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="440" y1="375" x2="437" y2="366" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="440" y1="375" x2="443" y2="365" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="310" y1="382" x2="307" y2="373" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="310" y1="382" x2="313" y2="372" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="560" y1="378" x2="557" y2="369" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<line x1="560" y1="378" x2="563" y2="368" stroke="#7a9a48" stroke-width="1.2" stroke-linecap="round"/>' +
-        '<rect x="333" y="120" width="14" height="235" rx="3" fill="#8a6030"/>' +
-        '<rect x="330" y="310" width="20" height="18" rx="2" fill="#7a5028"/>' +
-        '<rect x="333" y="120" width="14" height="30" fill="#7a5828"/>' +
-        '<rect x="222" y="222" width="160" height="40" rx="5" fill="#1a4a8a"/>' +
-        '<rect x="222" y="222" width="160" height="40" rx="5" fill="none" stroke="#0a3060" stroke-width="1.5"/>' +
-        '<polygon points="222,222 209,242 222,262" fill="#1a4a8a" stroke="#0a3060" stroke-width="1.5" stroke-linejoin="round"/>' +
-        '<text x="298" y="247" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDCD6 Literature</text>' +
-        '<rect x="347" y="168" width="172" height="40" rx="5" fill="#8a2020"/>' +
-        '<rect x="347" y="168" width="172" height="40" rx="5" fill="none" stroke="#6a1010" stroke-width="1.5"/>' +
-        '<polygon points="519,168 519,208 533,188" fill="#8a2020" stroke="#6a1010" stroke-width="1.5" stroke-linejoin="round"/>' +
-        '<text x="429" y="193" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#ffffff" letter-spacing="0.5">\u2694\uFE0F Military</text>' +
-        '<rect x="228" y="120" width="182" height="40" rx="5" fill="#5a2880"/>' +
-        '<rect x="228" y="120" width="182" height="40" rx="5" fill="none" stroke="#3a1060" stroke-width="1.5"/>' +
-        '<polygon points="228,120 228,160 215,140" fill="#5a2880" stroke="#3a1060" stroke-width="1.5" stroke-linejoin="round"/>' +
-        '<text x="316" y="145" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">\uD83D\uDC80 Horrible History</text>' +
-        '</svg>' +
-        '<p class="signpost-prompt">Select a marker on the map to begin your journey</p>' +
+function getEmptyStateHTML() {
+    return '<div class="empty-state">' +
+        '<p class="empty-state-text">Use search to find a place, or Explore to choose categories</p>' +
         '</div>';
 }
 
@@ -442,19 +362,11 @@ layerConfig.forEach(function(cfg) {
                 geoJsonLayers.push({ layer: ml, categories: cfg.categories, isWreckMarkers: true });
             }
 
-            // Mobile has no layer-toggle panel, so geoJSON layers (wrecks, battlefields)
-            // must be added to the map directly and unconditionally as soon as they load.
-            // Desktop uses applyLayerFilter() instead, driven by the toggle panel.
-            if (isMobile) {
-                geoJsonLayers.forEach(function(item) {
-                    if (!map.hasLayer(item.layer)) map.addLayer(item.layer);
-                });
-            } else {
-                // Re-apply any active layer filter now that this geoJSON has actually loaded.
-                // Without this, toggling a layer on before the fetch resolves (common on a fast
-                // page load) leaves that layer permanently invisible even after the data arrives.
-                applyLayerFilter();
-            }
+            // Re-apply any active layer filter now that this geoJSON has actually loaded.
+            // Without this, toggling a layer on before the fetch resolves (common on a fast
+            // page load) leaves that layer permanently invisible even after the data arrives.
+            // Shared by both mobile and desktop now that both drive the same activeLayers state.
+            applyLayerFilter();
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
 });
@@ -487,7 +399,7 @@ function closeLayersPanel() {
 }
 
 function toggleLayer(toggleEl) {
-    var row = toggleEl.closest ? toggleEl.closest(".layer-row") : toggleEl.parentNode;
+    var row = toggleEl.closest(".layer-row, .mobile-layer-row");
     var cat = row.getAttribute("data-cat");
     var isOn = toggleEl.classList.contains("on");
 
@@ -518,12 +430,9 @@ function clearAllLayers() {
 }
 
 function applyLayerFilter() {
-    // Mobile uses its own always-on filter system (applyMobileFilter), not the
-    // desktop layer-toggle panel. activeLayers stays empty on mobile, so this
-    // function must do nothing there — otherwise it wipes the marker cluster
-    // off the map the moment a geoJSON layer finishes loading asynchronously.
-    if (isMobile) return;
-
+    // Shared by both desktop (toggle panel) and mobile (layers tray) since
+    // both now drive the same activeLayers object - one source of truth,
+    // no more dual code paths to keep in sync.
     var activeList = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; });
 
     markerCluster.clearLayers();
@@ -559,14 +468,26 @@ function updateKeyPills() {
 }
 
 function updateBadge() {
-    var badge = document.getElementById("mapContentBadge");
-    if (!badge) return;
     var count = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; }).length;
-    if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = "inline-block";
-    } else {
-        badge.style.display = "none";
+
+    var desktopBadge = document.getElementById("mapContentBadge");
+    if (desktopBadge) {
+        if (count > 0) {
+            desktopBadge.textContent = count;
+            desktopBadge.style.display = "inline-block";
+        } else {
+            desktopBadge.style.display = "none";
+        }
+    }
+
+    var mobileBadge = document.getElementById("mobileExploreBadge");
+    if (mobileBadge) {
+        if (count > 0) {
+            mobileBadge.textContent = count;
+            mobileBadge.style.display = "inline-block";
+        } else {
+            mobileBadge.style.display = "none";
+        }
     }
 }
 
@@ -616,13 +537,14 @@ function resetMapView() {
 
     document.getElementById("layout").classList.remove("filter-active");
     document.getElementById("layout").classList.remove("map-expanded");
+    closeMobileLayersTray();
 
     if (isMobile) {
-        mobileDetails.innerHTML = getSignpostHTML();
+        mobileDetails.innerHTML = getEmptyStateHTML();
         openPanel();
         setTimeout(function() { map.invalidateSize(); }, 50);
     } else {
-        desktopDetails.innerHTML = getSignpostHTML();
+        desktopDetails.innerHTML = getEmptyStateHTML();
         openDesktopPanel();
     }
 }
@@ -650,56 +572,74 @@ function expandMap() {
 }
 
 // ====================
-// MOBILE FILTER
+// MOBILE LAYERS TRAY
 // ====================
 
-function toggleFilterDropdown() {
-    var dd = document.getElementById("categoryFilterDropdown");
-    if (dd) dd.classList.toggle("open");
+function toggleMobileLayersTray() {
+    var tray = document.getElementById("mobileLayersTray");
+    var overlay = document.getElementById("mobileLayersOverlay");
+    if (!tray || !overlay) return;
+    var isOpen = tray.classList.contains("open");
+    if (isOpen) {
+        closeMobileLayersTray();
+    } else {
+        tray.classList.add("open");
+        overlay.classList.add("open");
+    }
 }
 
-function selectFilterOption(value) {
-    var dd = document.getElementById("categoryFilterDropdown");
-    if (dd) dd.classList.remove("open");
-    applyMobileFilter(value);
+function closeMobileLayersTray() {
+    var tray = document.getElementById("mobileLayersTray");
+    var overlay = document.getElementById("mobileLayersOverlay");
+    if (tray) tray.classList.remove("open");
+    if (overlay) overlay.classList.remove("open");
+}
+
+function toggleMobileLayer(toggleEl) {
+    // Mobile and desktop share one source of truth (activeLayers). toggleLayer()
+    // already updates activeLayers and calls applyLayerFilter() + updateBadge()
+    // (which updates both the desktop and mobile badges) - we just also keep
+    // the matching desktop toggle row visually in sync, in case the panel is
+    // opened later in the same session after a resize.
+    toggleLayer(toggleEl);
+
+    var row = toggleEl.closest(".mobile-layer-row");
+    var cat = row ? row.getAttribute("data-cat") : null;
+    var isOn = toggleEl.classList.contains("on");
+
+    var desktopRow = document.querySelector(".layer-row[data-cat='" + cat + "']");
+    if (desktopRow) {
+        var desktopToggle = desktopRow.querySelector(".layer-toggle");
+        if (desktopToggle) {
+            desktopToggle.classList.toggle("on", isOn);
+            desktopToggle.classList.toggle("off", !isOn);
+        }
+    }
 }
 
 document.addEventListener("click", function(e) {
-    var bar = document.getElementById("mobileFilterBar");
-    if (bar && !bar.contains(e.target)) {
-        var dd = document.getElementById("categoryFilterDropdown");
-        if (dd) dd.classList.remove("open");
+    var resultsBox = document.getElementById("mobileSearchResults");
+    var searchBox = document.getElementById("mobileSearchBox");
+    if (resultsBox && searchBox && !searchBox.contains(e.target)) {
+        resultsBox.innerHTML = "";
     }
 });
-
-function applyMobileFilter(selectedCategory) {
-    currentFilter = selectedCategory;
-    var label = document.getElementById("categoryFilterLabel");
-    if (label) label.textContent = selectedCategory === "All" ? "All Categories" : selectedCategory;
-    document.querySelectorAll(".filter-option").forEach(function(opt) {
-        opt.classList.toggle("selected", opt.textContent.trim() === selectedCategory);
-    });
-    if (window.innerWidth <= 768) {
-        document.getElementById("layout").classList.add("filter-active");
-        closePanel();
-        setTimeout(function() { map.invalidateSize(); }, 50);
-    }
-    markerCluster.clearLayers();
-    allMarkers.forEach(function(marker) {
-        if (selectedCategory === "All" || marker.category === selectedCategory) {
-            marker.setIcon(selectedCategory === "All" ? navySingleIcon : getMarkerIcon(marker.category));
-            markerCluster.addLayer(marker);
-        }
-    });
-}
 
 // ====================
 // SEARCH (Nominatim)
 // ====================
 
 function runSearch() {
-    var input = document.getElementById("desktopSearchInput");
-    var resultsBox = document.getElementById("searchResults");
+    performSearch("desktopSearchInput", "searchResults");
+}
+
+function runSearchMobile() {
+    performSearch("mobileSearchInput", "mobileSearchResults");
+}
+
+function performSearch(inputId, resultsId) {
+    var input = document.getElementById(inputId);
+    var resultsBox = document.getElementById(resultsId);
     if (!input || !resultsBox) return;
     var query = input.value.trim();
     if (!query) return;
@@ -717,14 +657,14 @@ function runSearch() {
                 return;
             }
             if (data.length === 1) {
-                flyToResult(data[0]);
+                flyToResult(data[0], inputId, resultsId);
                 return;
             }
             data.forEach(function(item) {
                 var div = document.createElement("div");
                 div.className = "search-result-item";
                 div.textContent = item.display_name;
-                div.onclick = function() { flyToResult(item); resultsBox.innerHTML = ""; };
+                div.onclick = function() { flyToResult(item, inputId, resultsId); };
                 resultsBox.appendChild(div);
             });
         })
@@ -733,11 +673,11 @@ function runSearch() {
         });
 }
 
-function flyToResult(item) {
+function flyToResult(item, inputId, resultsId) {
     var lat = parseFloat(item.lat);
     var lng = parseFloat(item.lon);
-    var resultsBox = document.getElementById("searchResults");
-    var input = document.getElementById("desktopSearchInput");
+    var resultsBox = document.getElementById(resultsId || "searchResults");
+    var input = document.getElementById(inputId || "desktopSearchInput");
     if (resultsBox) resultsBox.innerHTML = "";
     if (input) input.value = item.display_name.split(",")[0];
     map.flyTo([lat, lng], 10, { duration: 1.2 });
@@ -757,13 +697,14 @@ document.addEventListener("click", function(e) {
 
 window.addEventListener('load', function() {
     if (!isMobile) {
-        desktopDetails.innerHTML = getSignpostHTML();
+        desktopDetails.innerHTML = getEmptyStateHTML();
         openDesktopPanel();
     } else {
-        mobileDetails.innerHTML = getSignpostHTML();
+        mobileDetails.innerHTML = getEmptyStateHTML();
         var detailsEl = document.getElementById("details");
         if (detailsEl) detailsEl.classList.remove("panel-hidden");
-        map.addLayer(markerCluster);
+        // Mobile now starts empty, same as desktop - the user opts in via the
+        // Explore pill/layers tray rather than seeing every marker by default.
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
 });
