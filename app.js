@@ -2,9 +2,15 @@
 // MAP SETUP
 // ====================
 
-var map = L.map('map').setView([54.0, -2.5], 6);
-var allMarkers = [];
 var isMobile = window.innerWidth <= 768;
+
+// On mobile, Leaflet's default top-left zoom control sits directly behind
+// the new search bar / pill row, so it's moved to bottom-left instead -
+// the only consistently free corner above the footer.
+var map = L.map('map', { zoomControl: false }).setView([54.0, -2.5], 6);
+L.control.zoom({ position: isMobile ? 'bottomleft' : 'topleft' }).addTo(map);
+
+var allMarkers = [];
 
 var desktopDetails = document.getElementById("detailsContent");
 var mobileDetails  = document.getElementById("mobileDetailsContent");
@@ -594,6 +600,70 @@ function closeMobileLayersTray() {
     if (tray) tray.classList.remove("open");
     if (overlay) overlay.classList.remove("open");
 }
+
+// ====================
+// MOBILE TRAY DRAG-TO-DISMISS
+// ====================
+
+(function() {
+    var tray = document.getElementById("mobileLayersTray");
+    var handle = document.getElementById("mobileTrayHandle");
+    if (!tray || !handle) return;
+
+    var startY = 0;
+    var currentY = 0;
+    var dragging = false;
+    var DISMISS_THRESHOLD = 80; // px of downward drag needed to dismiss
+
+    function onStart(clientY) {
+        dragging = true;
+        startY = clientY;
+        currentY = clientY;
+        tray.classList.add("dragging");
+    }
+
+    function onMove(clientY) {
+        if (!dragging) return;
+        currentY = clientY;
+        var delta = Math.max(0, currentY - startY); // only allow downward drag
+        tray.style.transform = "translateY(" + delta + "px)";
+    }
+
+    function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+        tray.classList.remove("dragging");
+        var delta = Math.max(0, currentY - startY);
+        tray.style.transform = "";
+        if (delta > DISMISS_THRESHOLD) {
+            closeMobileLayersTray();
+        }
+    }
+
+    handle.addEventListener("touchstart", function(e) {
+        onStart(e.touches[0].clientY);
+    }, { passive: true });
+
+    handle.addEventListener("touchmove", function(e) {
+        onMove(e.touches[0].clientY);
+    }, { passive: true });
+
+    handle.addEventListener("touchend", onEnd);
+    handle.addEventListener("touchcancel", onEnd);
+
+    // Mouse support too, for desktop-browser testing in responsive/mobile-emulation mode
+    handle.addEventListener("mousedown", function(e) {
+        onStart(e.clientY);
+        function moveHandler(e) { onMove(e.clientY); }
+        function upHandler() {
+            onEnd();
+            document.removeEventListener("mousemove", moveHandler);
+            document.removeEventListener("mouseup", upHandler);
+        }
+        document.addEventListener("mousemove", moveHandler);
+        document.addEventListener("mouseup", upHandler);
+    });
+})();
 
 function toggleMobileLayer(toggleEl) {
     // Mobile and desktop share one source of truth (activeLayers). toggleLayer()
