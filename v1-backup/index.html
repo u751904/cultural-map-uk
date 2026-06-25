@@ -8,13 +8,111 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
 <div id="layout">
+
     <div id="map"></div>
 
-    <!-- Mobile filter bar overlaid on map -->
+    <!-- ── DESKTOP LEFT PANEL ── -->
+    <div id="desktopPanel">
+        <div id="desktopPanelHeader">
+            <div id="desktopPanelLogo">Map Britannia</div>
+            <div id="desktopPanelSub">Explore Britain's cultural heritage</div>
+        </div>
+        <div id="desktopPanelSearch">
+            <div id="desktopSearchBox">
+                <svg id="desktopSearchIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="cursor:pointer;flex-shrink:0;" onclick="runSearch()">
+                    <circle cx="11" cy="11" r="7" stroke="#082b5f" stroke-width="2.2"/>
+                    <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="desktopSearchInput" placeholder="Search place or postcode…" autocomplete="off" onkeydown="if(event.key==='Enter') runSearch()"/>
+            </div>
+            <div id="searchResults"></div>
+        </div>
+        <div id="desktopPanelBody">
+            <div id="detailsContent"></div>
+        </div>
+        <div id="desktopPanelFooter">
+            <a href="#" onclick="openModal('about'); return false;" id="desktopFooterAbout">About · mapbritannia.com</a>
+            <span id="desktopFooterCopy">© 2026</span>
+        </div>
+    </div>
+
+    <!-- ── MAP CONTENT BUTTON + KEY PILLS ── -->
+    <div id="mapContentBar">
+        <button id="mapResetBtn" onclick="resetMapView(); clearAllLayers();">Reset</button>
+        <button id="mapContentBtn" onclick="toggleLayersPanel()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+                <rect x="2" y="10" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+                <rect x="2" y="17" width="20" height="4" rx="1" stroke="#333" stroke-width="1.8"/>
+            </svg>
+            Map content
+            <svg id="mapContentChevron" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 4l4 4 4-4" stroke="#555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="mapContentBadge" style="display:none;"></span>
+        </button>
+        <div id="keyPillsRow"></div>
+    </div>
+
+    <!-- ── LAYERS PANEL ── -->
+    <div id="layersPanel">
+        <div id="layersPanelHeader">
+            <span id="layersPanelTitle">Map content</span>
+            <button id="layersPanelClose" onclick="closeLayersPanel()" aria-label="Close layers panel">×</button>
+        </div>
+        <div id="layersPanelSection">Categories</div>
+        <div id="layersList">
+            <div class="layer-row" data-cat="Literary" data-colour="#1a4a8a">
+                <span class="layer-dot" style="background:#1a4a8a;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Literary</div>
+                    <div class="layer-sub">Authors, novels &amp; landscapes</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Horrible History" data-colour="#5a2880">
+                <span class="layer-dot" style="background:#5a2880;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Horrible History</div>
+                    <div class="layer-sub">Plague, crime &amp; dark tourism</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Military" data-colour="#8a2020">
+                <span class="layer-dot" style="background:#8a2020;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Military</div>
+                    <div class="layer-sub">Battlefields &amp; fortifications</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Maritime" data-colour="#1a6a7a">
+                <span class="layer-dot" style="background:#1a6a7a;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Maritime</div>
+                    <div class="layer-sub">Wrecks &amp; coastal heritage</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="layer-row" data-cat="Ancient Landscape" data-colour="#2d6e2d">
+                <span class="layer-dot" style="background:#2d6e2d;"></span>
+                <div class="layer-label">
+                    <div class="layer-name">Ancient Landscape</div>
+                    <div class="layer-sub">Veteran trees &amp; lost settlements</div>
+                </div>
+                <div class="layer-toggle off" onclick="toggleLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+        </div>
+        <div id="layersPanelFooter">
+            <button id="layersClearBtn" onclick="clearAllLayers()">Clear all</button>
+        </div>
+    </div>
+
+    <!-- ── MOBILE ELEMENTS ── -->
     <div id="mobileFilterBar">
         <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
             <span id="categoryFilterLabel">All Categories</span>
@@ -30,7 +128,6 @@
         </div>
     </div>
 
-    <!-- Mobile map-expand button (tap map to go fullscreen) -->
     <div id="mobileExpandBtn" onclick="expandMap()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
             <polyline points="15,3 21,3 21,9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -40,63 +137,28 @@
         </svg>
     </div>
 
-    <!-- Mobile home/refresh button -->
-    <div id="mobileHomeBtn" onclick="resetMapView(); closePanel();">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
-            <path d="M9 21V12h6v9" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
-        </svg>
-    </div>
-
-    <!-- Detail panel -->
+    <!-- Mobile details panel — no filterBar dropdown -->
     <div id="details">
         <div id="detailsPanelInner">
-            <div id="filterBar">
-                <select id="categoryFilterDesktop">
-                    <option value="All">All Categories</option>
-                    <option value="Horrible History">Horrible History</option>
-                    <option value="Literary">Literary</option>
-                    <option value="Maritime">Maritime</option>
-                    <option value="Military">Military</option>
-                    <option value="Ancient Landscape">Ancient Landscape</option>
-                </select>
-            </div>
-            <div id="detailsContent">
-                <div class="place-card">
-                    <h1>Devon Cultural Map</h1>
-                    <p class="intro">Click a marker to explore a literary or cultural location.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Desktop sticky footer -->
-        <div id="desktopFooter">
-            <div id="desktopFooterLinks">
-                <button class="footer-btn" onclick="openModal('about')">About</button>
-                <button class="footer-btn" onclick="openModal('contact')">Contact</button>
-                <button class="footer-btn" onclick="openModal('references')">References</button>
-                <span class="footer-copy">© 2026</span>
-            </div>
-            <div id="desktopFooterAttrib">
-                © Historic England 2026 · Contains Ordnance Survey data © Crown copyright and database right 2026 · Plague data: Büntgen &amp; Ginzler, EnviDat 2019 (ODbL) · Tree data: Wikidata (CC0)
-            </div>
+            <div id="mobileDetailsContent"></div>
         </div>
     </div>
 
-    <!-- Mobile footer -->
+    <!-- Mobile footer — house circle + About · mapbritannia.com + © 2026 -->
     <div id="mobileFooter">
-        <button class="footer-btn" onclick="resetMapView(); closePanel();">🏠</button>
-        <button class="footer-btn" onclick="openModal('about')">About</button>
-        <button class="footer-btn" onclick="openModal('contact')">Contact</button>
-        <button class="footer-btn" onclick="openModal('references')">References</button>
+        <button class="footer-home-btn" onclick="resetMapView(); closePanel();" aria-label="Home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+                <path d="M9 21V12h6v9" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <a class="footer-about-link" href="#" onclick="openModal('about'); return false;">About · mapbritannia.com</a>
         <span class="footer-copy">© 2026</span>
     </div>
 </div>
 
-<!-- Modal overlay -->
-<div id="modalOverlay" onclick="closeModal()"></div>
-
 <!-- Modal -->
+<div id="modalOverlay" onclick="closeModal()"></div>
 <div id="modal">
     <div id="modalHeader">
         <div id="modalTabs">
@@ -107,7 +169,6 @@
         <button id="modalClose" onclick="closeModal()">&#x2715;</button>
     </div>
     <div id="modalBody">
-
         <div id="tab-about" class="modal-tab-content active">
             <h2>Map Britannia</h2>
             <p>A narrative-led map of cultural, literary, heritage and dark tourism locations across the UK. Discover the stories behind the places — from plague outbreaks to shipwrecks, battlefields to literary landscapes.</p>
@@ -121,46 +182,29 @@
                 <li><strong>Ancient Landscape</strong> — ancient and veteran trees, lost settlements and prehistoric sites</li>
             </ul>
         </div>
-
         <div id="tab-references" class="modal-tab-content">
             <h2>Data Sources &amp; Attribution</h2>
-
             <h3>Historic England</h3>
             <p>Battlefield polygons, protected wreck polygons and battlefield data are sourced from the National Heritage List for England (NHLE), published by Historic England under the Open Government Licence v3.</p>
             <p class="attribution-block">© Historic England 2026. Contains Ordnance Survey data © Crown copyright and database right 2026.</p>
             <a href="https://historicengland.org.uk/listing/the-list/data-downloads" target="_blank">Historic England Open Data Hub ↗</a>
-
             <h3>Plague Data</h3>
             <p>UK plague outbreak locations (1348–1670) are sourced from the digitised Biraben dataset published by Büntgen &amp; Ginzler (2019) via EnviDat, licensed under the Open Database Licence (ODbL).</p>
             <p class="attribution-block">Büntgen, U. &amp; Ginzler, C. (2019). Digitizing historical plague. EnviDat. doi:10.16904/envidat.181</p>
             <a href="https://www.envidat.ch/dataset/digitizing-historical-plague" target="_blank">EnviDat dataset page ↗</a>
-
             <h3>Ancient Trees &amp; Woodland</h3>
-            <p>Tree location data sourced from Wikidata, licensed under CC0 (no restrictions). Narrative content researched and written by Map Britannia. Coordinates verified via Wikipedia and Wikidata.</p>
+            <p>Tree location data sourced from Wikidata, licensed under CC0 (no restrictions).</p>
             <p class="attribution-block">Wikidata contributors. Tree and woodland data. Wikidata (CC0).</p>
             <a href="https://www.wikidata.org" target="_blank">Wikidata ↗</a>
             <a href="https://ati.woodlandtrust.org.uk" target="_blank">Ancient Tree Inventory — Woodland Trust ↗</a>
-            <a href="https://www.ancienttreeforum.org.uk" target="_blank">Ancient Tree Forum ↗</a>
-            <a href="https://www.woodlandtrust.org.uk" target="_blank">Woodland Trust ↗</a>
-
-            <h3>Further Reading</h3>
-            <ul>
-                <li>Rackham, O. — <em>Trees and Woodland in the British Landscape</em></li>
-                <li>Barley, L. — <em>Ancient: Reviving the Woods That Made Britain</em></li>
-                <li>Munson, V. — <em>Nature Detective: British Trees</em></li>
-                <li>Phillips, T. — <em>Forest Folk Tales for Children</em></li>
-            </ul>
-
             <h3>Map Tiles</h3>
             <p>Map tiles provided by OpenStreetMap contributors, licensed under the Open Database Licence (ODbL).</p>
             <p class="attribution-block">© OpenStreetMap contributors</p>
             <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap copyright ↗</a>
-
             <h3>Wikidata</h3>
-            <p>Place descriptions and Wikipedia links sourced from Wikidata, licensed under CC0 (no restrictions).</p>
+            <p>Place descriptions and Wikipedia links sourced from Wikidata, licensed under CC0.</p>
             <a href="https://www.wikidata.org" target="_blank">Wikidata ↗</a>
         </div>
-
         <div id="tab-contact" class="modal-tab-content">
             <h2>Contact</h2>
             <p>For partnership and advertising enquiries, or to suggest a location for the map:</p>
@@ -168,13 +212,12 @@
             <h3>Partner with us</h3>
             <p>We offer local partner listings for businesses, heritage organisations, accommodation providers and tour operators. Reach visitors actively exploring cultural and heritage locations.</p>
         </div>
-
     </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>
