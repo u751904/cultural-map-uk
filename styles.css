@@ -255,22 +255,21 @@ body {
     color: #555;
 }
 
-.signpost-wrapper {
+.empty-state {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 16px 0 16px;
-    gap: 16px;
+    justify-content: center;
+    min-height: 200px;
+    padding: 24px 16px;
 }
 
-.signpost-prompt {
+.empty-state-text {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     color: #082b5f;
     text-align: center;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* ====================
@@ -484,16 +483,6 @@ body {
    MOBILE OVERLAY ELEMENTS
    ==================== */
 
-#mobileFilterBar {
-    display: none;
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
-
 #mobileExpandBtn {
     display: none;
     position: absolute;
@@ -507,6 +496,170 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+/* ====================
+   MOBILE TOP BAR — search + Explore pill
+   ==================== */
+
+#mobileTopBar {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 12px 12px 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+#mobileSearchBox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #ffffff;
+    border: 1.5px solid #082b5f;
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+#mobileSearchIcon { cursor: pointer; flex-shrink: 0; }
+
+#mobileSearchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #082b5f;
+    background: transparent;
+}
+
+#mobileSearchInput::placeholder { color: rgba(8,43,95,0.4); }
+
+#mobileSearchResults {
+    width: 100%;
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#mobileExploreBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #082b5f;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#mobileExploreBadge {
+    background: #082b5f;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 1px 7px;
+    margin-left: 2px;
+}
+
+/* ====================
+   MOBILE LAYERS TRAY (bottom sheet)
+   ==================== */
+
+#mobileLayersOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1500;
+}
+
+#mobileLayersOverlay.open { display: block; }
+
+#mobileLayersTray {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1501;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+#mobileLayersTray.open { display: block; }
+
+#mobileTrayHeader {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 10px;
+}
+
+#mobileTrayClose {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+#mobileTrayHandle {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    background: #dddddd;
+    border-radius: 2px;
+}
+
+#mobileTrayTitle {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+}
+
+#mobileTraySpacer { width: 18px; }
+
+#mobileLayersList {
+    border-top: 0.5px solid #f2f2f2;
+}
+
+.mobile-layer-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 0.5px solid #f2f2f2;
+}
+
+.mobile-layer-row:last-child { border-bottom: none; }
+
+.mobile-layer-name {
+    flex: 1;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #222222;
 }
 
 /* ====================
@@ -957,7 +1110,9 @@ body {
     #desktopPanel { display: flex; }
     #mapContentBar { display: flex; }
 
-    #mobileFilterBar,
+    #mobileTopBar,
+    #mobileLayersTray,
+    #mobileLayersOverlay,
     #mobileExpandBtn,
     #details,
     #mobileFooter {
@@ -1004,9 +1159,9 @@ body {
         height: calc(52vh - env(safe-area-inset-top));
     }
 
-    #mobileFilterBar {
-        display: block;
-        top: calc(12px + env(safe-area-inset-top));
+    #mobileTopBar {
+        display: flex;
+        padding-top: calc(12px + env(safe-area-inset-top));
     }
 
     #mobileExpandBtn {
@@ -1046,53 +1201,3 @@ body {
 #layout.map-expanded #details { display: none; }
 
 #layout.map-expanded #mobileExpandBtn { display: none; }
-
-/* ====================
-   CUSTOM MOBILE DROPDOWN
-   ==================== */
-
-#categoryFilterCustom {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    background: #fffdf8;
-    border: 2px solid #082b5f;
-    border-radius: 22px;
-    color: #082b5f;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    min-width: 180px;
-    justify-content: space-between;
-}
-
-#categoryFilterDropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #082b5f;
-    border-radius: 12px;
-    overflow: hidden;
-    min-width: 200px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    z-index: 1001;
-}
-
-#categoryFilterDropdown.open { display: block; }
-
-.filter-option {
-    padding: 14px 20px;
-    color: rgba(255,255,255,0.85);
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.filter-option:hover { background: rgba(255,255,255,0.12); color: white; }
-.filter-option.selected { color: white; font-weight: 700; }
