@@ -499,7 +499,7 @@ body {
 }
 
 /* ====================
-   MOBILE TOP BAR — search + Explore pill
+   MOBILE TOP BAR — search + Reset/Explore pills
    ==================== */
 
 #mobileTopBar {
@@ -509,7 +509,7 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 12px 12px 0;
+    padding: 10px 12px 0;
     flex-direction: column;
     align-items: center;
     gap: 8px;
@@ -519,11 +519,11 @@ body {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     background: #ffffff;
     border: 1.5px solid #082b5f;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 7px 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
@@ -534,7 +534,7 @@ body {
     border: none;
     outline: none;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     color: #082b5f;
     background: transparent;
 }
@@ -547,6 +547,25 @@ body {
     border: 0.5px solid #cccccc;
     border-radius: 10px;
     overflow: hidden;
+}
+
+#mobilePillRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#mobileResetBtn {
+    background: #ffffff;
+    border: 0.5px solid #cccccc;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333333;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 #mobileExploreBtn {
@@ -600,16 +619,20 @@ body {
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
     padding-bottom: env(safe-area-inset-bottom);
+    transition: transform 0.25s ease;
+    touch-action: none;
 }
 
 #mobileLayersTray.open { display: block; }
+
+#mobileLayersTray.dragging { transition: none; }
 
 #mobileTrayHeader {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 16px 10px;
+    padding: 18px 16px 12px;
 }
 
 #mobileTrayClose {
@@ -623,9 +646,19 @@ body {
 
 #mobileTrayHandle {
     position: absolute;
-    top: 8px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
+    width: 64px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+}
+
+#mobileTrayHandle::before {
+    content: "";
     width: 36px;
     height: 4px;
     background: #dddddd;
@@ -634,7 +667,7 @@ body {
 
 #mobileTrayTitle {
     font-family: Arial, sans-serif;
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 700;
     color: #111111;
 }
@@ -649,7 +682,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 13px 16px;
+    padding: 15px 16px;
     border-bottom: 0.5px solid #f2f2f2;
 }
 
@@ -658,7 +691,7 @@ body {
 .mobile-layer-name {
     flex: 1;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 17px;
     color: #222222;
 }
 
@@ -1167,6 +1200,11 @@ body {
     #mobileExpandBtn {
         display: flex;
         bottom: calc(48vh + 14px);
+    }
+
+    .leaflet-bottom.leaflet-left {
+        margin-bottom: 14px;
+        margin-left: 10px;
     }
 
     #mobileFooter { display: flex; }
