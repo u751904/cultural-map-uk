@@ -442,10 +442,19 @@ layerConfig.forEach(function(cfg) {
                 geoJsonLayers.push({ layer: ml, categories: cfg.categories, isWreckMarkers: true });
             }
 
-            // Re-apply any active layer filter now that this geoJSON has actually loaded.
-            // Without this, toggling a layer on before the fetch resolves (common on a fast
-            // mobile page load) leaves that layer permanently invisible even after the data arrives.
-            applyLayerFilter();
+            // Mobile has no layer-toggle panel, so geoJSON layers (wrecks, battlefields)
+            // must be added to the map directly and unconditionally as soon as they load.
+            // Desktop uses applyLayerFilter() instead, driven by the toggle panel.
+            if (isMobile) {
+                geoJsonLayers.forEach(function(item) {
+                    if (!map.hasLayer(item.layer)) map.addLayer(item.layer);
+                });
+            } else {
+                // Re-apply any active layer filter now that this geoJSON has actually loaded.
+                // Without this, toggling a layer on before the fetch resolves (common on a fast
+                // page load) leaves that layer permanently invisible even after the data arrives.
+                applyLayerFilter();
+            }
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
 });
@@ -509,6 +518,12 @@ function clearAllLayers() {
 }
 
 function applyLayerFilter() {
+    // Mobile uses its own always-on filter system (applyMobileFilter), not the
+    // desktop layer-toggle panel. activeLayers stays empty on mobile, so this
+    // function must do nothing there — otherwise it wipes the marker cluster
+    // off the map the moment a geoJSON layer finishes loading asynchronously.
+    if (isMobile) return;
+
     var activeList = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; });
 
     markerCluster.clearLayers();
