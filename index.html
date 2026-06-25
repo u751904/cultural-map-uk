@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="styles.css?v=19">
+    <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
 <div id="layout">
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <!-- ── MAP CONTENT BUTTON + KEY PILLS ── -->
+    <!-- ── MAP CONTENT BUTTON + KEY PILLS (desktop) ── -->
     <div id="mapContentBar">
         <button id="mapResetBtn" onclick="resetMapView(); clearAllLayers();">Reset</button>
         <button id="mapContentBtn" onclick="toggleLayersPanel()">
@@ -58,7 +58,7 @@
         <div id="keyPillsRow"></div>
     </div>
 
-    <!-- ── LAYERS PANEL ── -->
+    <!-- ── LAYERS PANEL (desktop dropdown) ── -->
     <div id="layersPanel">
         <div id="layersPanelHeader">
             <span id="layersPanelTitle">Map content</span>
@@ -112,19 +112,67 @@
         </div>
     </div>
 
-    <!-- ── MOBILE ELEMENTS ── -->
-    <div id="mobileFilterBar">
-        <div id="categoryFilterCustom" onclick="toggleFilterDropdown()">
-            <span id="categoryFilterLabel">All Categories</span>
-            <span id="categoryFilterChevron">&#8693;</span>
+    <!-- ── MOBILE TOP BAR: search + Explore pill ── -->
+    <div id="mobileTopBar">
+        <div id="mobileSearchBox">
+            <svg id="mobileSearchIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" onclick="runSearchMobile()">
+                <circle cx="11" cy="11" r="7" stroke="#082b5f" stroke-width="2.2"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="mobileSearchInput" placeholder="Search place or postcode…" autocomplete="off" onkeydown="if(event.key==='Enter') runSearchMobile()"/>
         </div>
-        <div id="categoryFilterDropdown">
-            <div class="filter-option" onclick="selectFilterOption('All')">All Categories</div>
-            <div class="filter-option" onclick="selectFilterOption('Horrible History')">Horrible History</div>
-            <div class="filter-option" onclick="selectFilterOption('Literary')">Literary</div>
-            <div class="filter-option" onclick="selectFilterOption('Maritime')">Maritime</div>
-            <div class="filter-option" onclick="selectFilterOption('Military')">Military</div>
-            <div class="filter-option" onclick="selectFilterOption('Ancient Landscape')">Ancient Landscape</div>
+        <div id="mobileSearchResults"></div>
+        <button id="mobileExploreBtn" onclick="toggleMobileLayersTray()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="4" rx="1" stroke="#082b5f" stroke-width="1.8"/>
+                <rect x="2" y="10" width="20" height="4" rx="1" stroke="#082b5f" stroke-width="1.8"/>
+                <rect x="2" y="17" width="20" height="4" rx="1" stroke="#082b5f" stroke-width="1.8"/>
+            </svg>
+            Explore
+            <span id="mobileExploreBadge" style="display:none;"></span>
+        </button>
+    </div>
+
+    <!-- ── MOBILE LAYERS TRAY (bottom sheet) ── -->
+    <div id="mobileLayersOverlay" onclick="closeMobileLayersTray()"></div>
+    <div id="mobileLayersTray">
+        <div id="mobileTrayHeader">
+            <button id="mobileTrayClose" onclick="closeMobileLayersTray()" aria-label="Close categories">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <line x1="5" y1="5" x2="19" y2="19" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="19" y1="5" x2="5" y2="19" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div id="mobileTrayHandle"></div>
+            <span id="mobileTrayTitle">Categories</span>
+            <span id="mobileTraySpacer"></span>
+        </div>
+        <div id="mobileLayersList">
+            <div class="mobile-layer-row" data-cat="Literary" data-colour="#1a4a8a">
+                <span class="layer-dot" style="background:#1a4a8a;"></span>
+                <span class="mobile-layer-name">Literary</span>
+                <div class="layer-toggle off" onclick="toggleMobileLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="mobile-layer-row" data-cat="Horrible History" data-colour="#5a2880">
+                <span class="layer-dot" style="background:#5a2880;"></span>
+                <span class="mobile-layer-name">Horrible History</span>
+                <div class="layer-toggle off" onclick="toggleMobileLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="mobile-layer-row" data-cat="Military" data-colour="#8a2020">
+                <span class="layer-dot" style="background:#8a2020;"></span>
+                <span class="mobile-layer-name">Military</span>
+                <div class="layer-toggle off" onclick="toggleMobileLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="mobile-layer-row" data-cat="Maritime" data-colour="#1a6a7a">
+                <span class="layer-dot" style="background:#1a6a7a;"></span>
+                <span class="mobile-layer-name">Maritime</span>
+                <div class="layer-toggle off" onclick="toggleMobileLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
+            <div class="mobile-layer-row" data-cat="Ancient Landscape" data-colour="#2d6e2d">
+                <span class="layer-dot" style="background:#2d6e2d;"></span>
+                <span class="mobile-layer-name">Ancient Landscape</span>
+                <div class="layer-toggle off" onclick="toggleMobileLayer(this)"><div class="toggle-thumb"></div></div>
+            </div>
         </div>
     </div>
 
@@ -137,16 +185,16 @@
         </svg>
     </div>
 
-    <!-- Mobile details panel — no filterBar dropdown -->
+    <!-- Mobile details panel -->
     <div id="details">
         <div id="detailsPanelInner">
             <div id="mobileDetailsContent"></div>
         </div>
     </div>
 
-    <!-- Mobile footer — house circle + About · mapbritannia.com + © 2026 -->
+    <!-- Mobile footer -->
     <div id="mobileFooter">
-        <button class="footer-home-btn" onclick="resetMapView(); closePanel();" aria-label="Home">
+        <button class="footer-home-btn" onclick="resetMapView(); clearAllLayers(); closePanel();" aria-label="Home">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
                 <path d="M9 21V12h6v9" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
@@ -218,6 +266,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="app.js?v=21"></script>
+<script src="app.js?v=22"></script>
 </body>
 </html>
