@@ -21,11 +21,12 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     color: #2a2620;
-    background-color: #f7f2e8;
+    background-color: #f4eee0;
     background-image:
-        radial-gradient(ellipse 1200px 800px at 15% 0%, rgba(232, 163, 104, 0.07), transparent 60%),
-        radial-gradient(ellipse 1000px 700px at 100% 30%, rgba(8, 43, 95, 0.05), transparent 55%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        radial-gradient(ellipse 1100px 750px at 10% -5%, rgba(232, 163, 104, 0.16), transparent 60%),
+        radial-gradient(ellipse 900px 650px at 105% 25%, rgba(8, 43, 95, 0.10), transparent 55%),
+        radial-gradient(ellipse 800px 600px at 50% 110%, rgba(168, 122, 46, 0.08), transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-attachment: fixed;
 }
 
@@ -74,6 +75,15 @@ a { text-decoration: none; }
     margin-top: 1px;
 }
 
+.nav-about-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a4438;
+    letter-spacing: 0.2px;
+}
+
+.nav-about-link:hover { color: #082b5f; }
+
 /* ---------------- HERO ---------------- */
 
 .hero {
@@ -82,7 +92,40 @@ a { text-decoration: none; }
     overflow: hidden;
 }
 
+.hero-bg-picture {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+}
+
+.hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /*
+        Warm gradient overlay for text legibility, per brand kit usage
+        notes. Strongest over the left/text column, easing off toward the
+        right where the map glimpse card sits on its own background.
+    */
+    background: linear-gradient(100deg,
+        rgba(247, 242, 230, 0.97) 0%,
+        rgba(247, 242, 230, 0.93) 30%,
+        rgba(247, 242, 230, 0.55) 55%,
+        rgba(247, 242, 230, 0.18) 75%,
+        rgba(247, 242, 230, 0.05) 100%);
+}
+
 .hero-grid {
+    position: relative;
+    z-index: 2;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     gap: 72px;
@@ -123,7 +166,7 @@ a { text-decoration: none; }
     gap: 0;
     max-width: 520px;
     margin-bottom: 18px;
-    box-shadow: 0 1px 2px rgba(42,38,32,0.04), 0 10px 28px rgba(8,43,95,0.09);
+    box-shadow: 0 2px 4px rgba(42,38,32,0.06), 0 18px 38px rgba(8,43,95,0.16);
     border-radius: 11px;
 }
 
@@ -198,20 +241,20 @@ a { text-decoration: none; }
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(180deg, #fffdf9 0%, #fbf7ee 100%);
-    border: 1px solid #e1d9c8;
+    background: linear-gradient(180deg, #fffdf9 0%, #f7efdf 100%);
+    border: 1px solid #ddd2b8;
     border-radius: 22px;
     padding: 10px 17px 10px 13px;
     font-size: 13.5px;
     font-weight: 600;
     color: #332e26;
-    box-shadow: 0 1px 2px rgba(42,38,32,0.03);
+    box-shadow: 0 2px 5px rgba(42,38,32,0.05);
     transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
 
 .theme-pill:hover {
     border-color: #082b5f;
-    box-shadow: 0 4px 14px rgba(8,43,95,0.1);
+    box-shadow: 0 6px 16px rgba(8,43,95,0.14);
     transform: translateY(-1px);
 }
 
@@ -234,7 +277,7 @@ a { text-decoration: none; }
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    box-shadow: 0 2px 4px rgba(42,38,32,0.05), 0 22px 48px rgba(8,43,95,0.14);
+    box-shadow: 0 3px 6px rgba(42,38,32,0.08), 0 30px 60px rgba(8,43,95,0.22);
 }
 
 .map-caption {
@@ -256,11 +299,11 @@ a { text-decoration: none; }
 .featured {
     display: grid;
     grid-template-columns: 1fr 1.1fr;
-    background: linear-gradient(170deg, #fffdf9 0%, #fbf6ec 100%);
+    background: linear-gradient(170deg, #fffdf9 0%, #faf4e8 100%);
     border: 1px solid #e8e1d0;
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(42,38,32,0.04), 0 16px 40px rgba(8,43,95,0.09);
+    box-shadow: 0 3px 6px rgba(42,38,32,0.06), 0 24px 54px rgba(8,43,95,0.15);
     margin-top: 14px;
 }
 
@@ -268,6 +311,19 @@ a { text-decoration: none; }
     position: relative;
     min-height: 280px;
     background: linear-gradient(135deg, #3a4f6b 0%, #1d2a3a 100%);
+}
+
+.featured-image-picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.featured-image-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .featured-image-illustration {
@@ -401,11 +457,40 @@ a { text-decoration: none; }
             <div class="landing-logo-sub">Stories that shaped our island</div>
         </div>
     </div>
+    <a class="nav-about-link" href="index.html?about=true">About</a>
 </nav>
 
 <div class="landing-wrap">
 
     <section class="hero">
+        <!--
+            Production hero background. Sits behind .hero-grid via z-index.
+            WebP first with PNG fallback through <picture>, matching the
+            asset board's named files exactly:
+              /assets/images/hero-landscape.webp
+              /assets/images/hero-landscape.png
+            Until those files are actually added to the repo, the browser
+            simply fails to load this <img> (broken-image icon suppressed
+            by hero-bg-picture's overflow:hidden + the existing radial
+            gradients on body/.hero already provide an acceptable look
+            underneath) - nothing else on the page depends on this image
+            existing, so it is safe to leave wired in ahead of the files
+            landing. Do not delete the existing gradient/noise background
+            on body - it remains the fallback atmosphere if this photo is
+            ever removed or fails to load.
+        -->
+        <picture class="hero-bg-picture" aria-hidden="true">
+            <source srcset="assets/images/hero-landscape.webp" type="image/webp">
+            <img
+                src="assets/images/hero-landscape.png"
+                alt=""
+                class="hero-bg-img"
+                loading="eager"
+                fetchpriority="high"
+                onerror="this.closest('.hero-bg-picture').style.display='none'">
+        </picture>
+        <div class="hero-bg-overlay" aria-hidden="true"></div>
+
         <div class="hero-grid">
             <div>
                 <p class="hero-eyebrow">A mapped catalogue of British history</p>
@@ -483,13 +568,13 @@ a { text-decoration: none; }
                 <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An illustrated glimpse of the map, hinting at the larger catalogue">
                     <defs>
                         <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#d9e2dc"/>
-                            <stop offset="100%" stop-color="#c3d2d4"/>
+                            <stop offset="0%" stop-color="#cee1e8"/>
+                            <stop offset="100%" stop-color="#a9c8d6"/>
                         </linearGradient>
                     </defs>
                     <rect width="400" height="500" fill="url(#seaGrad)"/>
                     <path d="M140 40 C 110 70, 90 110, 100 160 C 80 190, 70 230, 90 270 C 70 300, 80 340, 110 370 C 100 410, 130 450, 170 460 C 210 470, 250 450, 260 410 C 290 400, 310 360, 300 320 C 320 290, 310 240, 280 220 C 290 180, 270 130, 230 110 C 220 70, 180 40, 140 40 Z"
-                        fill="#efe7d6" stroke="#d9cdab" stroke-width="1.5"/>
+                        fill="#efe6d2" stroke="#d4c6a0" stroke-width="1.5"/>
                     <g font-family="Georgia, serif" font-size="11" fill="#7a8a96" font-style="italic">
                         <text x="318" y="120">North Sea</text>
                         <text x="40" y="230">Atlantic</text>
@@ -524,7 +609,26 @@ a { text-decoration: none; }
     <section class="featured">
         <div class="featured-image">
             <span class="featured-tag">START HERE</span>
-            <svg class="featured-image-illustration" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustration of Exeter Cathedral at dusk">
+            <!--
+                Production Exeter feature photo. WebP first, PNG fallback,
+                matching the asset board's named files:
+                  /assets/images/exeter-feature.webp
+                  /assets/images/exeter-feature.png
+                The SVG cathedral-silhouette illustration directly below is
+                kept in the DOM as a fallback. If the real photo is missing,
+                onerror hides the <picture> and reveals the SVG underneath,
+                so the card never looks broken either way.
+            -->
+            <picture class="featured-image-picture">
+                <source srcset="assets/images/exeter-feature.webp" type="image/webp">
+                <img
+                    src="assets/images/exeter-feature.png"
+                    alt="Exeter Cathedral at golden hour, viewed across the city's rooftops"
+                    class="featured-image-photo"
+                    loading="lazy"
+                    onerror="this.closest('.featured-image-picture').style.display='none'; this.closest('.featured-image').querySelector('.featured-image-illustration').style.display='block';">
+            </picture>
+            <svg class="featured-image-illustration" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustration of Exeter Cathedral at dusk" style="display:none;">
                 <defs>
                     <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stop-color="#e8a368"/>
