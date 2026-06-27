@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Map Britannia — Discover the stories that shaped Britain</title>
+<style>
+
+/* ====================================================
+   LANDING PAGE — scoped, standalone styles.
+   Deliberately not shared with styles.css: this page is
+   independent of the map application and should remain so.
+   Brand colours/fonts match the existing app intentionally
+   (navy #082b5f, cream #f8f4ec, Times New Roman display).
+   ==================================================== */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #1d2a3a;
+    background: #f8f4ec;
+}
+
+a { text-decoration: none; }
+
+.landing-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+/* ---------------- NAV ---------------- */
+
+.landing-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.landing-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.landing-logo-mark {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+}
+
+.landing-logo-text {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: #082b5f;
+    letter-spacing: 0.3px;
+}
+
+.landing-logo-sub {
+    font-size: 11px;
+    color: #6b6258;
+    margin-top: 1px;
+}
+
+/* ---------------- HERO ---------------- */
+
+.hero {
+    position: relative;
+    padding: 64px 0 88px;
+    overflow: hidden;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.hero-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #a87a2e;
+    margin: 0 0 14px;
+}
+
+.hero h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 52px;
+    line-height: 1.1;
+    color: #082b5f;
+    margin: 0 0 22px;
+    font-weight: 700;
+}
+
+.hero p.lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: #4a4438;
+    margin: 0 0 32px;
+    max-width: 480px;
+}
+
+/* ---------------- SEARCH ---------------- */
+
+.search-form {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    max-width: 520px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 18px rgba(8,43,95,0.08);
+    border-radius: 10px;
+}
+
+.search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fffdf8;
+    border: 1.5px solid #082b5f;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    padding: 16px 18px;
+}
+
+.search-box svg { flex-shrink: 0; }
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #082b5f;
+}
+
+.search-box input::placeholder { color: rgba(8,43,95,0.4); }
+
+.search-submit {
+    background: #082b5f;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    width: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-submit:hover { background: #0b3d80; }
+
+.locate-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    color: #4a4438;
+    margin-bottom: 30px;
+}
+
+.locate-link:hover { color: #082b5f; }
+
+/* ---------------- THEME PILLS ---------------- */
+
+.theme-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8a8174;
+    margin: 0 0 12px;
+}
+
+.theme-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.theme-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fffdf8;
+    border: 1px solid #d7d0c4;
+    border-radius: 22px;
+    padding: 9px 16px 9px 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #2b2620;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.theme-pill:hover {
+    border-color: #082b5f;
+    box-shadow: 0 2px 8px rgba(8,43,95,0.1);
+}
+
+.theme-pill .pill-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ---------------- MAP GLIMPSE ---------------- */
+
+.map-glimpse {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-height: 560px;
+}
+
+.map-glimpse svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    box-shadow: 0 12px 36px rgba(8,43,95,0.16);
+}
+
+.map-caption {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    background: rgba(8,43,95,0.88);
+    color: #fff;
+    font-size: 12.5px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* ---------------- FEATURED STORY ---------------- */
+
+.featured {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    background: #fffdf8;
+    border: 1px solid #e3dccb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(8,43,95,0.07);
+    margin-top: 8px;
+}
+
+.featured-image {
+    position: relative;
+    min-height: 280px;
+    background: linear-gradient(135deg, #3a4f6b 0%, #1d2a3a 100%);
+}
+
+.featured-image-illustration {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.featured-tag {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: #082b5f;
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    padding: 7px 14px;
+    border-radius: 6px;
+}
+
+.featured-body {
+    padding: 38px 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.featured-eyebrow {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #a87a2e;
+    margin: 0 0 10px;
+}
+
+.featured-body h2 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 28px;
+    color: #082b5f;
+    margin: 0 0 14px;
+    font-weight: 700;
+}
+
+.featured-body p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a4438;
+    margin: 0 0 22px;
+    max-width: 420px;
+}
+
+.featured-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #082b5f;
+}
+
+.featured-link:hover { color: #0b3d80; }
+
+/* ---------------- EXPLORE LINK ---------------- */
+
+.explore-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 56px 0 64px;
+}
+
+.explore-row .rule {
+    height: 1px;
+    background: #d7d0c4;
+    width: 64px;
+}
+
+.explore-link {
+    font-size: 14px;
+    color: #4a4438;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.explore-link:hover { color: #082b5f; }
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero h1 { font-size: 38px; }
+    .map-glimpse { max-height: 360px; }
+    .featured { grid-template-columns: 1fr; }
+    .featured-image { min-height: 200px; }
+    .featured-body { padding: 28px 26px; }
+    .landing-nav { padding: 20px 20px; }
+    .landing-wrap { padding: 0 20px; }
+    .explore-row .rule { width: 32px; }
+}
+
+@media (max-width: 520px) {
+    .hero h1 { font-size: 32px; }
+    .search-form { flex-direction: column; box-shadow: none; }
+    .search-box { border-radius: 10px; border-right: 1.5px solid #082b5f; }
+    .search-submit { display: none; }
+    .theme-pills { gap: 8px; }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="landing-nav">
+    <div class="landing-logo">
+        <svg class="landing-logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="#082b5f" stroke-width="1.4"/>
+            <path d="M20 6 L24 20 L20 34 L16 20 Z" fill="#082b5f"/>
+            <path d="M6 20 L20 16 L34 20 L20 24 Z" fill="#a87a2e"/>
+        </svg>
+        <div>
+            <div class="landing-logo-text">MAP BRITANNIA</div>
+            <div class="landing-logo-sub">Stories that shaped our island</div>
+        </div>
+    </div>
+</nav>
+
+<div class="landing-wrap">
+
+    <section class="hero">
+        <div class="hero-grid">
+            <div>
+                <p class="hero-eyebrow">A mapped catalogue of British history</p>
+                <h1>Discover the stories<br>that shaped Britain</h1>
+                <p class="lede">People, places and events from the past, anchored to the ground beneath your feet.</p>
+
+                <form class="search-form" action="index.html" method="get">
+                    <div class="search-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" stroke="#082b5f" stroke-width="2.2"/>
+                            <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" name="search" placeholder="Search a place, town, village or postcode…" autocomplete="off">
+                    </div>
+                    <button class="search-submit" type="submit" aria-label="Search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M5 12h14M13 6l6 6-6 6" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <!--
+                    TODO: "Use my current location" has no real backing function yet.
+                    app.js contains no geolocation logic at all (confirmed before
+                    building this page). This link is left pointing at
+                    index.html?locate=true so the destination already understands
+                    the parameter is reserved, but it currently does nothing beyond
+                    that — no fake geolocation has been implemented, per instruction.
+                    To wire this up later: call navigator.geolocation.getCurrentPosition
+                    in index.html's load handler when locate=true is present, then
+                    map.flyTo the resulting coordinates at a sensible zoom.
+                -->
+                <a class="locate-link" href="index.html?locate=true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 21s-7-7.58-7-12a7 7 0 1114 0c0 4.42-7 12-7 12z" stroke="#4a4438" stroke-width="1.8"/>
+                        <circle cx="12" cy="9" r="2.4" stroke="#4a4438" stroke-width="1.8"/>
+                    </svg>
+                    Use my current location
+                </a>
+
+                <p class="theme-label">Browse by theme</p>
+                <!--
+                    Theme pills use visitor-facing labels, mapped to the real
+                    internal category names used throughout the live map app
+                    (confirmed exact strings from index.html's data-cat attributes).
+                    The internal name travels in the URL; only the friendly label
+                    is ever shown on screen. "Horrible History" is intentionally
+                    never surfaced here per instruction — shown as "Ghosts & Folklore".
+                -->
+                <div class="theme-pills">
+                    <a class="theme-pill" href="index.html?theme=Horrible%20History">
+                        <span class="pill-dot" style="background:#5a2880;"></span>
+                        Ghosts &amp; Folklore
+                    </a>
+                    <a class="theme-pill" href="index.html?theme=Maritime">
+                        <span class="pill-dot" style="background:#1a6a7a;"></span>
+                        Shipwrecks
+                    </a>
+                    <a class="theme-pill" href="index.html?theme=Ancient%20Landscape">
+                        <span class="pill-dot" style="background:#2d6e2d;"></span>
+                        Ancient Trees
+                    </a>
+                    <a class="theme-pill" href="index.html?theme=Military">
+                        <span class="pill-dot" style="background:#8a2020;"></span>
+                        War Stories
+                    </a>
+                    <a class="theme-pill" href="index.html?theme=Literary">
+                        <span class="pill-dot" style="background:#1a4a8a;"></span>
+                        Writers &amp; Legends
+                    </a>
+                </div>
+            </div>
+
+            <div class="map-glimpse">
+                <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An illustrated glimpse of the map, hinting at the larger catalogue">
+                    <defs>
+                        <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#cfe0ea"/>
+                            <stop offset="100%" stop-color="#b9d1e0"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="400" height="500" fill="url(#seaGrad)"/>
+                    <path d="M140 40 C 110 70, 90 110, 100 160 C 80 190, 70 230, 90 270 C 70 300, 80 340, 110 370 C 100 410, 130 450, 170 460 C 210 470, 250 450, 260 410 C 290 400, 310 360, 300 320 C 320 290, 310 240, 280 220 C 290 180, 270 130, 230 110 C 220 70, 180 40, 140 40 Z"
+                        fill="#ece4d2" stroke="#cfc4a8" stroke-width="1.5"/>
+                    <g font-family="Georgia, serif" font-size="11" fill="#7a8a96" font-style="italic">
+                        <text x="318" y="120">North Sea</text>
+                        <text x="40" y="230">Atlantic</text>
+                        <text x="48" y="245">Ocean</text>
+                    </g>
+
+                    <circle cx="170" cy="95" r="16" fill="#1a4a8a" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="170" y="100" text-anchor="middle" font-size="13" fill="#fff">&#128218;</text>
+
+                    <circle cx="135" cy="170" r="16" fill="#5a2880" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="135" y="175" text-anchor="middle" font-size="13" fill="#fff">&#128123;</text>
+
+                    <circle cx="225" cy="155" r="16" fill="#a87a2e" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="225" y="160" text-anchor="middle" font-size="13" fill="#fff">&#127963;</text>
+
+                    <circle cx="118" cy="265" r="16" fill="#1a6a7a" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="118" y="270" text-anchor="middle" font-size="13" fill="#fff">&#9875;</text>
+
+                    <circle cx="220" cy="280" r="16" fill="#8a2020" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="220" y="285" text-anchor="middle" font-size="13" fill="#fff">&#127984;</text>
+
+                    <circle cx="170" cy="350" r="16" fill="#2d6e2d" stroke="#fffdf8" stroke-width="2.5"/>
+                    <text x="170" y="355" text-anchor="middle" font-size="13" fill="#fff">&#127795;</text>
+
+                    <circle cx="195" cy="400" r="5" fill="#082b5f"/>
+                </svg>
+                <div class="map-caption">A glimpse of the full mapped catalogue — explore it on the map</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured">
+        <div class="featured-image">
+            <span class="featured-tag">START HERE</span>
+            <svg class="featured-image-illustration" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustration of Exeter Cathedral at dusk">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#e8a368"/>
+                        <stop offset="55%" stop-color="#c97a6a"/>
+                        <stop offset="100%" stop-color="#3a4f6b"/>
+                    </linearGradient>
+                </defs>
+                <rect width="500" height="380" fill="url(#skyGrad)"/>
+                <rect x="0" y="300" width="500" height="80" fill="#1d2a3a"/>
+                <g fill="#16202c">
+                    <rect x="150" y="140" width="200" height="160" />
+                    <rect x="120" y="170" width="40" height="130" />
+                    <rect x="340" y="170" width="40" height="130" />
+                    <polygon points="120,170 140,130 160,170" />
+                    <polygon points="340,170 360,130 380,170" />
+                    <rect x="230" y="100" width="40" height="200" />
+                    <polygon points="230,100 250,70 270,100" />
+                </g>
+            </svg>
+        </div>
+        <div class="featured-body">
+            <p class="featured-eyebrow">Featured story</p>
+            <h2>Exeter: a city with layers</h2>
+            <p>From Roman roots to medieval power, Exeter's 2,000-year story runs deeper than you think.</p>
+            <a class="featured-link" href="index.html?search=Exeter">
+                Explore Exeter
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <div class="explore-row">
+        <span class="rule"></span>
+        <a class="explore-link" href="index.html">
+            Explore Britain: see patterns and stories across the country
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="#4a4438" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+        <span class="rule"></span>
+    </div>
+
+</div>
+
+</body>
+</html>
