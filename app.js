@@ -782,6 +782,61 @@ document.addEventListener("click", function(e) {
 // INIT
 // ====================
 
+// ====================
+// URL PARAMETER HANDLING (landing.html front door)
+// ====================
+// Added to support landing.html as the new search-led entry point.
+// index.html remains fully functional with no parameters present - this
+// block only acts when a recognised parameter is found, and does nothing
+// otherwise. No router, no new dependencies, no changes to existing
+// functions - it calls the same toggleLayer()/performSearch() the UI
+// itself uses for a real click or search.
+
+function applyUrlParams() {
+    var params = new URLSearchParams(window.location.search);
+
+    // ?search=QUERY - populate the visible search input and run the same
+    // search a person would get by typing and pressing Enter.
+    var searchQuery = params.get("search");
+    if (searchQuery) {
+        var input = isMobile ? document.getElementById("mobileSearchInput") : document.getElementById("desktopSearchInput");
+        if (input) {
+            input.value = searchQuery;
+            if (isMobile) runSearchMobile(); else runSearch();
+        }
+    }
+
+    // ?theme=Category Name - activate the matching existing layer, exactly
+    // as if its toggle switch had been clicked. Only acts if a toggle for
+    // that category actually exists; unrecognised values are ignored
+    // rather than causing an error, since future theme pills may reference
+    // categories that don't exist as data layers yet.
+    var theme = params.get("theme");
+    if (theme) {
+        var desktopToggle = document.querySelector(".layer-row[data-cat='" + theme + "'] .layer-toggle");
+        var mobileToggle = document.querySelector(".mobile-layer-row[data-cat='" + theme + "'] .layer-toggle");
+        if (desktopToggle) {
+            toggleLayer(desktopToggle);
+        } else if (mobileToggle) {
+            toggleLayer(mobileToggle);
+        }
+        // Keep the other (non-acted-on) row's switch visually in sync too,
+        // mirroring the existing pattern used by toggleMobileLayer().
+        if (desktopToggle && mobileToggle) {
+            var isOn = desktopToggle.classList.contains("on");
+            mobileToggle.classList.toggle("on", isOn);
+            mobileToggle.classList.toggle("off", !isOn);
+        }
+    }
+
+    // ?locate=true - reserved for a future "use my current location"
+    // feature. No geolocation function exists anywhere in this file yet,
+    // so deliberately left as a no-op rather than faking a result.
+    // TODO: when implemented, call navigator.geolocation.getCurrentPosition
+    // here and map.flyTo the returned coordinates at a sensible zoom.
+    // var locate = params.get("locate");
+}
+
 window.addEventListener('load', function() {
     if (!isMobile) {
         desktopDetails.innerHTML = getEmptyStateHTML();
@@ -794,6 +849,8 @@ window.addEventListener('load', function() {
         // Explore pill/layers tray rather than seeing every marker by default.
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
+
+    applyUrlParams();
 });
 
 // ====================
