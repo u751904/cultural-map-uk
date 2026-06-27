@@ -20,8 +20,13 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    color: #1d2a3a;
-    background: #f8f4ec;
+    color: #2a2620;
+    background-color: #f7f2e8;
+    background-image:
+        radial-gradient(ellipse 1200px 800px at 15% 0%, rgba(232, 163, 104, 0.07), transparent 60%),
+        radial-gradient(ellipse 1000px 700px at 100% 30%, rgba(8, 43, 95, 0.05), transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment: fixed;
 }
 
 a { text-decoration: none; }
@@ -38,7 +43,7 @@ a { text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 24px 32px;
+    padding: 36px 32px 0;
     max-width: 1240px;
     margin: 0 auto;
 }
@@ -73,14 +78,14 @@ a { text-decoration: none; }
 
 .hero {
     position: relative;
-    padding: 64px 0 88px;
+    padding: 88px 0 104px;
     overflow: hidden;
 }
 
 .hero-grid {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
-    gap: 56px;
+    gap: 72px;
     align-items: center;
 }
 
@@ -104,9 +109,9 @@ a { text-decoration: none; }
 
 .hero p.lede {
     font-size: 18px;
-    line-height: 1.55;
-    color: #4a4438;
-    margin: 0 0 32px;
+    line-height: 1.6;
+    color: #5a5346;
+    margin: 0 0 36px;
     max-width: 480px;
 }
 
@@ -117,9 +122,9 @@ a { text-decoration: none; }
     align-items: stretch;
     gap: 0;
     max-width: 520px;
-    margin-bottom: 14px;
-    box-shadow: 0 4px 18px rgba(8,43,95,0.08);
-    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 2px rgba(42,38,32,0.04), 0 10px 28px rgba(8,43,95,0.09);
+    border-radius: 11px;
 }
 
 .search-box {
@@ -127,11 +132,11 @@ a { text-decoration: none; }
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #fffdf8;
-    border: 1.5px solid #082b5f;
+    background: linear-gradient(180deg, #fffdf9 0%, #fdf9f1 100%);
+    border: 1.5px solid #0a2f63;
     border-right: none;
-    border-radius: 10px 0 0 10px;
-    padding: 16px 18px;
+    border-radius: 11px 0 0 11px;
+    padding: 17px 18px;
 }
 
 .search-box svg { flex-shrink: 0; }
@@ -149,9 +154,9 @@ a { text-decoration: none; }
 .search-box input::placeholder { color: rgba(8,43,95,0.4); }
 
 .search-submit {
-    background: #082b5f;
+    background: linear-gradient(160deg, #0d3870 0%, #082b5f 100%);
     border: none;
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 11px 11px 0;
     width: 56px;
     display: flex;
     align-items: center;
@@ -159,15 +164,15 @@ a { text-decoration: none; }
     cursor: pointer;
 }
 
-.search-submit:hover { background: #0b3d80; }
+.search-submit:hover { background: linear-gradient(160deg, #0f4080 0%, #0b3d80 100%); }
 
 .locate-link {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     font-size: 13.5px;
-    color: #4a4438;
-    margin-bottom: 30px;
+    color: #5a5346;
+    margin-bottom: 42px;
 }
 
 .locate-link:hover { color: #082b5f; }
@@ -177,35 +182,37 @@ a { text-decoration: none; }
 .theme-label {
     font-size: 11.5px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: #8a8174;
-    margin: 0 0 12px;
+    color: #9a9082;
+    margin: 0 0 16px;
 }
 
 .theme-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 11px;
 }
 
 .theme-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #fffdf8;
-    border: 1px solid #d7d0c4;
+    background: linear-gradient(180deg, #fffdf9 0%, #fbf7ee 100%);
+    border: 1px solid #e1d9c8;
     border-radius: 22px;
-    padding: 9px 16px 9px 12px;
+    padding: 10px 17px 10px 13px;
     font-size: 13.5px;
     font-weight: 600;
-    color: #2b2620;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    color: #332e26;
+    box-shadow: 0 1px 2px rgba(42,38,32,0.03);
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
 
 .theme-pill:hover {
     border-color: #082b5f;
-    box-shadow: 0 2px 8px rgba(8,43,95,0.1);
+    box-shadow: 0 4px 14px rgba(8,43,95,0.1);
+    transform: translateY(-1px);
 }
 
 .theme-pill .pill-dot {
@@ -226,21 +233,22 @@ a { text-decoration: none; }
 .map-glimpse svg {
     width: 100%;
     height: 100%;
-    border-radius: 18px;
-    box-shadow: 0 12px 36px rgba(8,43,95,0.16);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(42,38,32,0.05), 0 22px 48px rgba(8,43,95,0.14);
 }
 
 .map-caption {
     position: absolute;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    background: rgba(8,43,95,0.88);
-    color: #fff;
+    bottom: 18px;
+    left: 18px;
+    right: 18px;
+    background: linear-gradient(160deg, rgba(13,56,112,0.92) 0%, rgba(8,43,95,0.92) 100%);
+    color: #f5f1e8;
     font-size: 12.5px;
-    padding: 9px 14px;
-    border-radius: 8px;
+    padding: 10px 14px;
+    border-radius: 9px;
     text-align: center;
+    box-shadow: 0 4px 14px rgba(8,43,95,0.2);
 }
 
 /* ---------------- FEATURED STORY ---------------- */
@@ -248,12 +256,12 @@ a { text-decoration: none; }
 .featured {
     display: grid;
     grid-template-columns: 1fr 1.1fr;
-    background: #fffdf8;
-    border: 1px solid #e3dccb;
-    border-radius: 16px;
+    background: linear-gradient(170deg, #fffdf9 0%, #fbf6ec 100%);
+    border: 1px solid #e8e1d0;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 6px 22px rgba(8,43,95,0.07);
-    margin-top: 8px;
+    box-shadow: 0 2px 4px rgba(42,38,32,0.04), 0 16px 40px rgba(8,43,95,0.09);
+    margin-top: 14px;
 }
 
 .featured-image {
@@ -282,7 +290,7 @@ a { text-decoration: none; }
 }
 
 .featured-body {
-    padding: 38px 42px;
+    padding: 46px 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -308,7 +316,7 @@ a { text-decoration: none; }
 .featured-body p {
     font-size: 15px;
     line-height: 1.6;
-    color: #4a4438;
+    color: #5a5346;
     margin: 0 0 22px;
     max-width: 420px;
 }
@@ -330,19 +338,19 @@ a { text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    padding: 56px 0 64px;
+    gap: 16px;
+    padding: 76px 0 84px;
 }
 
 .explore-row .rule {
     height: 1px;
-    background: #d7d0c4;
-    width: 64px;
+    background: linear-gradient(90deg, transparent, #ddd5c2, transparent);
+    width: 72px;
 }
 
 .explore-link {
     font-size: 14px;
-    color: #4a4438;
+    color: #5a5346;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -432,8 +440,8 @@ a { text-decoration: none; }
                 -->
                 <a class="locate-link" href="index.html?locate=true">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M12 21s-7-7.58-7-12a7 7 0 1114 0c0 4.42-7 12-7 12z" stroke="#4a4438" stroke-width="1.8"/>
-                        <circle cx="12" cy="9" r="2.4" stroke="#4a4438" stroke-width="1.8"/>
+                        <path d="M12 21s-7-7.58-7-12a7 7 0 1114 0c0 4.42-7 12-7 12z" stroke="#5a5346" stroke-width="1.8"/>
+                        <circle cx="12" cy="9" r="2.4" stroke="#5a5346" stroke-width="1.8"/>
                     </svg>
                     Use my current location
                 </a>
@@ -475,13 +483,13 @@ a { text-decoration: none; }
                 <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An illustrated glimpse of the map, hinting at the larger catalogue">
                     <defs>
                         <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#cfe0ea"/>
-                            <stop offset="100%" stop-color="#b9d1e0"/>
+                            <stop offset="0%" stop-color="#d9e2dc"/>
+                            <stop offset="100%" stop-color="#c3d2d4"/>
                         </linearGradient>
                     </defs>
                     <rect width="400" height="500" fill="url(#seaGrad)"/>
                     <path d="M140 40 C 110 70, 90 110, 100 160 C 80 190, 70 230, 90 270 C 70 300, 80 340, 110 370 C 100 410, 130 450, 170 460 C 210 470, 250 450, 260 410 C 290 400, 310 360, 300 320 C 320 290, 310 240, 280 220 C 290 180, 270 130, 230 110 C 220 70, 180 40, 140 40 Z"
-                        fill="#ece4d2" stroke="#cfc4a8" stroke-width="1.5"/>
+                        fill="#efe7d6" stroke="#d9cdab" stroke-width="1.5"/>
                     <g font-family="Georgia, serif" font-size="11" fill="#7a8a96" font-style="italic">
                         <text x="318" y="120">North Sea</text>
                         <text x="40" y="230">Atlantic</text>
@@ -555,7 +563,7 @@ a { text-decoration: none; }
         <a class="explore-link" href="index.html">
             Explore Britain: see patterns and stories across the country
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="#4a4438" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="#5a5346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </a>
         <span class="rule"></span>
