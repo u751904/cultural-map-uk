@@ -225,7 +225,7 @@ a { text-decoration: none; }
 
 .locate-link:hover { color: #082b5f; }
 
-/* ---------------- THEME PILLS ---------------- */
+/* ---------------- THEME BADGES ---------------- */
 
 .theme-label {
     font-size: 12px;
@@ -233,48 +233,39 @@ a { text-decoration: none; }
     letter-spacing: 1.4px;
     text-transform: uppercase;
     color: #9a9082;
-    margin: 0 0 16px;
+    margin: 0 0 18px;
 }
 
 .theme-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 11px;
+    column-gap: 28px;
+    row-gap: 16px;
 }
 
 .theme-pill {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: linear-gradient(180deg, #fffdf9 0%, #f7efdf 100%);
-    border: 1px solid #ddd2b8;
-    border-radius: 22px;
-    padding: 10px 17px 10px 13px;
-    font-size: 13.5px;
+    gap: 10px;
+    font-size: 14px;
     font-weight: 600;
     color: #332e26;
-    box-shadow: 0 2px 5px rgba(42,38,32,0.05);
-    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+    padding: 4px 2px;
+    transition: color 0.18s;
 }
 
-.theme-pill:hover {
-    border-color: #082b5f;
-    box-shadow: 0 6px 16px rgba(8,43,95,0.14);
-    transform: translateY(-1px);
-}
+.theme-pill:hover { color: #082b5f; }
 
-.theme-pill .pill-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    flex-shrink: 0;
+.theme-pill:hover .theme-pill-icon {
+    transform: translateY(-2px);
 }
 
 .theme-pill-icon {
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
     flex-shrink: 0;
+    transition: transform 0.18s;
 }
 
 /* ---------------- MAP GLIMPSE ---------------- */
@@ -350,7 +341,7 @@ a { text-decoration: none; }
     .search-form { flex-direction: column; box-shadow: none; }
     .search-box { border-radius: 10px; border-right: 1.5px solid #082b5f; }
     .search-submit { display: none; }
-    .theme-pills { gap: 8px; }
+    .theme-pills { column-gap: 20px; row-gap: 14px; }
 }
 
 @media (max-width: 400px) {
@@ -387,7 +378,6 @@ a { text-decoration: none; }
 
     <section class="hero">
         <picture class="hero-bg-picture" aria-hidden="true">
-            <source srcset="assets/images/hero-landscape.webp" type="image/webp">
             <img
                 src="assets/images/hero-landscape.png"
                 alt=""
