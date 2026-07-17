@@ -40,7 +40,7 @@ a { text-decoration: none; }
 
 .landing-wrap {
     width: 100%;
-    max-width: 1320px;
+    max-width: 1520px;
     padding: 0 40px;
 }
 
@@ -52,7 +52,7 @@ a { text-decoration: none; }
     justify-content: space-between;
     padding: 36px 40px 0;
     width: 100%;
-    max-width: 1320px;
+    max-width: 1520px;
     margin-bottom: 24px;
 }
 
@@ -89,7 +89,7 @@ a { text-decoration: none; }
 
 .hero {
     position: relative;
-    padding: 88px 0 104px;
+    padding: 64px 0 56px;
     overflow: hidden;
 }
 
@@ -129,7 +129,8 @@ a { text-decoration: none; }
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 520px;
+    max-width: 560px;
+    padding: 48px 0 48px 56px;
 }
 
 .hero-eyebrow {
@@ -234,8 +235,8 @@ a { text-decoration: none; }
 .theme-pills {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 30px;
-    row-gap: 20px;
+    column-gap: 34px;
+    row-gap: 28px;
 }
 
 .theme-pill {
@@ -256,11 +257,11 @@ a { text-decoration: none; }
 }
 
 .theme-pill-icon {
-    width: 56px;
-    height: 56px;
+    width: 84px;
+    height: 84px;
     object-fit: contain;
     flex-shrink: 0;
-    filter: drop-shadow(0 3px 6px rgba(42,38,32,0.18));
+    filter: drop-shadow(0 4px 8px rgba(42,38,32,0.2));
     transition: transform 0.18s;
 }
 
@@ -268,7 +269,8 @@ a { text-decoration: none; }
 
 @media (max-width: 900px) {
     .hero { padding: 48px 0 64px; }
-    .hero-copy { max-width: none; }
+    .hero-copy { max-width: none; padding: 32px 28px; }
+    .theme-pill-icon { width: 64px; height: 64px; }
     .hero h1 { font-size: 38px; }
     .landing-nav { padding: 24px 28px 0; }
     .landing-wrap { padding: 0 28px; }
