@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Map Britannia — Discover the stories that shaped Britain</title>
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="icon" href="assets/icons/favicon-32x32.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <style>
 
 /* ====================================================
@@ -56,25 +59,25 @@ a { text-decoration: none; }
 .landing-logo {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
 }
 
 .landing-logo-mark {
-    width: 54px;
-    height: 54px;
+    width: 64px;
+    height: 64px;
     flex-shrink: 0;
 }
 
 .landing-logo-text {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 32px;
+    font-size: 38px;
     font-weight: 700;
     color: #082b5f;
     letter-spacing: 0.3px;
 }
 
 .nav-about-link {
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 600;
     color: #082b5f;
     letter-spacing: 0.2px;
@@ -253,40 +256,13 @@ a { text-decoration: none; }
 }
 
 .theme-pill-icon {
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
     object-fit: contain;
     flex-shrink: 0;
     filter: drop-shadow(0 3px 6px rgba(42,38,32,0.18));
     transition: transform 0.18s;
 }
-
-/* ---------------- EXPLORE LINK ---------------- */
-
-.explore-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 96px 0 84px;
-}
-
-.explore-row .rule {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #ddd5c2, transparent);
-    width: 110px;
-}
-
-.explore-link {
-    font-size: 16.5px;
-    font-weight: 600;
-    color: #332e26;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.explore-link:hover { color: #082b5f; }
 
 /* ---------------- RESPONSIVE ---------------- */
 
@@ -296,7 +272,6 @@ a { text-decoration: none; }
     .hero h1 { font-size: 38px; }
     .landing-nav { padding: 24px 28px 0; }
     .landing-wrap { padding: 0 28px; }
-    .explore-row .rule { width: 56px; }
 }
 
 @media (max-width: 520px) {
@@ -399,17 +374,6 @@ a { text-decoration: none; }
                 </div>
             </div>
     </section>
-
-    <div class="explore-row">
-        <span class="rule"></span>
-        <a class="explore-link" href="index.html">
-            Explore Britain on the map
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="#332e26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </a>
-        <span class="rule"></span>
-    </div>
 
 </div>
 
