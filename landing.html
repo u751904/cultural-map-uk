@@ -22,6 +22,9 @@ body {
     font-family: Arial, sans-serif;
     color: #2a2620;
     background-color: #f4eee0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-image:
         radial-gradient(ellipse 1100px 750px at 10% -5%, rgba(232, 163, 104, 0.16), transparent 60%),
         radial-gradient(ellipse 900px 650px at 105% 25%, rgba(8, 43, 95, 0.10), transparent 55%),
@@ -33,9 +36,9 @@ body {
 a { text-decoration: none; }
 
 .landing-wrap {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 32px;
+    width: 100%;
+    max-width: 1320px;
+    padding: 0 40px;
 }
 
 /* ---------------- NAV ---------------- */
@@ -44,9 +47,10 @@ a { text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 36px 32px 0;
-    max-width: 1240px;
-    margin: 0 auto;
+    padding: 36px 40px 0;
+    width: 100%;
+    max-width: 1320px;
+    margin-bottom: 24px;
 }
 
 .landing-logo {
@@ -56,33 +60,27 @@ a { text-decoration: none; }
 }
 
 .landing-logo-mark {
-    width: 34px;
-    height: 34px;
+    width: 46px;
+    height: 46px;
     flex-shrink: 0;
 }
 
 .landing-logo-text {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 21px;
+    font-size: 28px;
     font-weight: 700;
     color: #082b5f;
     letter-spacing: 0.3px;
 }
 
-.landing-logo-sub {
-    font-size: 11px;
-    color: #6b6258;
-    margin-top: 1px;
-}
-
 .nav-about-link {
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 600;
-    color: #4a4438;
+    color: #082b5f;
     letter-spacing: 0.2px;
 }
 
-.nav-about-link:hover { color: #082b5f; }
+.nav-about-link:hover { color: #0a3a80; }
 
 /* ---------------- HERO ---------------- */
 
@@ -127,9 +125,16 @@ a { text-decoration: none; }
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 72px;
-    align-items: center;
+    grid-template-columns: minmax(0, 620px) minmax(340px, 440px);
+    justify-content: center;
+    column-gap: 64px;
+    align-items: start;
+}
+
+.hero-copy {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
 }
 
 .hero-eyebrow {
@@ -151,7 +156,7 @@ a { text-decoration: none; }
 }
 
 .hero p.lede {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.6;
     color: #5a5346;
     margin: 0 0 36px;
@@ -190,7 +195,7 @@ a { text-decoration: none; }
     outline: none;
     background: transparent;
     font-family: Arial, sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     color: #082b5f;
 }
 
@@ -213,7 +218,7 @@ a { text-decoration: none; }
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    font-size: 13.5px;
+    font-size: 16px;
     color: #5a5346;
     margin-bottom: 42px;
 }
@@ -223,9 +228,9 @@ a { text-decoration: none; }
 /* ---------------- THEME PILLS ---------------- */
 
 .theme-label {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.4px;
     text-transform: uppercase;
     color: #9a9082;
     margin: 0 0 16px;
@@ -265,6 +270,13 @@ a { text-decoration: none; }
     flex-shrink: 0;
 }
 
+.theme-pill-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
 /* ---------------- MAP GLIMPSE ---------------- */
 
 .map-glimpse {
@@ -282,7 +294,7 @@ a { text-decoration: none; }
 
 .map-caption {
     position: absolute;
-    bottom: 18px;
+    bottom: 30px;
     left: 18px;
     right: 18px;
     background: linear-gradient(160deg, rgba(13,56,112,0.92) 0%, rgba(8,43,95,0.92) 100%);
@@ -294,119 +306,26 @@ a { text-decoration: none; }
     box-shadow: 0 4px 14px rgba(8,43,95,0.2);
 }
 
-/* ---------------- FEATURED STORY ---------------- */
-
-.featured {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    background: linear-gradient(170deg, #fffdf9 0%, #faf4e8 100%);
-    border: 1px solid #e8e1d0;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 3px 6px rgba(42,38,32,0.06), 0 24px 54px rgba(8,43,95,0.15);
-    margin-top: 14px;
-}
-
-.featured-image {
-    position: relative;
-    min-height: 280px;
-    background: linear-gradient(135deg, #3a4f6b 0%, #1d2a3a 100%);
-}
-
-.featured-image-picture {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.featured-image-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.featured-image-illustration {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.featured-tag {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    background: #082b5f;
-    color: #fff;
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    padding: 7px 14px;
-    border-radius: 6px;
-}
-
-.featured-body {
-    padding: 46px 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.featured-eyebrow {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #a87a2e;
-    margin: 0 0 10px;
-}
-
-.featured-body h2 {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 28px;
-    color: #082b5f;
-    margin: 0 0 14px;
-    font-weight: 700;
-}
-
-.featured-body p {
-    font-size: 15px;
-    line-height: 1.6;
-    color: #5a5346;
-    margin: 0 0 22px;
-    max-width: 420px;
-}
-
-.featured-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14.5px;
-    font-weight: 700;
-    color: #082b5f;
-}
-
-.featured-link:hover { color: #0b3d80; }
-
 /* ---------------- EXPLORE LINK ---------------- */
 
 .explore-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 76px 0 84px;
+    gap: 20px;
+    padding: 96px 0 84px;
 }
 
 .explore-row .rule {
     height: 1px;
     background: linear-gradient(90deg, transparent, #ddd5c2, transparent);
-    width: 72px;
+    width: 110px;
 }
 
 .explore-link {
-    font-size: 14px;
-    color: #5a5346;
+    font-size: 16.5px;
+    font-weight: 600;
+    color: #332e26;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -418,14 +337,12 @@ a { text-decoration: none; }
 
 @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero-copy { max-width: none; margin-inline: 0; }
     .hero h1 { font-size: 38px; }
     .map-glimpse { max-height: 360px; }
-    .featured { grid-template-columns: 1fr; }
-    .featured-image { min-height: 200px; }
-    .featured-body { padding: 28px 26px; }
-    .landing-nav { padding: 20px 20px; }
-    .landing-wrap { padding: 0 20px; }
-    .explore-row .rule { width: 32px; }
+    .landing-nav { padding: 24px 28px 0; }
+    .landing-wrap { padding: 0 28px; }
+    .explore-row .rule { width: 56px; }
 }
 
 @media (max-width: 520px) {
@@ -434,6 +351,13 @@ a { text-decoration: none; }
     .search-box { border-radius: 10px; border-right: 1.5px solid #082b5f; }
     .search-submit { display: none; }
     .theme-pills { gap: 8px; }
+}
+
+@media (max-width: 400px) {
+    .landing-nav { padding: 22px 24px 0; }
+    .landing-wrap { padding: 0 24px; }
+    .hero { padding: 56px 0 64px; }
+    .hero h1 { font-size: 28px; }
 }
 
 /* Respect reduced motion preference */
@@ -454,7 +378,6 @@ a { text-decoration: none; }
         </svg>
         <div>
             <div class="landing-logo-text">MAP BRITANNIA</div>
-            <div class="landing-logo-sub">Stories that shaped our island</div>
         </div>
     </div>
     <a class="nav-about-link" href="index.html?about=true">About</a>
@@ -463,22 +386,6 @@ a { text-decoration: none; }
 <div class="landing-wrap">
 
     <section class="hero">
-        <!--
-            Production hero background. Sits behind .hero-grid via z-index.
-            WebP first with PNG fallback through <picture>, matching the
-            asset board's named files exactly:
-              /assets/images/hero-landscape.webp
-              /assets/images/hero-landscape.png
-            Until those files are actually added to the repo, the browser
-            simply fails to load this <img> (broken-image icon suppressed
-            by hero-bg-picture's overflow:hidden + the existing radial
-            gradients on body/.hero already provide an acceptable look
-            underneath) - nothing else on the page depends on this image
-            existing, so it is safe to leave wired in ahead of the files
-            landing. Do not delete the existing gradient/noise background
-            on body - it remains the fallback atmosphere if this photo is
-            ever removed or fails to load.
-        -->
         <picture class="hero-bg-picture" aria-hidden="true">
             <source srcset="assets/images/hero-landscape.webp" type="image/webp">
             <img
@@ -492,7 +399,7 @@ a { text-decoration: none; }
         <div class="hero-bg-overlay" aria-hidden="true"></div>
 
         <div class="hero-grid">
-            <div>
+            <div class="hero-copy">
                 <p class="hero-eyebrow">A mapped catalogue of British history</p>
                 <h1>Discover the stories<br>that shaped Britain</h1>
                 <p class="lede">People, places and events from the past, anchored to the ground beneath your feet.</p>
@@ -512,17 +419,6 @@ a { text-decoration: none; }
                     </button>
                 </form>
 
-                <!--
-                    TODO: "Use my current location" has no real backing function yet.
-                    app.js contains no geolocation logic at all (confirmed before
-                    building this page). This link is left pointing at
-                    index.html?locate=true so the destination already understands
-                    the parameter is reserved, but it currently does nothing beyond
-                    that — no fake geolocation has been implemented, per instruction.
-                    To wire this up later: call navigator.geolocation.getCurrentPosition
-                    in index.html's load handler when locate=true is present, then
-                    map.flyTo the resulting coordinates at a sensible zoom.
-                -->
                 <a class="locate-link" href="index.html?locate=true">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M12 21s-7-7.58-7-12a7 7 0 1114 0c0 4.42-7 12-7 12z" stroke="#5a5346" stroke-width="1.8"/>
@@ -532,33 +428,21 @@ a { text-decoration: none; }
                 </a>
 
                 <p class="theme-label">Browse by theme</p>
-                <!--
-                    Theme pills use visitor-facing labels, mapped to the real
-                    internal category names used throughout the live map app
-                    (confirmed exact strings from index.html's data-cat attributes).
-                    The internal name travels in the URL; only the friendly label
-                    is ever shown on screen. "Horrible History" is intentionally
-                    never surfaced here per instruction — shown as "Ghosts & Folklore".
-                -->
                 <div class="theme-pills">
                     <a class="theme-pill" href="index.html?theme=Horrible%20History">
-                        <span class="pill-dot" style="background:#5a2880;"></span>
-                        Ghosts &amp; Folklore
+                        <img class="theme-pill-icon" src="assets/icons/08_horrible_history.png" alt="">
+                        Horrible History
                     </a>
                     <a class="theme-pill" href="index.html?theme=Maritime">
-                        <span class="pill-dot" style="background:#1a6a7a;"></span>
+                        <img class="theme-pill-icon" src="assets/icons/08_maritime.png" alt="">
                         Shipwrecks
                     </a>
                     <a class="theme-pill" href="index.html?theme=Ancient%20Landscape">
-                        <span class="pill-dot" style="background:#2d6e2d;"></span>
+                        <img class="theme-pill-icon" src="assets/icons/08_ancient_trees.png" alt="">
                         Ancient Trees
                     </a>
-                    <a class="theme-pill" href="index.html?theme=Military">
-                        <span class="pill-dot" style="background:#8a2020;"></span>
-                        War Stories
-                    </a>
                     <a class="theme-pill" href="index.html?theme=Literary">
-                        <span class="pill-dot" style="background:#1a4a8a;"></span>
+                        <img class="theme-pill-icon" src="assets/icons/08_writers_legends.png" alt="">
                         Writers &amp; Legends
                     </a>
                 </div>
@@ -582,22 +466,21 @@ a { text-decoration: none; }
                     </g>
 
                     <circle cx="170" cy="95" r="16" fill="#1a4a8a" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="170" y="100" text-anchor="middle" font-size="13" fill="#fff">&#128218;</text>
+                    <image href="assets/icons/08_writers_legends.png" x="160" y="85" width="20" height="20"/>
 
                     <circle cx="135" cy="170" r="16" fill="#5a2880" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="135" y="175" text-anchor="middle" font-size="13" fill="#fff">&#128123;</text>
+                    <image href="assets/icons/08_ghosts_folklore.png" x="125" y="160" width="20" height="20"/>
 
                     <circle cx="225" cy="155" r="16" fill="#a87a2e" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="225" y="160" text-anchor="middle" font-size="13" fill="#fff">&#127963;</text>
 
                     <circle cx="118" cy="265" r="16" fill="#1a6a7a" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="118" y="270" text-anchor="middle" font-size="13" fill="#fff">&#9875;</text>
+                    <image href="assets/icons/08_maritime.png" x="108" y="255" width="20" height="20"/>
 
                     <circle cx="220" cy="280" r="16" fill="#8a2020" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="220" y="285" text-anchor="middle" font-size="13" fill="#fff">&#127984;</text>
+                    <image href="assets/icons/08_war_conflict.png" x="210" y="270" width="20" height="20"/>
 
                     <circle cx="170" cy="350" r="16" fill="#2d6e2d" stroke="#fffdf8" stroke-width="2.5"/>
-                    <text x="170" y="355" text-anchor="middle" font-size="13" fill="#fff">&#127795;</text>
+                    <image href="assets/icons/08_ancient_trees.png" x="160" y="340" width="20" height="20"/>
 
                     <circle cx="195" cy="400" r="5" fill="#082b5f"/>
                 </svg>
@@ -606,68 +489,12 @@ a { text-decoration: none; }
         </div>
     </section>
 
-    <section class="featured">
-        <div class="featured-image">
-            <span class="featured-tag">START HERE</span>
-            <!--
-                Production Exeter feature photo. WebP first, PNG fallback,
-                matching the asset board's named files:
-                  /assets/images/exeter-feature.webp
-                  /assets/images/exeter-feature.png
-                The SVG cathedral-silhouette illustration directly below is
-                kept in the DOM as a fallback. If the real photo is missing,
-                onerror hides the <picture> and reveals the SVG underneath,
-                so the card never looks broken either way.
-            -->
-            <picture class="featured-image-picture">
-                <source srcset="assets/images/exeter-feature.webp" type="image/webp">
-                <img
-                    src="assets/images/exeter-feature.png"
-                    alt="Exeter Cathedral at golden hour, viewed across the city's rooftops"
-                    class="featured-image-photo"
-                    loading="lazy"
-                    onerror="this.closest('.featured-image-picture').style.display='none'; this.closest('.featured-image').querySelector('.featured-image-illustration').style.display='block';">
-            </picture>
-            <svg class="featured-image-illustration" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustration of Exeter Cathedral at dusk" style="display:none;">
-                <defs>
-                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#e8a368"/>
-                        <stop offset="55%" stop-color="#c97a6a"/>
-                        <stop offset="100%" stop-color="#3a4f6b"/>
-                    </linearGradient>
-                </defs>
-                <rect width="500" height="380" fill="url(#skyGrad)"/>
-                <rect x="0" y="300" width="500" height="80" fill="#1d2a3a"/>
-                <g fill="#16202c">
-                    <rect x="150" y="140" width="200" height="160" />
-                    <rect x="120" y="170" width="40" height="130" />
-                    <rect x="340" y="170" width="40" height="130" />
-                    <polygon points="120,170 140,130 160,170" />
-                    <polygon points="340,170 360,130 380,170" />
-                    <rect x="230" y="100" width="40" height="200" />
-                    <polygon points="230,100 250,70 270,100" />
-                </g>
-            </svg>
-        </div>
-        <div class="featured-body">
-            <p class="featured-eyebrow">Featured story</p>
-            <h2>Exeter: a city with layers</h2>
-            <p>From Roman roots to medieval power, Exeter's 2,000-year story runs deeper than you think.</p>
-            <a class="featured-link" href="index.html?search=Exeter">
-                Explore Exeter
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M5 12h14M13 6l6 6-6 6" stroke="#082b5f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-        </div>
-    </section>
-
     <div class="explore-row">
         <span class="rule"></span>
         <a class="explore-link" href="index.html">
-            Explore Britain: see patterns and stories across the country
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="#5a5346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            Explore Britain on the map
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="#332e26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </a>
         <span class="rule"></span>
