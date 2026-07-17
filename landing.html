@@ -56,18 +56,18 @@ a { text-decoration: none; }
 .landing-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 .landing-logo-mark {
-    width: 46px;
-    height: 46px;
+    width: 54px;
+    height: 54px;
     flex-shrink: 0;
 }
 
 .landing-logo-text {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: #082b5f;
     letter-spacing: 0.3px;
@@ -86,13 +86,8 @@ a { text-decoration: none; }
 
 .hero {
     position: relative;
-    padding: 0 0 104px;
-}
-
-.hero-photo-frame {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1536 / 1024;
+    padding: 88px 0 104px;
+    overflow: hidden;
 }
 
 .hero-photo-bg {
@@ -106,6 +101,7 @@ a { text-decoration: none; }
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: 68% 30%;
     display: block;
 }
 
@@ -115,9 +111,8 @@ a { text-decoration: none; }
     z-index: 1;
     /*
         Warm gradient overlay for text legibility, strongest over the
-        left/photo side where the hero copy sits. Eases off before the
-        transition zone (~47-59% across the composite) so the map side
-        on the right stays clear for badge placement.
+        left/photo side where the hero copy sits, easing off toward
+        the map side on the right.
     */
     background: linear-gradient(100deg,
         rgba(247, 242, 230, 0.97) 0%,
@@ -132,28 +127,6 @@ a { text-decoration: none; }
     z-index: 2;
     width: 100%;
     max-width: 520px;
-    padding: 72px 0 0 56px;
-}
-
-/*
-    Decorative badges pinned to the map side of the composite image.
-    Coordinates are percentages of the full 1536x1024 source image —
-    the frame's aspect-ratio matches the image exactly (object-fit:
-    cover with no crop), so these percentages map 1:1 to the same
-    "safe map" zone Bob specified. Purely illustrative, not linked —
-    the actual navigation lives in the theme row below the search box.
-*/
-.hero-badge {
-    position: absolute;
-    z-index: 2;
-    transform: translate(-50%, -50%);
-}
-
-.hero-badge img {
-    width: 44px;
-    height: 44px;
-    display: block;
-    filter: drop-shadow(0 3px 7px rgba(8, 43, 95, 0.35));
 }
 
 .hero-eyebrow {
@@ -258,15 +231,15 @@ a { text-decoration: none; }
 .theme-pills {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 28px;
-    row-gap: 16px;
+    column-gap: 30px;
+    row-gap: 20px;
 }
 
 .theme-pill {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 14px;
+    gap: 12px;
+    font-size: 15px;
     font-weight: 600;
     color: #332e26;
     padding: 4px 2px;
@@ -280,10 +253,11 @@ a { text-decoration: none; }
 }
 
 .theme-pill-icon {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
     flex-shrink: 0;
+    filter: drop-shadow(0 3px 6px rgba(42,38,32,0.18));
     transition: transform 0.18s;
 }
 
@@ -317,9 +291,8 @@ a { text-decoration: none; }
 /* ---------------- RESPONSIVE ---------------- */
 
 @media (max-width: 900px) {
-    .hero-photo-frame { aspect-ratio: auto; }
-    .hero-copy { max-width: none; padding: 40px 28px 32px; }
-    .hero-badge { display: none; }
+    .hero { padding: 48px 0 64px; }
+    .hero-copy { max-width: none; }
     .hero h1 { font-size: 38px; }
     .landing-nav { padding: 24px 28px 0; }
     .landing-wrap { padding: 0 28px; }
@@ -367,18 +340,17 @@ a { text-decoration: none; }
 <div class="landing-wrap">
 
     <section class="hero">
-        <div class="hero-photo-frame">
-            <div class="hero-photo-bg" aria-hidden="true">
-                <img
-                    src="assets/images/hero-composite.png"
-                    alt=""
-                    class="hero-bg-img"
-                    loading="eager"
-                    fetchpriority="high">
-                <div class="hero-bg-overlay"></div>
-            </div>
+        <div class="hero-photo-bg" aria-hidden="true">
+            <img
+                src="assets/images/hero-composite.png"
+                alt=""
+                class="hero-bg-img"
+                loading="eager"
+                fetchpriority="high">
+            <div class="hero-bg-overlay"></div>
+        </div>
 
-            <div class="hero-copy">
+        <div class="hero-copy">
                 <p class="hero-eyebrow">A mapped catalogue of British history</p>
                 <h1>Discover the stories<br>that shaped Britain</h1>
                 <p class="lede">People, places and events from the past, anchored to the ground beneath your feet.</p>
@@ -426,7 +398,6 @@ a { text-decoration: none; }
                     </a>
                 </div>
             </div>
-        </div>
     </section>
 
     <div class="explore-row">
