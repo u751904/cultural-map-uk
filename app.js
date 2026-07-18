@@ -1,24 +1,148 @@
+
+/
+Claude finished the response
+1784375171253_image.png
+is this the underlying postcode data base / service, its annoying having two entries and asking the user to select anything that can be done?
+
+
+Acknowledged limited access; pivoted toward explaining standard search behavior
+Acknowledged limited access; pivoted toward explaining standard search behavior
+Yes — that's Nominatim, OpenStreetMap's free geocoding/search service. It's what your Map_britannia search box is calling to turn "dartington" into address suggestions.
+
+Why you're seeing two entries for the same place
+
+Nominatim doesn't have one canonical record per place — it indexes multiple address-level entries that can all resolve to roughly the same location. A common pattern is:
+
+One result at the "settlement" level (village/town, no postcode)
+One result at a more specific level (often with a postcode attached, like your TQ9 6EA entry)
+These are technically different database rows in OpenStreetMap's data, even though to a user they're clearly "the same place." This is a known annoyance with Nominatim and not something unique to your setup.
+
+What can be done about it (without switching providers, which would cost money):
+
+De-duplicate by name before displaying — strip the postcode/trailing detail and compare the first part of the string (e.g. before the first comma). If two results share that first segment, only show one (prefer the one with the postcode, since it's more precise for zooming in).
+Limit to fewer results — showing only the top 1 result often just resolves to whichever Nominatim ranks first, which isn't reliable either.
+Filter by result type — Nominatim returns a type/class field (e.g. place, postcode, village). You could prefer one type over another when duplicates share a name.
+Option 1 is the standard fix and is a small, low-risk change — it doesn't touch your map logic, just the list of suggestions shown under the search box.
+
+I don't currently have your live search code in front of me (my project files here look like an older Devon-only version), so before I touch anything — can you paste in or point me to the block in app.js that calls Nominatim and builds that dropdown? Then I can show you exactly the small change rather than guessing at line numbers.
+
+
+// ==================== // MAP SETUP // ==================== var isMobile = window.innerWidth <= 768; // On mobile, Leaflet's default top-left zoom control sits directly behind // the new search bar / pill row, so it's moved to bottom-left instead - // the only consistently free corner abo
+
+pasted
+
+
+The user prompt is empty, so I cannot determine the primary language. However, based on the thinking block being in English, here is the summary: Explaining deduplication fix, seeking confirmation beforehand
+The user prompt is empty, so I cannot determine the primary language. However, based on the thinking block being in English, here is the summary: Explaining deduplication fix, seeking confirmation beforehand
+Found it — performSearch() in the SEARCH (Nominatim) section. This confirms what I described: Nominatim is returning two rows for Dartington that just differ by how specific the address is (one is the settlement, one includes the postcode).
+
+The fix: dedupe results by the first segment of display_name (the part before the first comma) right after the data comes back, before you decide whether to show a list or fly straight there.
+
+Here's the exact change — one new function, and one line added inside the existing .then():
+
+javascript
+function dedupeNominatimResults(data) {
+    var seen = {};
+    return data.filter(function(item) {
+        var key = item.display_name.split(",")[0].trim().toLowerCase();
+        if (seen[key]) return false;
+        seen[key] = true;
+        return true;
+    });
+}
+And in performSearch, change:
+
+javascript
+.then(function(data) {
+    resultsBox.innerHTML = "";
+    if (!data || data.length === 0) {
+to:
+
+javascript
+.then(function(data) {
+    data = dedupeNominatimResults(data);
+    resultsBox.innerHTML = "";
+    if (!data || data.length === 0) {
+That's it — two small, self-contained additions. No other functions change, and it doesn't touch flyToResult, the map logic, or anything mobile/desktop-specific since both runSearch and runSearchMobile funnel through this one performSearch function.
+
+One judgment call built into this: when two results share the same first segment, it keeps whichever one Nominatim returned first (which in your Dartington example was the plain village entry, not the postcode one) — since Nominatim's own ranking usually puts the more relevant result first. That should be fine for your use case, but flag it if you'd rather it prefer the postcode version specifically.
+
+Want me to fold this into a version-bumped app.js for you to download, or do you want to paste it in yourself first and test?
+
+
+// ==================== // MAP SETUP // ==================== var isMobile = window.innerWidth <= 768; // On mobile, Leaflet's default top-left zoom control sits directly behind // the new search bar / pill row, so it's moved to bottom-left instead - // the only consistently free corner abo
+
+pasted
+
+is this right
+
+
+Verified function placement and contemplated version management
+Verified function placement and contemplated version management
+Yes, that's correct. A few things worth confirming:
+
+It'll work as placed. In JavaScript, function dedupeNominatimResults(...) {...} declarations are "hoisted" — meaning the function exists and is callable from anywhere in the file, regardless of whether it's defined before or after the code that calls it. So having it at the very bottom, after performSearch calls it near the top, is fine. No functional problem.
+
+The logic itself:
+
+It builds a seen object keyed by the lowercased first segment of display_name.
+Filters out any later result that repeats a key already seen, keeping the first occurrence.
+Matches exactly what we discussed for the Dartington case.
+One small style note, not a bug: convention in this file has been to group related functions under the // ========== section headers (like the SEARCH (Nominatim) block). Since dedupeNominatimResults is a search helper, you could move it up into that section, right above or below performSearch, just for readability when you or Bob look at this file in future. It'll behave identically either way — this is purely tidiness, not correctness.
+
+Before you upload this to GitHub — do you want to test it locally first (search "dartington" again and confirm only one result shows, or that it flies straight there since it'd now be a single-result match), or are you comfortable pushing it and testing live?
+
+canyou do the whole file I'm not experienced enough yet
+
+
+Reorganized code structure for complete file delivery
+Reorganized code structure for complete file delivery
+Done — this is the full app.js with the dedupe fix moved into the SEARCH (Nominatim) section, right where performSearch is, with a short comment explaining what it does and why. I ran it through a syntax checker too, so it's valid JavaScript.
+
+Nothing else in the file changed — same functions, same order, same everything else.
+
+To use it:
+
+Download it above.
+Replace your existing app.js in the u751904/cultural-map-uk repo with this one.
+Test locally in Chrome first (search "dartington" again) before pushing, since you mentioned the preview pane can be unreliable.
+One thing I didn't do: bump the version number. I don't know what version you're currently on in index.html/styles.css/app.js, so I left it as-is rather than guess. Let me know the current version and I'll tell you what to bump it to, or you can handle that bit yourself since it's just a comment/label change.
+
+
+App
+JS 
+
+
+Want to be notified when Claude responds?
+
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+App · JS
 // ====================
 // MAP SETUP
 // ====================
-
+ 
 var isMobile = window.innerWidth <= 768;
-
+ 
 // On mobile, Leaflet's default top-left zoom control sits directly behind
 // the new search bar / pill row, so it's moved to bottom-left instead -
 // the only consistently free corner above the footer.
 var map = L.map('map', { zoomControl: false }).setView([54.0, -2.5], 6);
 L.control.zoom({ position: isMobile ? 'bottomleft' : 'topleft' }).addTo(map);
-
+ 
 var allMarkers = [];
-
+ 
 var desktopDetails = document.getElementById("detailsContent");
 var mobileDetails  = document.getElementById("mobileDetailsContent");
-
+ 
 // ====================
 // MARKER ICONS
 // ====================
-
+ 
 function makeTearDrop(colour) {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">' +
         '<path d="M12.5 0 C5.6 0 0 5.6 0 12.5 C0 22 12.5 41 12.5 41 C12.5 41 25 22 25 12.5 C25 5.6 19.4 0 12.5 0 Z"' +
@@ -27,7 +151,7 @@ function makeTearDrop(colour) {
         '</svg>';
     return L.divIcon({ html: svg, className: '', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
 }
-
+ 
 function makeTearDropSelected(colour) {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="52" viewBox="0 0 25 41">' +
         '<path d="M12.5 0 C5.6 0 0 5.6 0 12.5 C0 22 12.5 41 12.5 41 C12.5 41 25 22 25 12.5 C25 5.6 19.4 0 12.5 0 Z"' +
@@ -36,7 +160,7 @@ function makeTearDropSelected(colour) {
         '</svg>';
     return L.divIcon({ html: svg, className: '', iconSize: [32, 52], iconAnchor: [16, 52], popupAnchor: [1, -52] });
 }
-
+ 
 var blueMarkerIcon     = makeTearDrop("#1a4a8a");
 var redMarkerIcon      = makeTearDrop("#8a2020");
 var violetMarkerIcon   = makeTearDrop("#5a2880");
@@ -45,7 +169,7 @@ var blueSelectedIcon   = makeTearDropSelected("#1a4a8a");
 var redSelectedIcon    = makeTearDropSelected("#8a2020");
 var violetSelectedIcon = makeTearDropSelected("#5a2880");
 var tealSelectedIcon   = makeTearDropSelected("#1a6a7a");
-
+ 
 function makeTreeIcon() {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="38" viewBox="0 0 36 38">' +
         '<polygon points="16,38 20,38 21,28 22,24 18,21 14,24 15,28" fill="#3d2008"/>' +
@@ -57,9 +181,9 @@ function makeTreeIcon() {
         '</svg>';
     return L.divIcon({ html: svg, className: '', iconSize: [36, 38], iconAnchor: [18, 38], popupAnchor: [0, -38] });
 }
-
+ 
 var treeMarkerIcon = makeTreeIcon();
-
+ 
 function getMarkerIcon(category) {
     if (category === "Military") return redMarkerIcon;
     if (category === "Horrible History") return violetMarkerIcon;
@@ -67,21 +191,21 @@ function getMarkerIcon(category) {
     if (category === "Ancient Landscape") return treeMarkerIcon;
     return blueMarkerIcon;
 }
-
+ 
 function getSelectedMarkerIcon(category) {
     if (category === "Military") return redSelectedIcon;
     if (category === "Horrible History") return violetSelectedIcon;
     if (category === "Maritime") return tealSelectedIcon;
     return blueSelectedIcon;
 }
-
+ 
 // ====================
 // MARKER CLUSTER
 // ====================
-
+ 
 var markerClicked = false;
 var selectedMarker = null;
-
+ 
 var markerCluster = L.markerClusterGroup({
     maxClusterRadius: 50,
     disableClusteringAtZoom: 16,
@@ -91,7 +215,7 @@ var markerCluster = L.markerClusterGroup({
         var categories = {};
         children.forEach(function(m) { if (m.category) categories[m.category] = true; });
         var uniqueCats = Object.keys(categories);
-
+ 
         var colourClass = "cluster-circle"; // default: navy, used when mixed or unknown
         if (uniqueCats.length === 1) {
             var catColourClass = {
@@ -103,15 +227,15 @@ var markerCluster = L.markerClusterGroup({
             };
             colourClass = catColourClass[uniqueCats[0]] || "cluster-circle";
         }
-
+ 
         return L.divIcon({ html: '<div class="' + colourClass + '">' + count + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
     }
 });
-
+ 
 // ====================
 // WRECK ICON
 // ====================
-
+ 
 function makeWreckIcon(size) {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 40 40">' +
         '<line x1="6" y1="6" x2="34" y2="34" stroke="#e07b39" stroke-width="8" stroke-linecap="round"/>' +
@@ -119,38 +243,38 @@ function makeWreckIcon(size) {
         '</svg>';
     return L.divIcon({ html: svg, className: '', iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
 }
-
+ 
 var shipMarkerIcon = makeWreckIcon(isMobile ? 18 : 22);
-
+ 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-
+ 
 // ====================
 // HELPERS
 // ====================
-
+ 
 function escapeHtml(text) {
     return String(text || "")
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
-
+ 
 function makeLiteratureList(text) {
     if (!text) return "<p>No literature added yet.</p>";
     var items = text.split(/\n+/).map(function(i) { return i.trim(); }).filter(function(i) { return i.length > 0; });
     return "<ul class='literature-list'>" + items.map(function(i) { return "<li>" + escapeHtml(i) + "</li>"; }).join("") + "</ul>";
 }
-
+ 
 function formatParagraph(text) {
     return escapeHtml(text).replace(/\n/g, "<br>");
 }
-
+ 
 // ====================
 // CATEGORY CONFIG
 // ====================
-
+ 
 var categoryConfig = {
     "Literary": {
         label: "Literary Location",
@@ -203,35 +327,35 @@ var categoryConfig = {
         partnerCta: "Find out more", partnerCtaClass: "ancient"
     }
 };
-
+ 
 function getCategoryConfig(category) {
     return categoryConfig[category] || categoryConfig["Literary"];
 }
-
+ 
 // ====================
 // SHOW DETAILS
 // ====================
-
+ 
 function showDetails(row, marker) {
     var title = row.Location_name || "Cultural location";
     var lat = row.Latitude;
     var lng = row.Longitude;
     var category = row.Category ? row.Category.trim() : "Literary";
     var cfg = getCategoryConfig(category);
-
+ 
     if (selectedMarker && selectedMarker !== marker) {
         selectedMarker.setIcon(getMarkerIcon(selectedMarker.category || "Literary"));
     }
     selectedMarker = marker;
     marker.setIcon(getSelectedMarkerIcon(category));
-
+ 
     var googleMaps = row.Google_Maps_Link
         ? "<a class='button' href='" + escapeHtml(row.Google_Maps_Link) + "' target='_blank'>Google Maps</a>" : "";
     var appleMaps = lat && lng
         ? "<a class='button' href='https://maps.apple.com/?q=" + encodeURIComponent(title) + "&ll=" + lat + "," + lng + "' target='_blank'>Apple Maps</a>" : "";
     var officialWebsite = row.Official_Website
         ? "<a class='button secondary-button' href='" + escapeHtml(row.Official_Website) + "' target='_blank'>Official website</a>" : "";
-
+ 
     var html =
         "<div class='place-card'>" +
         "<div class='place-card-category'>" + escapeHtml(cfg.label) + "</div>" +
@@ -266,9 +390,9 @@ function showDetails(row, marker) {
         "&body=I found an issue with this entry: " + escapeHtml(title) + "%0A%0APlease describe the error:' target='_blank'>Report an error ✉</a>" +
         (row.Source ? "<br><small class='source-credit'>Source: " + escapeHtml(row.Source) + "</small>" : "") +
         "</div></div>";
-
+ 
     markerClicked = true;
-
+ 
     if (isMobile) {
         document.getElementById("layout").classList.remove("filter-active");
         document.getElementById("layout").classList.remove("map-expanded");
@@ -279,21 +403,21 @@ function showDetails(row, marker) {
         openDesktopPanel();
     }
 }
-
+ 
 // ====================
 // EMPTY STATE (replaces old signpost graphic)
 // ====================
-
+ 
 function getEmptyStateHTML() {
     return '<div class="empty-state">' +
         '<p class="empty-state-text">Use search to find a place, or Explore to choose categories</p>' +
         '</div>';
 }
-
+ 
 // ====================
 // CSV DATA
 // ====================
-
+ 
 var csvFiles = [
     { file: "literarydevon.csv",   defaultCategory: "Literary" },
     { file: "horriblehistory.csv", defaultCategory: "Horrible History" },
@@ -302,7 +426,7 @@ var csvFiles = [
     { file: "plague_uk_final.csv", defaultCategory: "Horrible History" },
     { file: "ancient_trees.csv",   defaultCategory: "Ancient Landscape" }
 ];
-
+ 
 function loadCsv(fileObj) {
     Papa.parse(fileObj.file, {
         download: true, header: true, skipEmptyLines: true,
@@ -323,13 +447,13 @@ function loadCsv(fileObj) {
         }
     });
 }
-
+ 
 csvFiles.forEach(loadCsv);
-
+ 
 // ====================
 // GEOJSON LAYERS
 // ====================
-
+ 
 var layerConfig = [
     {
         file: "battlefields.geojson",
@@ -354,9 +478,9 @@ var layerConfig = [
         markerFromCentroid: true
     }
 ];
-
+ 
 var geoJsonLayers = [];
-
+ 
 layerConfig.forEach(function(cfg) {
     fetch(cfg.file)
         .then(function(r) { return r.json(); })
@@ -366,7 +490,7 @@ layerConfig.forEach(function(cfg) {
                 onEachFeature: function(feature, l) { l.bindPopup(cfg.popup(feature.properties)); }
             });
             geoJsonLayers.push({ layer: layer, categories: cfg.categories });
-
+ 
             if (cfg.markerFromCentroid) {
                 var ml = L.featureGroup();
                 data.features.forEach(function(feature) {
@@ -384,7 +508,7 @@ layerConfig.forEach(function(cfg) {
                 });
                 geoJsonLayers.push({ layer: ml, categories: cfg.categories, isWreckMarkers: true });
             }
-
+ 
             // Re-apply any active layer filter now that this geoJSON has actually loaded.
             // Without this, toggling a layer on before the fetch resolves (common on a fast
             // page load) leaves that layer permanently invisible even after the data arrives.
@@ -393,13 +517,13 @@ layerConfig.forEach(function(cfg) {
         })
         .catch(function() { console.warn("Could not load: " + cfg.file); });
 });
-
+ 
 // ====================
 // LAYERS PANEL SYSTEM
 // ====================
-
+ 
 var activeLayers = {};
-
+ 
 function toggleLayersPanel() {
     var panel = document.getElementById("layersPanel");
     var chevron = document.getElementById("mapContentChevron");
@@ -413,19 +537,19 @@ function toggleLayersPanel() {
         if (chevron) chevron.style.transform = "rotate(180deg)";
     }
 }
-
+ 
 function closeLayersPanel() {
     var panel = document.getElementById("layersPanel");
     var chevron = document.getElementById("mapContentChevron");
     if (panel) panel.classList.remove("open");
     if (chevron) chevron.style.transform = "";
 }
-
+ 
 function toggleLayer(toggleEl) {
     var row = toggleEl.closest(".layer-row, .mobile-layer-row");
     var cat = row.getAttribute("data-cat");
     var isOn = toggleEl.classList.contains("on");
-
+ 
     if (isOn) {
         toggleEl.classList.remove("on");
         toggleEl.classList.add("off");
@@ -435,12 +559,12 @@ function toggleLayer(toggleEl) {
         toggleEl.classList.add("on");
         activeLayers[cat] = true;
     }
-
+ 
     applyLayerFilter();
     updateKeyPills();
     updateBadge();
 }
-
+ 
 function clearAllLayers() {
     activeLayers = {};
     document.querySelectorAll(".layer-toggle").forEach(function(t) {
@@ -451,33 +575,33 @@ function clearAllLayers() {
     updateKeyPills();
     updateBadge();
 }
-
+ 
 function applyLayerFilter() {
     // Shared by both desktop (toggle panel) and mobile (layers tray) since
     // both now drive the same activeLayers object - one source of truth,
     // no more dual code paths to keep in sync.
     var activeList = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; });
-
+ 
     markerCluster.clearLayers();
     allMarkers.forEach(function(marker) {
         if (activeList.length === 0 || activeList.indexOf(marker.category) !== -1) {
             markerCluster.addLayer(marker);
         }
     });
-
+ 
     if (!map.hasLayer(markerCluster) && activeList.length > 0) {
         map.addLayer(markerCluster);
     } else if (activeList.length === 0) {
         map.removeLayer(markerCluster);
     }
-
+ 
     geoJsonLayers.forEach(function(item) {
         var shouldShow = activeList.some(function(cat) { return item.categories.indexOf(cat) !== -1; });
         if (shouldShow) item.layer.addTo(map);
         else if (map.hasLayer(item.layer)) map.removeLayer(item.layer);
     });
 }
-
+ 
 function updateKeyPills() {
     var row = document.getElementById("keyPillsRow");
     if (!row) return;
@@ -489,10 +613,10 @@ function updateKeyPills() {
         return "<div class='key-pill'><span class='key-pill-dot' style='background:" + colour + ";'></span>" + cat + "</div>";
     }).join("");
 }
-
+ 
 function updateBadge() {
     var count = Object.keys(activeLayers).filter(function(k) { return activeLayers[k]; }).length;
-
+ 
     var desktopBadge = document.getElementById("mapContentBadge");
     if (desktopBadge) {
         if (count > 0) {
@@ -502,7 +626,7 @@ function updateBadge() {
             desktopBadge.style.display = "none";
         }
     }
-
+ 
     var mobileBadge = document.getElementById("mobileExploreBadge");
     if (mobileBadge) {
         if (count > 0) {
@@ -513,14 +637,14 @@ function updateBadge() {
         }
     }
 }
-
+ 
 map.on("click", function() {
     if (!isMobile) {
         closeLayersPanel();
         closeDesktopPanel();
     }
 });
-
+ 
 document.addEventListener("click", function(e) {
     var bar = document.getElementById("mapContentBar");
     var panel = document.getElementById("layersPanel");
@@ -528,40 +652,40 @@ document.addEventListener("click", function(e) {
         closeLayersPanel();
     }
 });
-
+ 
 // ====================
 // DESKTOP PANEL
 // ====================
-
+ 
 function openDesktopPanel() {
     var panel = document.getElementById("desktopPanel");
     if (panel) panel.classList.add("panel-open");
     setTimeout(function() { map.invalidateSize(); }, 320);
 }
-
+ 
 function closeDesktopPanel() {
     var panel = document.getElementById("desktopPanel");
     if (panel) panel.classList.remove("panel-open");
     setTimeout(function() { map.invalidateSize(); }, 320);
 }
-
+ 
 // ====================
 // RESET MAP VIEW
 // ====================
-
+ 
 function resetMapView() {
     map.setView([54.0, -2.5], 6);
     markerClicked = false;
-
+ 
     if (selectedMarker) {
         selectedMarker.setIcon(getMarkerIcon(selectedMarker.category || "Literary"));
         selectedMarker = null;
     }
-
+ 
     document.getElementById("layout").classList.remove("filter-active");
     document.getElementById("layout").classList.remove("map-expanded");
     closeMobileLayersTray();
-
+ 
     if (isMobile) {
         mobileDetails.innerHTML = getEmptyStateHTML();
         openPanel();
@@ -571,33 +695,33 @@ function resetMapView() {
         openDesktopPanel();
     }
 }
-
+ 
 // ====================
 // MOBILE PANEL
 // ====================
-
+ 
 function openPanel() {
     var el = document.getElementById("details");
     if (el) el.classList.remove("panel-hidden");
     setTimeout(function() { map.invalidateSize(); }, 50);
 }
-
+ 
 function closePanel() {
     var el = document.getElementById("details");
     if (el) el.classList.add("panel-hidden");
     setTimeout(function() { map.invalidateSize(); }, 50);
 }
-
+ 
 function expandMap() {
     document.getElementById("layout").classList.add("map-expanded");
     closePanel();
     setTimeout(function() { map.invalidateSize(); }, 50);
 }
-
+ 
 // ====================
 // MOBILE LAYERS TRAY
 // ====================
-
+ 
 function toggleMobileLayersTray() {
     var tray = document.getElementById("mobileLayersTray");
     var overlay = document.getElementById("mobileLayersOverlay");
@@ -610,42 +734,42 @@ function toggleMobileLayersTray() {
         overlay.classList.add("open");
     }
 }
-
+ 
 function closeMobileLayersTray() {
     var tray = document.getElementById("mobileLayersTray");
     var overlay = document.getElementById("mobileLayersOverlay");
     if (tray) tray.classList.remove("open");
     if (overlay) overlay.classList.remove("open");
 }
-
+ 
 // ====================
 // MOBILE TRAY DRAG-TO-DISMISS
 // ====================
-
+ 
 (function() {
     var tray = document.getElementById("mobileLayersTray");
     var handle = document.getElementById("mobileTrayHandle");
     if (!tray || !handle) return;
-
+ 
     var startY = 0;
     var currentY = 0;
     var dragging = false;
     var DISMISS_THRESHOLD = 80; // px of downward drag needed to dismiss
-
+ 
     function onStart(clientY) {
         dragging = true;
         startY = clientY;
         currentY = clientY;
         tray.classList.add("dragging");
     }
-
+ 
     function onMove(clientY) {
         if (!dragging) return;
         currentY = clientY;
         var delta = Math.max(0, currentY - startY); // only allow downward drag
         tray.style.transform = "translateY(" + delta + "px)";
     }
-
+ 
     function onEnd() {
         if (!dragging) return;
         dragging = false;
@@ -656,18 +780,18 @@ function closeMobileLayersTray() {
             closeMobileLayersTray();
         }
     }
-
+ 
     handle.addEventListener("touchstart", function(e) {
         onStart(e.touches[0].clientY);
     }, { passive: true });
-
+ 
     handle.addEventListener("touchmove", function(e) {
         onMove(e.touches[0].clientY);
     }, { passive: true });
-
+ 
     handle.addEventListener("touchend", onEnd);
     handle.addEventListener("touchcancel", onEnd);
-
+ 
     // Mouse support too, for desktop-browser testing in responsive/mobile-emulation mode
     handle.addEventListener("mousedown", function(e) {
         onStart(e.clientY);
@@ -681,7 +805,7 @@ function closeMobileLayersTray() {
         document.addEventListener("mouseup", upHandler);
     });
 })();
-
+ 
 function toggleMobileLayer(toggleEl) {
     // Mobile and desktop share one source of truth (activeLayers). toggleLayer()
     // already updates activeLayers and calls applyLayerFilter() + updateBadge()
@@ -689,11 +813,11 @@ function toggleMobileLayer(toggleEl) {
     // the matching desktop toggle row visually in sync, in case the panel is
     // opened later in the same session after a resize.
     toggleLayer(toggleEl);
-
+ 
     var row = toggleEl.closest(".mobile-layer-row");
     var cat = row ? row.getAttribute("data-cat") : null;
     var isOn = toggleEl.classList.contains("on");
-
+ 
     var desktopRow = document.querySelector(".layer-row[data-cat='" + cat + "']");
     if (desktopRow) {
         var desktopToggle = desktopRow.querySelector(".layer-toggle");
@@ -703,7 +827,7 @@ function toggleMobileLayer(toggleEl) {
         }
     }
 }
-
+ 
 document.addEventListener("click", function(e) {
     var resultsBox = document.getElementById("mobileSearchResults");
     var searchBox = document.getElementById("mobileSearchBox");
@@ -711,30 +835,45 @@ document.addEventListener("click", function(e) {
         resultsBox.innerHTML = "";
     }
 });
-
+ 
 // ====================
 // SEARCH (Nominatim)
 // ====================
-
+ 
 function runSearch() {
     performSearch("desktopSearchInput", "searchResults");
 }
-
+ 
 function runSearchMobile() {
     performSearch("mobileSearchInput", "mobileSearchResults");
 }
-
+ 
+// Nominatim often returns more than one row for what a person would call
+// "the same place" - e.g. a plain settlement match and a more specific
+// match with a postcode attached. This keeps only the first result for
+// each distinct place name (the part of display_name before the first
+// comma), so the dropdown doesn't show obvious-looking duplicates.
+function dedupeNominatimResults(data) {
+    var seen = {};
+    return data.filter(function(item) {
+        var key = item.display_name.split(",")[0].trim().toLowerCase();
+        if (seen[key]) return false;
+        seen[key] = true;
+        return true;
+    });
+}
+ 
 function performSearch(inputId, resultsId) {
     var input = document.getElementById(inputId);
     var resultsBox = document.getElementById(resultsId);
     if (!input || !resultsBox) return;
     var query = input.value.trim();
     if (!query) return;
-
+ 
     resultsBox.innerHTML = '<div class="search-no-result">Searching…</div>';
-
+ 
     var url = "https://nominatim.openstreetmap.org/search?format=json&countrycodes=gb&limit=5&q=" + encodeURIComponent(query);
-
+ 
     fetch(url, { headers: { "Accept-Language": "en", "User-Agent": "MapBritannia/1.0" } })
         .then(function(r) { return r.json(); })
         .then(function(data) {
@@ -760,7 +899,7 @@ function performSearch(inputId, resultsId) {
             resultsBox.innerHTML = '<div class="search-no-result">Search unavailable — please try again</div>';
         });
 }
-
+ 
 function flyToResult(item, inputId, resultsId) {
     var lat = parseFloat(item.lat);
     var lng = parseFloat(item.lon);
@@ -770,7 +909,7 @@ function flyToResult(item, inputId, resultsId) {
     if (input) input.value = item.display_name.split(",")[0];
     map.flyTo([lat, lng], 10, { duration: 1.2 });
 }
-
+ 
 document.addEventListener("click", function(e) {
     var search = document.getElementById("desktopPanelSearch");
     var results = document.getElementById("searchResults");
@@ -778,11 +917,11 @@ document.addEventListener("click", function(e) {
         results.innerHTML = "";
     }
 });
-
+ 
 // ====================
 // INIT
 // ====================
-
+ 
 // ====================
 // URL PARAMETER HANDLING (landing.html front door)
 // ====================
@@ -792,10 +931,10 @@ document.addEventListener("click", function(e) {
 // otherwise. No router, no new dependencies, no changes to existing
 // functions - it calls the same toggleLayer()/performSearch() the UI
 // itself uses for a real click or search.
-
+ 
 function applyUrlParams() {
     var params = new URLSearchParams(window.location.search);
-
+ 
     // ?search=QUERY - populate the visible search input and run the same
     // search a person would get by typing and pressing Enter.
     var searchQuery = params.get("search");
@@ -806,7 +945,7 @@ function applyUrlParams() {
             if (isMobile) runSearchMobile(); else runSearch();
         }
     }
-
+ 
     // ?theme=Category Name - activate the matching existing layer, exactly
     // as if its toggle switch had been clicked. Only acts if a toggle for
     // that category actually exists; unrecognised values are ignored
@@ -829,7 +968,7 @@ function applyUrlParams() {
             mobileToggle.classList.toggle("off", !isOn);
         }
     }
-
+ 
     // ?locate=true - reserved for a future "use my current location"
     // feature. No geolocation function exists anywhere in this file yet,
     // so deliberately left as a no-op rather than faking a result.
@@ -837,7 +976,7 @@ function applyUrlParams() {
     // here and map.flyTo the returned coordinates at a sensible zoom.
     // var locate = params.get("locate");
 }
-
+ 
 window.addEventListener('load', function() {
     if (!isMobile) {
         desktopDetails.innerHTML = getEmptyStateHTML();
@@ -850,25 +989,25 @@ window.addEventListener('load', function() {
         // Explore pill/layers tray rather than seeing every marker by default.
         setTimeout(function() { map.invalidateSize(); }, 50);
     }
-
+ 
     applyUrlParams();
 });
-
+ 
 // ====================
 // MODAL
 // ====================
-
+ 
 function openModal(tab) {
     document.getElementById('modal').classList.add('open');
     document.getElementById('modalOverlay').classList.add('open');
     if (tab) switchTab(tab);
 }
-
+ 
 function closeModal() {
     document.getElementById('modal').classList.remove('open');
     document.getElementById('modalOverlay').classList.remove('open');
 }
-
+ 
 function switchTab(name) {
     document.querySelectorAll('.modal-tab').forEach(function(btn) { btn.classList.remove('active'); });
     document.querySelectorAll('.modal-tab-content').forEach(function(el) { el.classList.remove('active'); });
@@ -878,14 +1017,16 @@ function switchTab(name) {
         if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(name) !== -1) btn.classList.add('active');
     });
 }
-
+ 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-function dedupeNominatimResults(data) {
-    var seen = {};
-    return data.filter(function(item) {
-        var key = item.display_name.split(",")[0].trim().toLowerCase();
-        if (seen[key]) return false;
-        seen[key] = true;
-        return true;
-    });
-}
+ 
+
+
+
+
+
+
+
+
+
+
