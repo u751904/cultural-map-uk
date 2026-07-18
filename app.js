@@ -738,6 +738,7 @@ function performSearch(inputId, resultsId) {
     fetch(url, { headers: { "Accept-Language": "en", "User-Agent": "MapBritannia/1.0" } })
         .then(function(r) { return r.json(); })
         .then(function(data) {
+            data = dedupeNominatimResults(data);
             resultsBox.innerHTML = "";
             if (!data || data.length === 0) {
                 resultsBox.innerHTML = '<div class="search-no-result">No results found</div>';
@@ -879,3 +880,12 @@ function switchTab(name) {
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+function dedupeNominatimResults(data) {
+    var seen = {};
+    return data.filter(function(item) {
+        var key = item.display_name.split(",")[0].trim().toLowerCase();
+        if (seen[key]) return false;
+        seen[key] = true;
+        return true;
+    });
+}
