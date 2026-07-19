@@ -1,10 +1,22 @@
-# Map Britannia — Architecture Reference
+# Map Britannia — Status & Working Log
 
 Last verified against live repo: 19 July 2026, by fetching raw files directly
 from `github.com/u751904/cultural-map-uk` (not from chat history or memory).
 
-This file is the single source of truth for file roles. If a file's purpose
-changes, update this doc in the same commit — not as an afterthought.
+**Scope of this document, vs. the Developer Reference:**
+This file is a **running log of current status and working guardrails** —
+what each file currently is, what's broken, what just got fixed, and the
+rules that keep iterative changes safe. It updates every session.
+
+It is **not** the architecture spec. The full build (tech stack, CSV schema,
+category config, GeoJSON layer mechanics, cache-busting convention, licence
+text, "how to add a new category") lives in the separate **Developer
+Reference** document (currently a local `.docx`, refreshed periodically —
+only when something structurally changes, not after routine fixes). That
+document is what you'd hand a real developer on day one. This one is what
+keeps day-to-day AI-assisted work from drifting.
+
+Bug/backlog items belong **only here**, not in the Developer Reference.
 
 ---
 
@@ -80,31 +92,62 @@ GeoJSON (via `layerConfig` array in `app.js`):
 ## Versioning convention
 
 `map.html` loads `styles.css` and `app.js` with a manual cache-busting query
-string, e.g. `styles.css?v=23`, `app.js?v=25`. Bump this number by 1 any time
-either file changes, so browsers don't serve a stale cached copy.
+string. Bump the relevant number by 1 any time that file changes, so
+browsers don't serve a stale cached copy. Each file is versioned
+independently — only bump the one you actually changed.
+
+**Current live values (confirmed 19 July 2026): `styles.css?v=23`, `app.js?v=26`.**
+Update this line whenever either number changes — a stale example here is
+exactly the kind of drift this document exists to prevent.
 
 ---
 
+## Resolved issues (recent)
+
+- **DNS/domain config** (resolved ~19 July 2026): `mapbritannia.com` was
+  showing blank while the GitHub Pages default URL worked. Root cause was
+  domain/DNS configuration, not code — self-resolved during this work
+  (`mapbritannia.com/map.html` now loads directly).
+- **`app.js` corruption incident** (resolved 19 July 2026): the live
+  `app.js` was found to contain ~124 lines of accidentally-pasted chat
+  transcript text before the real code, which broke the entire script (JS
+  parse error on line 1 = nothing in the file runs). Fixed by stripping
+  the junk and validating with `node --check` before re-upload. **Lesson:
+  always verify a file parses/lints before uploading, especially after
+  copy-pasting from a chat interface rather than using a proper download.**
+- **Post-fix blank page** (resolved 19 July 2026): after the `app.js` fix,
+  navigating via a pill/search click still showed the old parse error.
+  Cause was the browser serving a cached copy of the pre-fix `app.js`
+  rather than a genuine regression — confirmed fixed by testing in an
+  incognito window. Lesson: test fixes in a private/incognito window to
+  rule out caching before assuming a fix failed.
+- **Font-size inconsistency on `about.html`**: `.about-section p` (15.5px)
+  and `.source-list li` (15px) — unified. (Confirmed fixed by user;
+  exact resulting value not independently verified against live file.)
+- **Nominatim duplicate search results**: dedupe logic in `app.js`
+  (`dedupeNominatimResults()`) — confirmed working by user.
+- **Dartington Hall Oak marker**: duplicate/missing marker issue in
+  `ancient_trees.csv` — confirmed fixed by user.
+
 ## Known issues / open items (as of 19 July 2026)
 
-- **DNS/domain config**: `mapbritannia.com` was showing blank while the
-  GitHub Pages default URL worked — points to a DNS or custom-domain
-  verification issue at the registrar/GitHub Pages settings level, not a
-  code issue. Not yet resolved.
-- **`app.js` corruption incident**: the live `app.js` was found to contain
-  ~124 lines of accidentally-pasted chat transcript text before the real
-  code, which broke the entire script (JS parse error on line 1 = nothing
-  in the file runs). Fixed by stripping the junk and validating with
-  `node --check`. **Lesson: always verify a file parses/lints before
-  uploading, especially after copy-pasting from a chat interface rather
-  than using a proper download.**
-- **Font-size inconsistency on `about.html`**: `.about-section p` (15.5px)
-  and `.source-list li` (15px) don't match each other. Proposed fix:
-  unify to 16px. Not yet applied — pending confirmation.
 - **URL parameter handling** (`?search=`, `?theme=`, `?locate=`): implemented
   in `app.js` via `applyUrlParams()`, except `?locate=true`, which is a
   deliberate no-op (no geolocation function exists yet — TODO comment in
   the code marks where to add it).
+- **Yarmouth narrative mismatch** (migrated from Developer Reference,
+  18 July 2026): a Yarmouth entry in `plague_uk_final.csv` displays East
+  Anglia narrative text despite the marker sitting on the Isle of Wight
+  Yarmouth, not the Norfolk one. Needs its own entry with corrected,
+  geography-specific narrative. There is also an unconfirmed report of
+  Scottish entries inheriting an English/London regional narrative during
+  the original data build — needs re-checking against the current file;
+  may already be resolved.
+- **Ancient tree markers at national zoom** (migrated from Developer
+  Reference, 18 July 2026): markers from `ancient_trees.csv` do not always
+  appear at national zoom level in some regions, and only become visible
+  after zooming in. Needs review of clustering/marker-loading behaviour
+  for this layer specifically.
 
 ---
 
